@@ -4,18 +4,18 @@ import Link from "next/link";
 
 type TProps = {
   children: Readonly<React.ReactNode>;
-  styleType: "primary" | "secondary" | "danger";
+  type?: "primary" | "secondary" | "danger";
   href?: string;
   onClick?: () => void;
-  customStyle?: string;
+  className?: string;
 };
 
 export default function Button({
   children,
-  styleType,
+  type = "primary",
   href,
   onClick,
-  customStyle,
+  className,
 }: TProps) {
   const styles = {
     default: "px-4 py-2 rounded-md hover:rounded-sm transition-all",
@@ -28,13 +28,13 @@ export default function Button({
       {href ? (
         <Link
           href={href}
-          className={`${styles[styleType]} ${styles.default} ${customStyle}`}
+          className={`${styles[type]} ${styles.default} ${className}`}
         >
           {children}
         </Link>
       ) : (
         <button
-          className={`${styles[styleType]} ${styles.default} ${customStyle}`}
+          className={`${styles[type]} ${styles.default} ${className}`}
           onClick={onClick}
         >
           {children}
