@@ -8,12 +8,10 @@ export default function HeaderBar() {
           <div className="bg-slate-500 h-8 w-20"></div>
         </div>
         <div className="links flex flex-row items-center gap-2">
-          <Button styleType="secondary" href="/login">
+          <Button type="secondary" href="/login">
             Sign In
           </Button>
-          <Button styleType="primary" href="/signup">
-            Enterprise Sign Up
-          </Button>
+          <Button href="/signup">Enterprise Sign Up</Button>
         </div>
       </div>
     </>

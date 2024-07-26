@@ -33,8 +33,7 @@ export default function SearchBox() {
 
       <Button
         onClick={handleSearch}
-        styleType="primary"
-        customStyle="whitespace-nowrap rounded-lg px-10"
+        className="whitespace-nowrap rounded-lg px-10"
       >
         搜尋
       </Button>
