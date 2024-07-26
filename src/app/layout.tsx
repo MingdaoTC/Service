@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_TC } from "next/font/google";
 import React from "react";
-import "./globals.css";
+import "@/app/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MDTC - Mingdao Talent Cloud",
+  title: "MDTC",
   description: "Mingdao Talent Cloud",
 };
 
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={NotoSansTC.className}>{children}</body>
     </html>
   );
 }
