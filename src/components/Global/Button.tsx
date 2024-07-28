@@ -28,13 +28,13 @@ export default function Button({
       {href ? (
         <Link
           href={href}
-          className={`${styles[type]} ${styles.default} ${className}`}
+          className={`${styles[type]} ${styles.default} ${className} select-none`}
         >
           {children}
         </Link>
       ) : (
         <button
-          className={`${styles[type]} ${styles.default} ${className}`}
+          className={`${styles[type]} ${styles.default} ${className} select-none`}
           onClick={onClick}
         >
           {children}

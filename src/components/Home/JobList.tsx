@@ -22,8 +22,8 @@ export default function JobList() {
         ></BiBriefcase>{" "}
         推薦職缺
       </h1>
-      <div className="flex flex-wrap gap-4 py-4">
-        {new Array(6).fill(testJobData).map((jobData, index) => (
+      <div className="flex flex-wrap gap-4 py-4 justify-between">
+        {new Array(7).fill(testJobData).map((jobData, index) => (
           <Job key={index} {...jobData} />
         ))}
       </div>

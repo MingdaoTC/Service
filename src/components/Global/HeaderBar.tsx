@@ -8,7 +8,7 @@ export default function HeaderBar() {
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
-        <div className="logo">
+        <div className="logo select-none">
           <Image
             src="/images/logo.png"
             width={200}

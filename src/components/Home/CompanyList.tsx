@@ -23,15 +23,10 @@ export default function CompanyList() {
         ></BiBuildings>{" "}
         推薦公司
       </h1>
-      <div className="flex flex-wrap gap-4 py-4">
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
-        <Company {...testCompanyData}></Company>
+      <div className="flex flex-wrap gap-4 py-4 justify-between">
+        {new Array(7).fill(testCompanyData).map((companyData, index) => (
+          <Company key={index} {...companyData} />
+        ))}
       </div>
     </div>
   );
