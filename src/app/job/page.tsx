@@ -1,9 +1,9 @@
 // Components
 import HeaderBar from "@/components/Global/HeaderBar";
-import Content from "@/components/Job/content";
+import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import Other from "@/components/Job/other";
-import Requirement from "@/components/Job/requirement";
+import Other from "@/components/Job/Other";
+import Requirement from "@/components/Job/Requirement";
 
 const testCompanyData = {
   title: "硬體研發工程師(伺服器及工作站)",
@@ -47,7 +47,7 @@ export default function job() {
     <>
       <HeaderBar />
       <Info data={testCompanyData} />
-      <div className="grid grid-cols-3 gap-14 m-20">
+      <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto mt-[5dvh]">
         <div
           className={`grid-cols-subgrid col-start-1 col-end-3 flex flex-col ${blockGap}`}
         >

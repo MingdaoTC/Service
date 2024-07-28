@@ -1,30 +1,29 @@
 import { BiBriefcase } from "react-icons/bi";
 
 import Job from "../Global/Job";
+import { Job as TJob } from "@customTypes/Job";
 
-const testJobData = {
-  title: "硬體研發工程師(伺服器及工作站)",
-  company: "華碩電腦股份有限公司",
-  location: "台北市北投區",
-  seniority: "兩年以上",
-  education: "大學",
-  salary: "999999",
+type Props = {
+  data: TJob[];
+  className?: string;
 };
 
-export default function JobList() {
+export default function JobList(props: Props) {
   return (
-    <div className="px-6 py-4 shadow-lg bg-white rounded-xl w-[90dvw] m-auto relative -top-28">
-      <h1 className="text-xl flex gap-2 items-center text-black font-bold">
+    <div
+      className={`border p-8 shadow-lg bg-white rounded-xl ${props.className}`}
+    >
+      <h1 className="text-xl mb-5 flex gap-2 items-center text-black font-bold">
         <BiBriefcase
           color="#00A3FF"
           size={"1.25em"}
-          style={{ position: "relative", top: "-1px" }}
-        ></BiBriefcase>{" "}
+          className="translate-y-[0.05em]"
+        />
         推薦職缺
       </h1>
-      <div className="flex flex-wrap gap-4 py-4 justify-between">
-        {new Array(7).fill(testJobData).map((jobData, index) => (
-          <Job key={index} {...jobData} />
+      <div className="grid grid-cols-2 gap-4">
+        {props.data.map((jobData, index) => (
+          <Job key={index} data={jobData} />
         ))}
       </div>
     </div>
