@@ -1,5 +1,13 @@
 import type { Config } from "tailwindcss";
 
+const mingdaoBlue = {
+  "mingdao-blue": {
+    light: "#CAECFF",
+    DEFAULT: "#00A3FF",
+    dark: "#00446A",
+  }
+};
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,11 +22,10 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        "mingdao-blue": {
-          light: "#CAECFF",
-          DEFAULT: "#00A3FF",
-          dark: "#00446A",
-        },
+        ...mingdaoBlue
+      },
+      backgroundColor: {
+        ...mingdaoBlue
       },
     },
   },

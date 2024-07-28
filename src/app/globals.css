@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Set after:bg-[color] to specify the color of the underline */
+  .animated-underline-left {
+    position: relative;
+  }
+  .animated-underline-left::after {
+    content: "";
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    transform: scaleX(0);
+    height: 0.07em;
+    bottom: 0;
+    left: 0;
+    transform-origin: left;
+    transition: transform 0.25s ease-out;
+  }
+  .animated-underline-left:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Set after:bg-[color] to specify the color of the underline */
+  .animated-underline-center {
+    position: relative;
+  }
+  .animated-underline-center::after {
+    content: "";
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    transform: scaleX(0);
+    height: 0.07em;
+    bottom: 0;
+    left: 0;
+    transform-origin: center;
+    transition: transform 0.25s ease-out;
+  }
+  .animated-underline-center:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Set after:bg-[color] to specify the color of the underline */
+  .animated-underline-right {
+    position: relative;
+  }
+  .animated-underline-right::after {
+    content: "";
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    transform: scaleX(0);
+    height: 0.07em;
+    bottom: 0;
+    left: 0;
+    transform-origin: right;
+    transition: transform 0.1s ease-out;
+  }
+  .animated-underline-right:hover::after {
+    transform: scaleX(1);
+  }
+}
