@@ -23,12 +23,9 @@ export default function JobList() {
         推薦職缺
       </h1>
       <div className="flex flex-wrap gap-4 py-4">
-        <Job {...testJobData}></Job>
-        <Job {...testJobData}></Job>
-        <Job {...testJobData}></Job>
-        <Job {...testJobData}></Job>
-        <Job {...testJobData}></Job>
-        <Job {...testJobData}></Job>
+        {new Array(6).fill(testJobData).map((jobData, index) => (
+          <Job key={index} {...jobData} />
+        ))}
       </div>
     </div>
   );
