@@ -2,19 +2,13 @@ import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/modules/joinClass";
 import Button from "../Global/Button";
+import { Company } from "@customTypes/Company";
 
 export default function Info({
   data,
   className,
 }: {
-  data: {
-    title: string;
-    company: string;
-    location: string;
-    seniority: string;
-    education: string;
-    salary: string;
-  };
+  data: Company;
   className?: string;
 }) {
   return (
@@ -25,7 +19,7 @@ export default function Info({
       )}
     >
       <h1 className="text-4xl text-mingdao-blue-dark font-extrabold">
-        {data.company}
+        {data.name}
       </h1>
       <div className="flex h-fit gap-6">
         <Button
