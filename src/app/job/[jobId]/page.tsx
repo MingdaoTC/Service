@@ -47,7 +47,7 @@ export default function job() {
     <>
       <HeaderBar />
       <Info data={testCompanyData} />
-      <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto mt-[5dvh]">
+      <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto my-[5dvh]">
         <div
           className={`grid-cols-subgrid col-start-1 col-end-3 flex flex-col ${blockGap}`}
         >
