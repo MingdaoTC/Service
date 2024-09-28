@@ -25,7 +25,7 @@ export default function Company(props: Props) {
           {props.data.name}
         </h2>
       </div>
-      <div className="py-4 px-6 ">
+      <div className="py-4 px-6">
         <div className="flex gap-2 items-center">
           <BiMap color="gray" size={"1.25em"}></BiMap>
           <span>{props.data.location}</span>

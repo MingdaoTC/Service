@@ -1,8 +1,13 @@
-import Button from "../Global/Button";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
 
-type Props = {
+import { joinClass } from "@/modules/joinClass";
+import Button from "../Global/Button";
+
+export default function Info({
+  data,
+  className,
+}: {
   data: {
     title: string;
     company: string;
@@ -12,19 +17,20 @@ type Props = {
     salary: string;
   };
   className?: string;
-};
-
-export default function Info(props: Props) {
+}) {
   return (
     <div
-      className={`w-full shadow-lg py-10 px-12 flex justify-between ${props.className}`}
+      className={joinClass(
+        "w-full h-40 shadow-lg px-12 flex justify-between items-center",
+        className,
+      )}
     >
       <div className="w-fit">
         <h1 className="text-4xl text-mingdao-blue-dark font-extrabold">
-          {props.data.title}
+          {data.title}
         </h1>
         <div className="flex gap-6 pt-4">
-          <p className="text-mingdao-blue text-lg">{props.data.company}</p>
+          <p className="text-mingdao-blue text-lg">{data.company}</p>
           <a
             href="#"
             className="text-mingdao-blue text-lg animated-underline-center after:bg-mingdao-blue"
