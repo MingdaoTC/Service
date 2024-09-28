@@ -23,7 +23,7 @@ export default function JobList(props: Props) {
       </h1>
       <div className="grid grid-cols-2 gap-4">
         {props.data.map((jobData, index) => (
-          <Job key={index} data={jobData} />
+          <Job key={index} data={jobData} size="sm" />
         ))}
       </div>
     </div>
