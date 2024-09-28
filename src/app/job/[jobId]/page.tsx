@@ -2,8 +2,9 @@
 import HeaderBar from "@/components/Global/HeaderBar";
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import Other from "@/components/Job/Other";
+import Other from "@/components/Global/Other";
 import Requirement from "@/components/Job/Requirement";
+import { Job } from "@customTypes/Job";
 
 const testCompanyData = {
   title: "硬體研發工程師(伺服器及工作站)",
@@ -43,6 +44,7 @@ const testJobData = {
 
 export default function job() {
   const blockGap = "gap-8";
+
   return (
     <>
       <HeaderBar />
@@ -55,9 +57,10 @@ export default function job() {
           <Requirement data={testJobData.requirement} className="" />
         </div>
         <div className="grid-cols-subgrid col-start-3">
-          <Other
+          <Other<Job>
+            title="適合你的其他職缺"
             data={[testCompanyData, testCompanyData, testCompanyData]}
-            className=""
+            contentKey={{ title: "title", content0: "company" }}
           />
         </div>
       </div>
