@@ -1,7 +1,7 @@
-import { Company as TCompany } from "@customTypes/Company";
-import Image from "next/image";
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
+
+import { Company as TCompany } from "@customTypes/Company";
 
 type Props = {
   data: TCompany;
@@ -28,7 +28,7 @@ export default function Company(props: Props) {
       <div className="py-4 px-6">
         <div className="flex gap-2 items-center">
           <BiMap color="gray" size={"1.25em"}></BiMap>
-          <span>{props.data.location}</span>
+          <span>{props.data.address}</span>
         </div>
         <div className="flex gap-2 items-center">
           <BiBuildings color="gray" size={"1.25em"}></BiBuildings>
@@ -38,7 +38,7 @@ export default function Company(props: Props) {
           {props.data.tags.map((tag) => {
             return (
               <span
-                className="border px-2     py-[2px] rounded-lg text-sm text-gray-500"
+                className="border px-2 py-[2px] rounded-lg text-sm text-gray-500"
                 key={tag}
               >
                 {tag}
