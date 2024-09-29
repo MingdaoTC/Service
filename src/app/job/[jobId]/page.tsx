@@ -6,7 +6,8 @@ import Other from "@/components/Global/Other";
 import Requirement from "@/components/Job/Requirement";
 import { Job } from "@customTypes/Job";
 
-const testCompanyData = {
+const testRecommendedJobData = {
+  _id: "1",
   title: "硬體研發工程師(伺服器及工作站)",
   company: "華碩電腦股份有限公司",
   location: "台北市北投區",
@@ -48,7 +49,7 @@ export default function job() {
   return (
     <>
       <HeaderBar />
-      <Info data={testCompanyData} />
+      <Info data={testRecommendedJobData} />
       <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto my-[5dvh]">
         <div
           className={`grid-cols-subgrid col-start-1 col-end-3 flex flex-col ${blockGap}`}
@@ -59,7 +60,11 @@ export default function job() {
         <div className="grid-cols-subgrid col-start-3">
           <Other<Job>
             title="適合你的其他職缺"
-            data={[testCompanyData, testCompanyData, testCompanyData]}
+            data={[
+              testRecommendedJobData,
+              testRecommendedJobData,
+              testRecommendedJobData,
+            ]}
             contentKey={{ title: "title", content0: "company" }}
           />
         </div>
