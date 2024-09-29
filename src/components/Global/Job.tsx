@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
 
@@ -20,13 +22,15 @@ export default function Job({
         <div
           className={joinClass(
             "px-8 py-6 border bg-white rounded-xl flex",
-            className,
+            className
           )}
         >
           <div className="flex-grow">
-            <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
-              {data.title}
-            </h2>
+            <Link href={`/job/${data._id}`}>
+              <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
+                {data.title}
+              </h2>
+            </Link>
             <div className="py-4">
               <p className="text-mingdao-blue-dark font-bold">{data.company}</p>
               <div className="flex">
@@ -62,9 +66,11 @@ export default function Job({
     case "sm":
       return (
         <div className={`px-6 py-4 border bg-white rounded-xl ${className}`}>
-          <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
-            {data.title}
-          </h2>
+          <Link href={`/job/${data._id}`}>
+            <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
+              {data.title}
+            </h2>
+          </Link>
           <div className="py-4">
             <p className="text-mingdao-blue-dark font-bold">{data.company}</p>
             <div className="flex">
@@ -85,9 +91,11 @@ export default function Job({
     default:
       return (
         <div className={`px-6 py-4 border bg-white rounded-xl ${className}`}>
-          <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
-            {data.title}
-          </h2>
+          <Link href={`/job/${data._id}`}>
+            <h2 className="text-xl text-mingdao-blue-dark font-extrabold">
+              {data.title}
+            </h2>
+          </Link>
           <div className="py-4">
             <p className="text-mingdao-blue-dark font-bold">{data.company}</p>
             <div className="flex">
