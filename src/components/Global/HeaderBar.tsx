@@ -3,12 +3,13 @@ import Button from "@/components/Global/Button";
 
 // Third-Party Library
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HeaderBar() {
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
-        <div className="logo select-none">
+        <Link href={"/"} className="logo select-none">
           <Image
             src="/images/logo.png"
             width={200}
@@ -16,7 +17,7 @@ export default function HeaderBar() {
             alt="logo"
             className=" translate-y-[0.25rem]"
           />
-        </div>
+        </Link>
         <div className="links flex flex-row items-center gap-2">
           <Button type="secondary" href="/login">
             Sign In
