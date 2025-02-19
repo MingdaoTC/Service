@@ -1,7 +1,7 @@
 import { BiBriefcase } from "react-icons/bi";
 
 import Job from "../Global/Job";
-import { Job as TJob } from "@customTypes/Job";
+import { Job as TJob } from "@/types/Job";
 
 type Props = {
   data: TJob[];

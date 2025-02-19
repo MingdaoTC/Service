@@ -2,7 +2,7 @@ import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/modules/joinClass";
 import Button from "../Global/Button";
-import { Company } from "@customTypes/Company";
+import { Company } from "@/types/Company";
 
 export default function Info({
   data,

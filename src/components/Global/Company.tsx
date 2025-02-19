@@ -1,7 +1,7 @@
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
 
-import { Company as TCompany } from "@customTypes/Company";
+import { Company as TCompany } from "@/types/Company";
 
 type Props = {
   data: TCompany;

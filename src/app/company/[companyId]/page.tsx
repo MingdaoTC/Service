@@ -2,7 +2,7 @@ import { Content } from "@/components/Company/Content";
 import HeaderBar from "@/components/Global/HeaderBar";
 import Info from "@/components/Company/Info";
 import Other from "@/components/Global/Other";
-import { Company } from "@customTypes/Company";
+import { Company } from "@/types/Company";
 import { joinClass } from "@/modules/joinClass";
 import Job from "@/components/Global/Job";
 

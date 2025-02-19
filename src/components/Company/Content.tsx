@@ -1,5 +1,5 @@
 import { joinClass } from "@/modules/joinClass";
-import { Company } from "@customTypes/Company";
+import { Company } from "@/types/Company";
 import { Separator } from "@/components/Global/Separator";
 
 export function Content({

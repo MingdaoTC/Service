@@ -5,7 +5,7 @@ import { BiBookmark } from "react-icons/bi";
 
 import Button from "@/components/Global/Button";
 import { joinClass } from "@/modules/joinClass";
-import { Job as TJob } from "@customTypes/Job";
+import { Job as TJob } from "@/types/Job";
 
 export default function Job({
   data,

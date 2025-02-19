@@ -4,7 +4,7 @@ import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
 import Other from "@/components/Global/Other";
 import Requirement from "@/components/Job/Requirement";
-import { Job } from "@customTypes/Job";
+import { Job } from "@/types/Job";
 
 const testRecommendedJobData = {
   _id: "1",

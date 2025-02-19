@@ -2,7 +2,7 @@
 import { BiBuildings } from "react-icons/bi";
 
 // Components
-import { Company as TCompany } from "@customTypes/Company";
+import { Company as TCompany } from "@/types/Company";
 import Company from "../Global/Company";
 
 type Props = {
