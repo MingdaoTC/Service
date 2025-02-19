@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Lib
-import { auth, signIn } from "@/lib/auth"
+import { auth, signIn, signOut } from "@/lib/auth";
 
 export default async function HeaderBar() {
-  const session = await auth()
+  const session = await auth();
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
@@ -23,18 +23,25 @@ export default async function HeaderBar() {
           />
         </Link>
         <div className="links flex flex-row items-center gap-2">
-          <p>歡迎， {session?.user.name}！</p>
           <form
             action={async () => {
-              "use server"
-              await signIn("google")
+              "use server";
+              await signOut();
+            }}
+          >
+            <button type="submit">歡迎， {session?.user?.name}！</button>
+          </form>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("google");
             }}
           >
             <Button type="secondary">註冊/登入</Button>
           </form>
           <Button>企業徵才</Button>
         </div>
-      </div>
+      </div >
     </>
   );
 }
