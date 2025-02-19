@@ -5,7 +5,11 @@ import Button from "@/components/Global/Button";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function HeaderBar() {
+// Lib
+import { auth, signIn } from "@/lib/auth"
+
+export default async function HeaderBar() {
+  const session = await auth()
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
@@ -19,10 +23,16 @@ export default function HeaderBar() {
           />
         </Link>
         <div className="links flex flex-row items-center gap-2">
-          <Button type="secondary" href="/login">
-            Sign In
-          </Button>
-          <Button href="/signup">Enterprise Sign Up</Button>
+          <p>歡迎， {session?.user.name}！</p>
+          <form
+            action={async () => {
+              "use server"
+              await signIn("google")
+            }}
+          >
+            <Button type="secondary">註冊/登入</Button>
+          </form>
+          <Button>企業徵才</Button>
         </div>
       </div>
     </>
