@@ -10,6 +10,7 @@ import { auth, signIn, signOut } from "@/lib/auth";
 
 export default async function HeaderBar() {
   const session = await auth();
+  console.log(session);
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
@@ -17,7 +18,7 @@ export default async function HeaderBar() {
           <Image
             src="/images/logo.png"
             width={200}
-            height={0}
+            height={200}
             alt="logo"
             className=" translate-y-[0.25rem]"
           />
