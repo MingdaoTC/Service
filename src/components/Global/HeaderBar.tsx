@@ -10,7 +10,6 @@ import { auth, signIn, signOut } from "@/lib/auth";
 
 export default async function HeaderBar() {
   const session = await auth();
-  console.log(session);
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">

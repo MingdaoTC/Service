@@ -12,10 +12,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
-        console.log(account, profile)
         return true
       }
       return true;
+    },
+    async session({ session, token }) {
+      console.log(session, token)
+      // We should return user data here for frontend to use.
     },
   },
   session: {
