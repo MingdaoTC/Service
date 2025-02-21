@@ -12,16 +12,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
-        return true
+        return true;
       }
       return true;
     },
     async session({ session, token }) {
-      console.log(session, token)
+      console.log(session, token);
+      // await prisma.user.
       // We should return user data here for frontend to use.
+      return token
     },
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
 });

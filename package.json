@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next lint --fix & next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate": "env $(cat .env.local | xargs) pnpm exec prisma migrate dev",
+    "prisma:generate": "env $(cat .env.local | xargs) pnpm exec prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.4.0",
