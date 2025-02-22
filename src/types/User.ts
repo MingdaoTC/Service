@@ -10,7 +10,7 @@ export type User = {
   description?: string;
   role: roleType;
   verified: boolean;
-  application?: any[];
+  application: any[];
   createdAt: Date;
   updatedAt: Date;
 };

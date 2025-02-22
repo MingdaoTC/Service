@@ -14,13 +14,13 @@ model User {
   website     String? // optional
   phone       String
   email       String        @unique
-  description String
+  description String?
   role        String        @default("alumni") // "company", "alumni"
   verified    Boolean       @default(false)
   application Application[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now())
-  
+
   @@map("user")
 }
 
