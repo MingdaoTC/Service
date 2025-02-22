@@ -7,13 +7,11 @@ type findUserTypes = {
 };
 
 export async function findUser(param: findUserTypes) {
-  const whereClause: Partial<findUserTypes> = {};
-
-  if (param.id) whereClause.id = param.id;
-  if (param.username) whereClause.username = param.username;
-  if (param.email) whereClause.email = param.email;
-
   return await prisma.user.findUnique({
-    where: whereClause,
+    where: {
+      id: param.id,
+      username: param.username,
+      email: param.email,
+    },
   });
 }
