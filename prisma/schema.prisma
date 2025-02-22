@@ -10,9 +10,9 @@ generator client {
 model User {
   id          String        @id @default(cuid()) @map("_id")
   username    String        @unique
-  displayName String
-  website     String? // optional
-  phone       String
+  displayName String?
+  website     String?
+  phone       String?
   email       String        @unique
   description String?
   role        String        @default("alumni") // "company", "alumni"
