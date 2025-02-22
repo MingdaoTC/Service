@@ -8,8 +8,14 @@ import Link from "next/link";
 // Lib
 import { auth, signIn, signOut } from "@/lib/auth";
 
+// Type
+import { User } from "@prisma/client";
+
 export default async function HeaderBar() {
-  const session = await auth();
+  let session = await auth();
+  //@ts-ignore
+  const user: User = session.user
+
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
@@ -29,7 +35,7 @@ export default async function HeaderBar() {
               await signOut();
             }}
           >
-            <button type="submit">歡迎， {session?.user?.name}！</button>
+            <button type="submit">歡迎， {user.displayName}！</button>
           </form>
           <form
             action={async () => {

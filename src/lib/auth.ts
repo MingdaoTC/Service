@@ -5,7 +5,8 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 // Lib
-import { prisma } from "@/lib/prisma";
+import { findUser } from "@/lib/db/user/find";
+import { createUser } from "@/lib/db/user/create";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google],
@@ -17,10 +18,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return true;
     },
     async session({ session, token }) {
-      console.log(session, token);
-      // await prisma.user.
-      // We should return user data here for frontend to use.
-      return token;
+      let user = await findUser({ email: session.user.email });
+
+      if (!user) {
+        user = await createUser({
+          username:
+            session.user.email.split("@")[0] +
+            "_" +
+            session.user.email.split("@")[1],
+          displayName: session.user.name,
+          email: session.user.email,
+        });
+      }
+
+      return { user: user };
     },
   },
   session: {
