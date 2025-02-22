@@ -28,7 +28,7 @@ model Application {
   id          String   @id @default(cuid()) @map("_id")
   userId      String   @map("userId")
   jobId       String   @map("jobId")
-  companyId   String   @map("companyId")
+  companyId   String   @map("company.id")
   status      String   @default("pending") // "pending", "reviewed", "accepted", "rejected"
   appliedAt   DateTime
   resumeId    String   @map("resume.id")
