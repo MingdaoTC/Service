@@ -20,7 +20,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       console.log(session, token);
       // await prisma.user.
       // We should return user data here for frontend to use.
-      return token
+      return token;
     },
   },
   session: {
