@@ -1,12 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 import { User } from "@/types/User";
 
-const prisma = new PrismaClient();
-
-async function createUser(newData: User) {
+export async function createUser(newData: User) {
   const user = await prisma.user.create(newData);
   return user;
 }
-
-export default createUser;
