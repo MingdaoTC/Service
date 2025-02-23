@@ -38,3 +38,29 @@ model Application {
 
   @@map("application")
 }
+
+model Company {
+  id                String           @id @default(cuid())
+  name              String
+  categoryId        String
+  capital           Int?
+  numberOfEmployees Int?
+  website           String?
+  phone             String?
+  fax               String?
+  address           String?
+  email             String?
+  description       String?
+  jobs              Job[]
+  CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
+
+  @@map("company")
+}
+
+model CompanyCategory {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  companies Company[]
+
+  @@map("company_category")
+}
