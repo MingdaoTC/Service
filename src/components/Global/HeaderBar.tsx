@@ -35,7 +35,7 @@ export default async function HeaderBar() {
               await signOut();
             }}
           >
-            <button type="submit">歡迎， {user.displayName}！</button>
+            <button type="submit">歡迎， {user?.displayName!}！</button>
           </form>
           <form
             action={async () => {
