@@ -8,31 +8,31 @@ generator client {
 }
 
 model User {
-  id          String        @id @default(cuid()) @map("_id")
+  id          String        @id @default(cuid())
   username    String        @unique
   displayName String?
   website     String?
   phone       String?
   email       String        @unique
   description String?
-  role        String        @default("alumni") // "company", "alumni"
+  role        String        @default("guest") // "company", "alumni"
   verified    Boolean       @default(false)
   application Application[]
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
+  updatedAt   DateTime      @updatedAt
 
   @@map("user")
 }
 
 model Application {
-  id          String   @id @default(cuid()) @map("_id")
-  userId      String   @map("userId")
-  jobId       String   @map("jobId")
-  companyId   String   @map("company.id")
+  id          String   @id @default(cuid())
+  userId      String
+  jobId       String
+  companyId   String
   status      String   @default("pending") // "pending", "reviewed", "accepted", "rejected"
   appliedAt   DateTime
-  resumeId    String   @map("resume.id")
-  resumeUrl   String   @map("resume.url")
+  resumeId    String
+  resumeUrl   String
   coverLetter String
   user        User     @relation(fields: [userId], references: [id])
 
