@@ -57,10 +57,48 @@ model Company {
   @@map("company")
 }
 
+model Job {
+  id                String  @id @default(cuid())
+  title             String
+  companyId         String
+  description       String
+  categoryId        String
+  salaryMin         Int     @default(0)
+  salaryMax         Int     @default(0)
+  negotiable        Boolean
+  employmentType    String  @default("full-time") // "part-time", "contract", "internship"
+  location          String? // "remote", "on-site"
+  management        String? // "yes", "no"
+  businessTrip      String? // "yes", "no"
+  workingHours      String?
+  startDate         String?
+  numberOfPositions Int?
+  experience        String?
+  education         String?
+  major             String?
+  language          String?
+  skills            String?
+  others            String?
+  benefits          String?
+
+  company  Company     @relation(fields: [companyId], references: [id])
+  category JobCategory @relation(fields: [categoryId], references: [id])
+
+  @@map("job")
+}
+
 model CompanyCategory {
   id        String    @id @default(cuid())
   name      String    @unique
   companies Company[]
 
   @@map("company_category")
+}
+
+model JobCategory {
+  id   String @id @default(cuid())
+  name String @unique
+  jobs Job[]
+
+  @@map("job_category")
 }
