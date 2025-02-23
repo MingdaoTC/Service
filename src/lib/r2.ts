@@ -1,6 +1,7 @@
 // Modules
 import { S3Client } from "@aws-sdk/client-s3";
 
+//@ts-ignore
 export const r2 = new S3Client({
   region: "auto",
   endpoint: `https://${process.env.S3_ACCOUNT_ID}.r2.cloudflarestorage.com`,
