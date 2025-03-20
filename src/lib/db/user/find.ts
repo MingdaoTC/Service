@@ -1,12 +1,16 @@
 import { prisma } from "@/lib/db/prisma";
 
-type findUserTypes = {
+export type findUserTypes = {
   id?: string;
   username?: string;
   email?: string;
 };
 
 export async function findUser(param: findUserTypes) {
+  if (!param.id && !param.username && !param.email) {
+    throw new Error("At least one parameter should be provided.");
+  }
+
   return await prisma.user.findUnique({
     where: {
       id: param.id,
