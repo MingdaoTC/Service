@@ -14,7 +14,7 @@ import { User } from "@prisma/client";
 export default async function HeaderBar() {
   let session = await auth();
   //@ts-ignore
-  const user: User = session.user
+  const user: User = session.user;
 
   return (
     <>
