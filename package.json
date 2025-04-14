@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next lint --fix & next build",
+    "build": "next lint --fix & prisma:generate & next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:migrate": "env $(cat .env.local | xargs) pnpm exec prisma migrate dev",
-    "prisma:generate": "env $(cat .env.local | xargs) pnpm exec prisma generate"
+    "prisma:generate": "env $(cat .env.local | xargs) pnpm exec prisma generate",
+    "prisma:push": "env $(cat .env.local | xargs) pnpm exec prisma db push"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.750.0",
-    "@prisma/client": "^6.4.1",
+    "@aws-sdk/client-s3": "^3.787.0",
+    "@prisma/client": "^6.6.0",
     "next": "14.2.5",
     "next-auth": "5.0.0-beta.25",
     "react": "^18.3.1",
@@ -20,16 +21,16 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
-    "@types/node": "^20.17.19",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/node": "^20.17.30",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.6",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.5",
-    "postcss": "^8.5.2",
+    "postcss": "^8.5.3",
     "prettier-eslint": "^16.3.0",
-    "prisma": "^6.4.1",
+    "prisma": "^6.6.0",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@9.11.0"
 }
