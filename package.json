@@ -7,9 +7,9 @@
     "build": "next lint --fix & pnpm prisma:generate & next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:migrate": "env $(cat .env.local | xargs) pnpm exec prisma migrate dev",
-    "prisma:generate": "env $(cat .env.local | xargs) pnpm exec prisma generate",
-    "prisma:push": "env $(cat .env.local | xargs) pnpm exec prisma db push"
+    "prisma:migrate": "pnpm exec prisma migrate dev",
+    "prisma:generate": "pnpm exec prisma generate",
+    "prisma:push": "pnpm exec prisma db push"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.787.0",
