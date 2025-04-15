@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm exec prisma generate & pnpm next build",
+    "build": "pnpx prisma generate & next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:migrate": "pnpm exec prisma migrate dev",
-    "prisma:generate": "pnpm exec prisma generate",
-    "prisma:push": "pnpm exec prisma db push"
+    "prisma:generate": "pnpx prisma generate",
+    "prisma:push": "pnpx prisma db push"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.787.0",
