@@ -9,7 +9,7 @@ import Link from "next/link";
 import { auth, signIn, signOut } from "@/lib/auth";
 
 // Type
-import { User } from "@prisma/client";
+import { User } from "@/app/prisma/client";
 
 export default async function HeaderBar() {
   let session = await auth();

@@ -25,17 +25,15 @@
       "@/*": [
         "./src/*"
       ],
-      "@prisma/client": [
-        "./prisma/app/generated/prisma/client/*"
-      ]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "src/app/api/auth/[...nextauth]/route.ts"  ],
+    ".next/types/**/*.ts",
+    "src/app/api/auth/[...nextauth]/route.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
