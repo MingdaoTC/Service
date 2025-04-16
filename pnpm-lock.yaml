@@ -12,7 +12,7 @@ importers:
         specifier: ^3.787.0
         version: 3.787.0
       '@prisma/client':
-        specifier: ^6.6.0
+        specifier: 6.6.0
         version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
       next:
         specifier: 14.2.5
