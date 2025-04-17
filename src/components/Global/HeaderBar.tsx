@@ -9,12 +9,14 @@ import Link from "next/link";
 import { auth, signIn, signOut } from "@/lib/auth";
 
 // Type
-import { User } from "@/app/prisma/client";
+import { User } from "@/prisma/client";
 
 export default async function HeaderBar() {
   let session = await auth();
   //@ts-ignore
   const user: User = session?.user;
+
+  console.log(user);
 
   return (
     <>
