@@ -7,7 +7,6 @@ const SearchResult = () => {
   const query = searchParams.get("q");
 
   useEffect(() => {
-    console.log(query);
     if (!query) redirect("/");
   }, [query]);
 
