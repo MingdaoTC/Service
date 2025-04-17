@@ -168,6 +168,36 @@
   margin-top: 5px;
 }
 
+.select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border 0.3s;
+}
+
+.select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.documentUploadContainer {
+  display: flex;
+  margin-top: 15px;
+  gap: 20px;
+}
+
+.documentUploadSide {
+  flex: 1;
+}
+
+.uploadLabel {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 .btn {
   display: inline-block;
   padding: 12px 24px;
@@ -194,5 +224,10 @@
   .container {
     padding: 20px;
     margin: 20px;
+  }
+
+  .documentUploadContainer {
+    flex-direction: column;
+    gap: 15px;
   }
 }
