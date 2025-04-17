@@ -1,0 +1,198 @@
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.description {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.tabContainer {
+  display: flex;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabButton {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  color: #666;
+}
+
+.tabButton.active {
+  color: var(--primary-color);
+}
+
+.tabButton.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+.form {
+  width: 100%;
+}
+
+.formGroup {
+  margin-bottom: 25px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.required::after {
+  content: "*";
+  color: var(--danger-color);
+  margin-left: 4px;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="tel"],
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border 0.3s;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="email"]:focus,
+.formGroup input[type="tel"]:focus,
+.formGroup textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.fileUpload {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.fileUploadLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--light-color);
+  border: 2px dashed var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.fileUploadLabel:hover {
+  border-color: var(--primary-color);
+}
+
+.fileUploadIcon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.fileUpload input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.uploadedFiles {
+  display: flex;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.uploadedFile {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: var(--light-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: var(--danger-color);
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.helpText {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.btnBlock {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    margin: 20px;
+  }
+}
