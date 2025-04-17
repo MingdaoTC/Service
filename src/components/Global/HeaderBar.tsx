@@ -16,8 +16,6 @@ export default async function HeaderBar() {
   //@ts-ignore
   const user: User = session?.user;
 
-  console.log(user);
-
   return (
     <>
       <div className="flex flex-row items-center justify-between py-2 px-8 w-full h-16 border ">
