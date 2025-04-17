@@ -48,7 +48,6 @@ export default function job() {
 
   return (
     <>
-      <HeaderBar />
       <Info data={testRecommendedJobData} />
       <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto my-[5dvh]">
         <div
