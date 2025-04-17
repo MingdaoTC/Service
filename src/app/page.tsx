@@ -1,5 +1,5 @@
 // Components
-import HeaderBar from "@/components/Global/HeaderBar";
+
 import JobList from "@/components/Home/JobList";
 import CompanyList from "@/components/Home/CompanyList";
 import SearchBox from "@/components/Global/SearchBox";
@@ -25,7 +25,6 @@ const testJobData = {
 export default function Home() {
   return (
     <>
-      <HeaderBar />
       <div className="bg-mingdao-blue-light h-72 px-4 py-10 flex justify-center items-start">
         <SearchBox />
       </div>

@@ -1,7 +1,16 @@
-import type { Metadata } from "next";
-import { Noto_Sans_TC } from "next/font/google";
+// Module
 import React from "react";
-import "@/app/globals.css";
+
+// Type
+import type { Metadata } from "next";
+
+// Style
+import "@/styles/Global/globals.css";
+import { Noto_Sans_TC } from "next/font/google";
+
+// Component
+import HeaderBar from "@/components/Global/HeaderBar";
+
 
 const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
@@ -17,7 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={NotoSansTC.className}>{children}</body>
+      <body className={NotoSansTC.className}>
+        <HeaderBar />
+        {children}
+      </body>
     </html>
   );
 }
