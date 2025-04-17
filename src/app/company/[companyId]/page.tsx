@@ -41,12 +41,11 @@ export default function companyID() {
 
   return (
     <>
-      <HeaderBar />
       <Info data={testCompanyData0} />
       <div
         className={joinClass(
           "w-[90dvw] m-auto my-[5dvh] flex flex-col",
-          blockGap,
+          blockGap
         )}
       >
         <div className={joinClass("grid grid-cols-3", blockGap)}>
