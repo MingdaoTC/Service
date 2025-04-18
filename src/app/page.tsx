@@ -1,5 +1,4 @@
 // Components
-
 import JobList from "@/components/Home/JobList";
 import CompanyList from "@/components/Home/CompanyList";
 // import SearchBox from "@/components/Global/SearchBox";
@@ -26,10 +25,15 @@ const testJobData = {
 export default function Home() {
   return (
     <>
-      <div className="bg-mingdao-blue-light h-72 px-4 py-10 flex justify-center items-start">
-        <SimpleSearch />
+      {/* Responsive hero section with search */}
+      <div className="bg-mingdao-blue-light min-h-[12rem] md:h-72 px-4 py-6 md:py-10 flex justify-center items-start">
+        <div className="w-full max-w-3xl">
+          <SimpleSearch />
+        </div>
       </div>
-      <div className="flex flex-col gap-8 w-[90dvw] my-8 mx-auto relative -top-28">
+
+      {/* Main content with responsive width and spacing */}
+      <div className="flex flex-col gap-4 sm:gap-6 w-[95%] sm:w-[90%] max-w-6xl mx-auto my-4 md:my-6 relative -top-12 sm:-top-16 md:-top-24">
         <JobList data={new Array(7).fill(testJobData)} />
         <CompanyList data={new Array(5).fill(testCompanyData)} />
       </div>
