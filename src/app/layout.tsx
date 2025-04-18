@@ -11,7 +11,6 @@ import { Noto_Sans_TC } from "next/font/google";
 // Component
 import HeaderBar from "@/components/Global/HeaderBar";
 
-
 const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -26,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={NotoSansTC.className}>
+      <body
+        className={
+          NotoSansTC.className + " [&:has(dialog[open])]:overflow-hidden"
+        }
+      >
         <HeaderBar />
         {children}
       </body>
