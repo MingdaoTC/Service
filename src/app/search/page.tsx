@@ -8,8 +8,10 @@ import SimpleSearch from "@/components/Global/SimpleSearch";
 const search = () => {
   return (
     <>
-      <div className="px-4 py-10 flex justify-center items-start">
-        <SimpleSearch />
+      <div className="px-4 py-12 mb-2 flex justify-center items-start sticky top-0">
+        <div className="w-[50vw] max-lg:w-full max-lg:px-8 bg-transparent ">
+          <SimpleSearch />
+        </div>
       </div>
       <Result />
     </>
