@@ -1,9 +1,9 @@
 // Components
-import HeaderBar from "@/components/Global/HeaderBar";
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
 import Other from "@/components/Global/Other";
 import Requirement from "@/components/Job/Requirement";
+import JobApplicationDialog from "@/components/Job/JobApplicationDialog";
 import { Job } from "@/types/Job";
 
 const testRecommendedJobData = {
@@ -43,7 +43,7 @@ const testJobData = {
   },
 };
 
-export default function job() {
+export default function JobPage() {
   const blockGap = "gap-8";
 
   return (
