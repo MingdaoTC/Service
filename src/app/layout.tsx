@@ -10,6 +10,7 @@ import { Noto_Sans_TC } from "next/font/google";
 
 // Component
 import HeaderBar from "@/components/Global/Header/HeaderBar";
+import Footer from "@/components/Global/Footer";
 
 const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <HeaderBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
