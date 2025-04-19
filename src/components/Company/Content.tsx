@@ -1,6 +1,6 @@
 import { joinClass } from "@/modules/joinClass";
 import { Company } from "@/types/Company";
-import { Separator } from "@/components/Global/Separator";
+import { Separator } from "@/components/Global/Separator/Separator";
 
 export function Content({
   data,

@@ -1,6 +1,6 @@
 // Components
-import SimpleButton from "@/components/Global/SimpleButton";
-import Button from "@/components/Global/Button";
+import SimpleButton from "@/components/Global/Button/SimpleButton";
+import Button from "@/components/Global/Button/Button";
 import UserDropdown from "@/components/Global/Header/UserDropdown";
 
 // Third-Party Library
@@ -8,8 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Lib
-import { auth } from "@/lib/auth";
-import { handleSignIn } from "@/lib/auth-actions";
+import { auth } from "@/lib/auth/auth";
+import { handleSignIn } from "@/lib/auth/auth-actions";
 
 // Type
 import { User } from "@/prisma/client";

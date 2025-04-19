@@ -3,7 +3,7 @@ import React from "react";
 // components
 import Result from "@/components/Search/Results";
 // import SearchBox from "@/components/Global/SearchBox";
-import SimpleSearch from "@/components/Global/SimpleSearch";
+import SimpleSearch from "@/components/Global/Search/SimpleSearch";
 
 const search = () => {
   return (

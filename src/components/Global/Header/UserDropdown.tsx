@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 
 // Components
-import SimpleButton from "@/components/Global/SimpleButton";
+import SimpleButton from "@/components/Global/Button/SimpleButton";
 
 // Libraries
-import { handleSignOut } from "@/lib/auth-actions";
+import { handleSignOut } from "@/lib/auth/auth-actions";
 
 // Types
 import type { User } from "@/prisma/client";

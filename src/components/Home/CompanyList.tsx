@@ -1,6 +1,6 @@
 import { BiBuildings } from "react-icons/bi";
 import { Company as TCompany } from "@/types/Company";
-import Company from "../Global/Company";
+import Company from "../Global/Object/Company";
 
 type Props = {
   data: TCompany[];

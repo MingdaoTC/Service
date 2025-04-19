@@ -11,7 +11,7 @@ import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 
 // Components
-import Button from "@/components/Global/Button";
+import Button from "@/components/Global/Button/Button";
 
 // Type
 import { User } from "@/prisma/client";

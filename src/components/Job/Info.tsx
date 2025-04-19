@@ -5,9 +5,9 @@ import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/modules/joinClass";
-import Button from "../Global/Button";
+import Button from "../Global/Button/Button";
 import JobApplicationDialog from "./JobApplicationDialog";
-import LoginPromptDialog from "../Global/LoginPromptDialog";
+import LoginPromptDialog from "../Global/LoginPromptDialog/LoginPromptDialog";
 
 export default function Info({
   data,

@@ -1,7 +1,7 @@
 // Components
 import JobList from "@/components/Home/JobList";
 import CompanyList from "@/components/Home/CompanyList";
-import SimpleSearch from "@/components/Global/SimpleSearch";
+import SimpleSearch from "@/components/Global/Search/SimpleSearch";
 
 const testCompanyData = {
   name: "英屬維京群島商太古可口可樂(股)公司台灣分公司",

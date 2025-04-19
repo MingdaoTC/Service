@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
-import Button from "@/components/Global/Button";
+import Button from "@/components/Global/Button/Button";
 import { joinClass } from "@/modules/joinClass";
 import { Job as TJob } from "@/types/Job";
 

@@ -1,10 +1,10 @@
 import { Content } from "@/components/Company/Content";
 import HeaderBar from "@/components/Global/Header/HeaderBar";
 import Info from "@/components/Company/Info";
-import Other from "@/components/Global/Other";
+import Other from "@/components/Global/Object/Other";
 import { Company } from "@/types/Company";
 import { joinClass } from "@/modules/joinClass";
-import Job from "@/components/Global/Job";
+import Job from "@/components/Global/Object/Job";
 
 const testCompanyData0 = {
   name: "華碩電腦股份有限公司",

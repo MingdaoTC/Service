@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 
-import Button from "./Button";
+import Button from "../Button/Button";
 
 export default function SearchBox() {
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleSearch = () => {};
+  const handleSearch = () => { };
 
   return (
     <div className="flex flex-row items-start justify-start gap-2 bg-white border border-mingdao-blue rounded-xl p-2">

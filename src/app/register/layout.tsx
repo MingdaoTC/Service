@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import AuthWrapperClient from "@/components/Auth";
 import { User } from "@/prisma/client";
 import React from "react";

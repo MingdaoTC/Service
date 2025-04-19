@@ -10,6 +10,7 @@ type UploadedFile = {
   type: string;
   side?: "front" | "back";
 };
+import type { User } from "@/prisma/client";
 
 export default function RegistrationPage() {
   const [accountType, setAccountType] = useState<AccountType>("alumni");
@@ -139,7 +140,7 @@ export default function RegistrationPage() {
         <input type="hidden" id="account-type" name="accountType" value={accountType} />
 
         <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.required}>Email</label>
+          <label htmlFor="email" className={styles.required}>電子郵件</label>
           <input type="email" id="email" name="email" required />
           <p className={styles.helpText}>此 Email 將作為您的登入帳號</p>
         </div>

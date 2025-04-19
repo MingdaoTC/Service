@@ -3,7 +3,7 @@ import { redirect, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { joinClass } from "@/modules/joinClass";
-import Job from "@/components/Global/Job";
+import Job from "@/components/Global/Object/Job";
 
 const testJobData = {
   title: "硬體研發工程師(伺服器及工作站)",

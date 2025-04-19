@@ -1,10 +1,10 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { User } from "@/prisma/client";
 
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import Other from "@/components/Global/Other";
+import Other from "@/components/Global/Object/Other";
 import Requirement from "@/components/Job/Requirement";
 import { Job } from "@/types/Job";
 
