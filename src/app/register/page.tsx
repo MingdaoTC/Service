@@ -15,7 +15,7 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container + " border-black border border-opacity-30"}>
       <header className={styles.header}>
         <h1>申請驗證</h1>
         <p className={styles.description}>請填寫以下資料完成申請，帶 * 符號為必填欄位</p>
