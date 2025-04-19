@@ -1,3 +1,6 @@
+import { auth } from "@/lib/auth";
+import { User } from "@/prisma/client";
+
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
@@ -42,12 +45,16 @@ const testJobData = {
   },
 };
 
-export default function JobPage() {
+export default async function JobPage() {
+  const session = await auth();
+  // @ts-ignore
+  const user: User | null = session?.user || null;
+
   const blockGap = "gap-8";
 
   return (
     <>
-      <Info data={testRecommendedJobData} />
+      <Info isLogin={!!user} data={testRecommendedJobData} />
       <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto my-[5dvh]">
         <div
           className={`grid-cols-subgrid col-start-1 col-end-3 flex flex-col ${blockGap}`}

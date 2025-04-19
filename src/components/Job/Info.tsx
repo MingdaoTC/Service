@@ -7,9 +7,11 @@ import { BiBookmark } from "react-icons/bi";
 import { joinClass } from "@/modules/joinClass";
 import Button from "../Global/Button";
 import JobApplicationDialog from "./JobApplicationDialog";
+import LoginPromptDialog from "../Global/LoginPromptDialog";
 
 export default function Info({
   data,
+  isLogin,
   className,
 }: {
   data: {
@@ -20,6 +22,7 @@ export default function Info({
     education: string;
     salary: string;
   };
+  isLogin: boolean;
   className?: string;
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -31,12 +34,19 @@ export default function Info({
 
   return (
     <>
-      <JobApplicationDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSubmit={handleSubmit}
-        jobData={data}
-      />
+      {isLogin ? (
+        <JobApplicationDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSubmit={handleSubmit}
+          jobData={data}
+        />
+      ) : (
+        <LoginPromptDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      )}
       <div
         className={joinClass(
           "w-full h-40 shadow-lg px-12 flex justify-between items-center",
