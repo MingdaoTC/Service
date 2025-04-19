@@ -1,6 +1,6 @@
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
-import { Company as TCompany } from "@/types/Company";
+import type { Company as TCompany } from "@/prisma/client";
 
 type Props = {
   data: TCompany;
@@ -15,7 +15,7 @@ export default function Company(props: Props) {
           <div
             className="w-full h-full"
             style={{
-              backgroundImage: `url(${props.data.logo})`,
+              backgroundImage: `url(${props.data.logoUrl})`,
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -29,14 +29,14 @@ export default function Company(props: Props) {
       <div className="py-2 px-3">
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiMap color="gray" size={"1em"}></BiMap>
-          <span className="truncate">{props.data.location}</span>
+          <span className="truncate">{props.data.address}</span>
         </div>
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiBuildings color="gray" size={"1em"}></BiBuildings>
-          <span className="truncate">{props.data.category}</span>
+          <span className="truncate">{props.data.categoryId}</span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">
-          {props.data.tags.map((tag) => {
+          {props.data.tags.map((tag: any) => {
             return (
               <span
                 className="border px-1.5 py-[1px] rounded-md text-xs text-gray-500"

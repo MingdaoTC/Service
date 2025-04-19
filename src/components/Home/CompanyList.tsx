@@ -1,5 +1,5 @@
 import { BiBuildings } from "react-icons/bi";
-import { Company as TCompany } from "@/types/Company";
+import { Company as TCompany } from "@/prisma/client";
 import Company from "../Global/Object/Company";
 
 type Props = {

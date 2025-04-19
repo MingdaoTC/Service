@@ -49,6 +49,7 @@ model Company {
   capital           Int?
   numberOfEmployees Int?
   website           String?
+  tags              String[]
   phone             String?
   fax               String?
   address           String?

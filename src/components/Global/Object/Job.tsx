@@ -3,7 +3,7 @@ import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
 import Button from "@/components/Global/Button/Button";
 import { joinClass } from "@/modules/joinClass";
-import { Job as TJob } from "@/types/Job";
+import { Job as TJob } from "@/prisma/client";
 
 export default function Job({
   data,
@@ -24,25 +24,25 @@ export default function Job({
           )}
         >
           <div className="flex-grow">
-            <Link href={`/job/${data._id}`}>
+            <Link href={`/job/${data.id}`}>
               <h2 className="text-lg text-mingdao-blue-dark font-extrabold line-clamp-1">
                 {data.title}
               </h2>
             </Link>
             <div className="py-2">
-              <p className="text-mingdao-blue-dark font-bold text-sm">{data.company}</p>
+              <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
               <div className="flex flex-wrap text-sm">
                 <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                   {data.location}
                 </p>
                 <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                  {data.seniority}
+                  {data.experience}
                 </p>
                 <p className="text-black font-bold pl-2">{data.education}</p>
               </div>
             </div>
             <p className="text-mingdao-blue font-semibold text-sm">
-              月薪 {data.salary} 元
+              月薪 {data.salaryMin} ~ {data.salaryMax} 元
             </p>
           </div>
           <div className="flex flex-col gap-2">
@@ -64,50 +64,50 @@ export default function Job({
     case "sm":
       return (
         <div className={`px-4 py-3 border bg-white rounded-lg ${className}`}>
-          <Link href={`/job/${data._id}`}>
+          <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">{data.company}</p>
+            <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
             <div className="flex flex-wrap text-xs">
               <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.location}
               </p>
               <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.seniority}
+                {data.experience}
               </p>
               <p className="text-black font-bold pl-2">{data.education}</p>
             </div>
           </div>
           <p className="text-mingdao-blue font-semibold text-xs">
-            月薪 {data.salary} 元
+            月薪 {data.salaryMin} ~ {data.salaryMax} 元
           </p>
         </div>
       );
     default:
       return (
         <div className={`px-4 py-3 border bg-white rounded-lg ${className}`}>
-          <Link href={`/job/${data._id}`}>
+          <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">{data.company}</p>
+            <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
             <div className="flex flex-wrap text-xs">
               <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.location}
               </p>
               <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.seniority}
+                {data.experience}
               </p>
               <p className="text-black font-bold pl-2">{data.education}</p>
             </div>
           </div>
           <p className="text-mingdao-blue font-semibold text-xs">
-            月薪 {data.salary} 元
+            月薪 {data.salaryMin} ~ {data.salaryMax} 元
           </p>
         </div>
       );

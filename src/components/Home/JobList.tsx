@@ -1,6 +1,6 @@
 import { BiBriefcase } from "react-icons/bi";
 import Job from "../Global/Object/Job";
-import { Job as TJob } from "@/types/Job";
+import { Job as TJob } from "@/prisma/client";
 
 type Props = {
   data: TJob[];

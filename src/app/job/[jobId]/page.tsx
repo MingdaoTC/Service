@@ -6,16 +6,36 @@ import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
 import Other from "@/components/Global/Object/Other";
 import Requirement from "@/components/Job/Requirement";
-import { Job } from "@/types/Job";
+import type { Job } from "@/prisma/client";
 
 const testRecommendedJobData = {
-  _id: "1",
+  id: "1",
+  description: "硬體研發工程師相關職缺描述",
   title: "硬體研發工程師(伺服器及工作站)",
+  companyId: "華碩電腦股份有限公司",
   company: "華碩電腦股份有限公司",
+  categoryId: "硬體研發",
+  salaryMin: 40000,
+  salaryMax: 999999,
+  negotiable: true,
+  employmentType: "contract",
   location: "台北市北投區",
   seniority: "兩年以上",
   education: "大學",
-  salary: "999999",
+  salary: "待遇面議 (經常性薪資達 4 萬元或以上)",
+  benefits: null,
+  management: "無需負擔管理責任",
+  businessTrip: "無須出差外派",
+  workingHours: "日班",
+  startDate: "一週內",
+  holiday: "依公司規定",
+  peopleRequired: "不限",
+  numberOfPositions: 1,
+  experience: "兩年以上",
+  major: "不拘",
+  language: "不拘",
+  skills: null,
+  others: null,
 };
 
 const testJobData = {

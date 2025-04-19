@@ -1,5 +1,5 @@
 import { joinClass } from "@/modules/joinClass";
-import { Company } from "@/types/Company";
+import type { Company } from "@/prisma/client";
 import { Separator } from "@/components/Global/Separator/Separator";
 
 export function Content({
@@ -12,19 +12,19 @@ export function Content({
   const detailColumn0: Detail = {
     category: {
       title: "產業類別",
-      content: data.category,
+      content: data.categoryId,
     },
     description: {
       title: "產業描述",
-      content: data.description,
+      content: data.description || "暫不提供",
     },
     capital: {
       title: "資本額",
-      content: data.capital || "暫不提供",
+      content: data.capital ? String(data.capital) : "暫不提供",
     },
     employeeCount: {
       title: "員工人數",
-      content: data.employeeCount || "暫不提供",
+      content: data.numberOfEmployees ? String(data.numberOfEmployees) : "暫不提供",
     },
     website: {
       title: "公司網址",
@@ -35,7 +35,7 @@ export function Content({
   const detailColumn1: Detail = {
     contact: {
       title: "聯絡人",
-      content: data.contact || "暫不提供",
+      content: data.email || "暫不提供",
     },
     phone: {
       title: "電話",
@@ -47,7 +47,7 @@ export function Content({
     },
     address: {
       title: "公司地址",
-      content: data.address,
+      content: data.address || "暫不提供",
     },
   };
 
@@ -81,7 +81,7 @@ export function Content({
         </tbody>
       </table>
       <Separator className="mt-3 mb-6" />
-      <p className="font-light whitespace-pre-wrap">{data.detail}</p>
+      <p className="font-light whitespace-pre-wrap">{data.description}</p>
     </div>
   );
 }
