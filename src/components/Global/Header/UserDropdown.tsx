@@ -70,7 +70,7 @@ function UserDropdown({ user }: { user: User }) {
 
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-auto rounded-md shadow-xl bg-white ring-1 ring-black ring-opacity-20 z-10">
-                    <div className="py-4">
+                    <div className="py-2">
                         <div className="flex px-4">
                             <div className="w-12 h-12 mr-2">
                                 <img
@@ -79,7 +79,7 @@ function UserDropdown({ user }: { user: User }) {
                                     className="rounded-full"
                                 />
                             </div>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col justify-center">
                                 <h3 className="text-md font-semibold">{user.displayName}</h3>
                                 <p className="text-xs text-gray-500">{user.email}</p>
                             </div>
