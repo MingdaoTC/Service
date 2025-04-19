@@ -28,6 +28,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             session.user.email.split("@")[1],
           displayName: session.user.name,
           email: session.user.email,
+          avatarUrl: session.user.image,
         });
       }
 

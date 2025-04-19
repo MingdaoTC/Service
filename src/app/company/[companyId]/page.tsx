@@ -1,5 +1,5 @@
 import { Content } from "@/components/Company/Content";
-import HeaderBar from "@/components/Global/HeaderBar";
+import HeaderBar from "@/components/Global/Header/HeaderBar";
 import Info from "@/components/Company/Info";
 import Other from "@/components/Global/Other";
 import { Company } from "@/types/Company";

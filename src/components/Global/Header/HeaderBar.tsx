@@ -1,7 +1,7 @@
 // Components
 import SimpleButton from "@/components/Global/SimpleButton";
 import Button from "@/components/Global/Button";
-import UserDropdown from "@/components/Global/UserDropdown";
+import UserDropdown from "@/components/Global/Header/UserDropdown";
 
 // Third-Party Library
 import Image from "next/image";

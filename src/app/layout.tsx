@@ -9,7 +9,7 @@ import "@/styles/Global/globals.css";
 import { Noto_Sans_TC } from "next/font/google";
 
 // Component
-import HeaderBar from "@/components/Global/HeaderBar";
+import HeaderBar from "@/components/Global/Header/HeaderBar";
 
 const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
