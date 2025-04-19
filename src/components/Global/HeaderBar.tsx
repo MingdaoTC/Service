@@ -1,6 +1,7 @@
 // Components
 import SimpleButton from "@/components/Global/SimpleButton";
 import Button from "@/components/Global/Button";
+import UserDropdown from "@/components/Global/UserDropdown";
 
 // Third-Party Library
 import Image from "next/image";
@@ -8,7 +9,7 @@ import Link from "next/link";
 
 // Lib
 import { auth } from "@/lib/auth";
-import { handleSignIn, handleSignOut } from "@/lib/auth-actions";
+import { handleSignIn } from "@/lib/auth-actions";
 
 // Type
 import { User } from "@/prisma/client";
@@ -40,13 +41,10 @@ export default async function HeaderBar() {
               if (e.label === "login") {
                 return (
                   user ? (
-                    <SimpleButton>{user?.displayName!}</SimpleButton>
-                    // <form action={handleSignOut}>
-                    //   <SimpleButton>{user?.displayName!}</SimpleButton>
-                    // </form>
+                    <UserDropdown user={user} key={e.label} />
                   ) : (
                     <form action={handleSignIn}>
-                      <SimpleButton type="secondary">{e.text}</SimpleButton>
+                      <SimpleButton type="secondary" key={e.label}>{e.text}</SimpleButton>
                     </form>
                   )
                 )
