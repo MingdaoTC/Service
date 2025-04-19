@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+
   /* Set after:bg-[color] to specify the color of the underline */
   .animated-underline-left {
     position: relative;
   }
+
   .animated-underline-left::after {
     content: "";
     position: absolute;
@@ -19,6 +21,7 @@
     transform-origin: left;
     transition: transform 0.25s ease-out;
   }
+
   .animated-underline-left:hover::after {
     transform: scaleX(1);
   }
@@ -27,6 +30,7 @@
   .animated-underline-center {
     position: relative;
   }
+
   .animated-underline-center::after {
     content: "";
     position: absolute;
@@ -39,6 +43,7 @@
     transform-origin: center;
     transition: transform 0.25s ease-out;
   }
+
   .animated-underline-center:hover::after {
     transform: scaleX(1);
   }
@@ -47,6 +52,7 @@
   .animated-underline-right {
     position: relative;
   }
+
   .animated-underline-right::after {
     content: "";
     position: absolute;
@@ -59,6 +65,7 @@
     transform-origin: right;
     transition: transform 0.1s ease-out;
   }
+
   .animated-underline-right:hover::after {
     transform: scaleX(1);
   }
@@ -72,4 +79,33 @@
   --light-color: #f5f5f5;
   --dark-color: #333;
   --border-color: #ddd;
+}
+
+/* Webkit browsers (Chrome, Safari, newer versions of Opera) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f7fc;
+  /* Light blue background matching site theme */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a9fe9;
+  /* Blue color from the site's header */
+  border-radius: 10px;
+  border: 2px solid #f0f7fc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3182ce;
+  /* Darker blue on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4a9fe9 #f0f7fc;
 }
