@@ -12,4 +12,5 @@ export type Company = {
   fax?: string;
   address: string;
   detail?: string;
+  location?: string;
 }
