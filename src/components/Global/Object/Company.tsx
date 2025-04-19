@@ -1,6 +1,7 @@
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
 import type { Company as TCompany } from "@/prisma/client";
+import Link from "next/link";
 
 type Props = {
   data: TCompany;
@@ -49,8 +50,10 @@ export default function Company(props: Props) {
         </div>
       </div>
       <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer">
-        查看更多工作機會 (43)
+        <Link className="" href={`/company/${props.data.id}`}>
+          查看工作機會 (43)
+        </Link>
       </div>
-    </div>
+    </div >
   );
 }
