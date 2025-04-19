@@ -11,15 +11,17 @@ export default function Company(props: Props) {
   return (
     <div className={`border bg-white rounded-lg ${props.className}`}>
       <div className="flex gap-2 items-center px-3 pt-3">
-        <div
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1"
-          style={{
-            backgroundImage: `url(${props.data.logo})`,
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        ></div>
+        <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1 flex-shrink-0 aspect-square">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `url(${props.data.logo})`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          ></div>
+        </div>
         <h2 className="text-base text-mingdao-blue-dark font-bold line-clamp-2">
           {props.data.name}
         </h2>
