@@ -26,7 +26,6 @@ export function handleAlumniRegister(email: any, formDataIn: any) {
 export function handleCorporateRegister(email: any, formDataIn:any) {
     const form = formDataIn as HTMLFormElement;
     const formData = new FormData(form);
-
     const company = formData.get("company");
     const companyId = formData.get("companyid");
     const name = formData.get("name");
