@@ -28,12 +28,16 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={
-          NotoSansTC.className + " [&:has(dialog[open])]:overflow-hidden"
+          NotoSansTC.className + " [&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden"
         }
       >
         <HeaderBar />
-        {children}
-        <Footer />
+        <div className="h-[calc(100vh-3rem)] overflow-auto">
+          <div className="h-[calc(100%-3rem)] mb-[5rem]">
+            {children}
+          </div>
+          <Footer />
+        </div>
       </body>
     </html>
   );
