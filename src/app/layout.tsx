@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <HeaderBar />
         <div className="h-[calc(100vh-3rem)] overflow-auto">
-          <div className="h-[calc(100%-3rem)] mb-[5rem]">
+          <div className="h-auto min-h-[calc(100%-3rem)]">
             {children}
           </div>
           <Footer />

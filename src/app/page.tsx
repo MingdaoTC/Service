@@ -35,7 +35,7 @@ export default function Home() {
       <div className="flex flex-col gap-3 sm:gap-4 w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4 relative -top-20 sm:-top-14 md:-top-32">
         <JobList data={new Array(4).fill(testJobData)} />
         <CompanyList data={new Array(4).fill(testCompanyData)} />
-      </div>
+      </div >
     </>
   );
 }
