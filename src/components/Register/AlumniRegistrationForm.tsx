@@ -3,6 +3,7 @@
 import { useState, useRef, ChangeEvent, FormEvent, useEffect } from "react";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
+import { handleAlumniRegister } from "@/lib/register-form";
 
 type IdDocumentType = "idCard" | "passport";
 type UploadedFile = {
@@ -70,9 +71,11 @@ export default function AlumniRegistrationForm() {
         const hasStudentCardFront = uploadedFiles.some(f => f.type === "studentCard" && f.side === "front");
         const hasStudentCardBack = uploadedFiles.some(f => f.type === "studentCard" && f.side === "back");
 
-        if (!hasStudentCardFront || !hasStudentCardBack) {
-            isValid = false;
-            errorMessage = "請上傳學生證正反面";
+        if (stuCardYes) {
+            if (!hasStudentCardFront || !hasStudentCardBack) {
+                isValid = false;
+                errorMessage = "請上傳學生證正反面";
+            }
         }
 
         // 檢查身分證或護照是否已上傳
@@ -98,8 +101,7 @@ export default function AlumniRegistrationForm() {
             return;
         }
 
-        // 處理表單提交邏輯
-        alert("表單已提交！在實際應用中，這裡會處理表單資料並傳送到伺服器。");
+        handleAlumniRegister(userMail, e.currentTarget);
     };
 
     return (

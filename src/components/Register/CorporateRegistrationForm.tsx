@@ -3,11 +3,7 @@
 import { FormEvent } from "react";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
-
-type UploadedFile = {
-    file: File;
-    type: string;
-};
+import { handleCorporateRegister } from "@/lib/register-form";
 
 export default function CorporateRegistrationForm() {
     const { data: session } = useSession();
@@ -15,32 +11,20 @@ export default function CorporateRegistrationForm() {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        // 驗證文件是否已上傳
-        let isValid = true;
-        let errorMessage = "";
-
-        if (!isValid) {
-            alert(errorMessage);
-            return;
-        }
-
-        // 處理表單提交邏輯
-        alert("表單已提交！在實際應用中，這裡會處理表單資料並傳送到伺服器。");
+        handleCorporateRegister(userMail, e.currentTarget);
     };
 
     return (
         <form id="corporate-registration-form" className={styles.form} onSubmit={handleSubmit}>
-            <input type="hidden" id="account-type" name="accountType" value="corporate" />
 
             <div className={styles.formGroup}>
                 <label htmlFor="email" className={styles.required}>電子郵件</label>
-                <input type="email" id="email" name="email" required disabled value={userMail} />
+                <input type="email" id="email" name="email" required value={userMail} disabled />
             </div>
 
             <div className={styles.formGroup}>
-                <label htmlFor="company" className={styles.required}>公司統編</label>
-                <input type="text" id="company" name="company" required />
+                <label htmlFor="companyid" className={styles.required}>公司統編</label>
+                <input type="text" id="companyid" name="companyid" required />
                 <p className={styles.helpText}>請輸入公司統一編號</p>
             </div>
 
