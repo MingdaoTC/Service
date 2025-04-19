@@ -22,6 +22,17 @@ function UserDropdown({ user }: { user: User }) {
         alumni: "校友",
         company: "企業",
     }
+    const verified = {
+        true: "已驗證",
+        false: "未驗證",
+        pending: "審核中",
+    }
+
+    const verifiedColor = {
+        true: "text-green-500",
+        false: "text-red-500",
+        pending: "text-yellow-500",
+    }
 
     // 處理點擊事件 - 切換下拉選單
     const toggleDropdown = () => {
@@ -79,12 +90,12 @@ function UserDropdown({ user }: { user: User }) {
                                 登入身分：<span className="text-mingdao-blue-dark font-medium">{role[user.role as keyof typeof role]}</span>
                             </p>
                             <p>
-                                驗證身分：<span className={"font-medium " + (user.verified ? "text-green-500" : "text-red-500")}>{user.verified ? "已驗證" : "未驗證"}</span>
+                                驗證身分：<span className={"font-medium " + verifiedColor[user.verified as keyof typeof verified]}>{verified[user.verified as keyof typeof verified]}</span>
                             </p>
                         </div>
                         <hr className="border-gray-300 my-2" />
                         <div className="flex flex-col gap-2 px-4">
-                            {!user.verified && (
+                            {(user.verified === "false") && (
                                 <Link
                                     href="/register"
                                     className="w-full text-left text-md text-black hover:text-mingdao-blue"

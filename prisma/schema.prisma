@@ -18,7 +18,7 @@ model User {
   email       String        @unique
   description String?
   role        String        @default("guest") // "company", "alumni"
-  verified    Boolean       @default(false)
+  verified    String        @default("false") // "true", "false", "pending"
   application Application[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
