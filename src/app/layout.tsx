@@ -1,5 +1,6 @@
 // Module
 import React from "react";
+import { SessionProvider } from "next-auth/react"
 
 // Type
 import type { Metadata } from "next";
@@ -25,20 +26,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={
-          NotoSansTC.className + " [&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden"
-        }
-      >
-        <HeaderBar />
-        <div className="h-[calc(100vh-3rem)] overflow-auto">
-          <div className="h-auto min-h-[calc(100%-3rem)]">
-            {children}
+    <SessionProvider>
+      <html lang="en">
+        <body
+          className={
+            NotoSansTC.className + " [&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden"
+          }
+        >
+          <HeaderBar />
+          <div className="h-[calc(100vh-3rem)] overflow-auto">
+            <div className="h-auto min-h-[calc(100%-3rem)]">
+              {children}
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }
