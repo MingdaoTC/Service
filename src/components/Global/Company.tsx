@@ -1,6 +1,5 @@
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
-
 import { Company as TCompany } from "@/types/Company";
 
 type Props = {
@@ -10,10 +9,10 @@ type Props = {
 
 export default function Company(props: Props) {
   return (
-    <div className={`border bg-white rounded-xl ${props.className}`}>
-      <div className="flex gap-4 items-center px-6 pt-4">
+    <div className={`border bg-white rounded-lg ${props.className}`}>
+      <div className="flex gap-2 items-center px-3 pt-3">
         <div
-          className="w-20 h-20 rounded-md border p-1"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1"
           style={{
             backgroundImage: `url(${props.data.logo})`,
             backgroundSize: "contain",
@@ -21,24 +20,24 @@ export default function Company(props: Props) {
             backgroundPosition: "center",
           }}
         ></div>
-        <h2 className="text-xl text-mingdao-blue-dark font-bold">
+        <h2 className="text-base text-mingdao-blue-dark font-bold line-clamp-2">
           {props.data.name}
         </h2>
       </div>
-      <div className="py-4 px-6">
-        <div className="flex gap-2 items-center">
-          <BiMap color="gray" size={"1.25em"}></BiMap>
-          <span>{props.data.address}</span>
+      <div className="py-2 px-3">
+        <div className="flex gap-1 items-center text-xs sm:text-sm">
+          <BiMap color="gray" size={"1em"}></BiMap>
+          <span className="truncate">{props.data.location}</span>
         </div>
-        <div className="flex gap-2 items-center">
-          <BiBuildings color="gray" size={"1.25em"}></BiBuildings>
-          <span>{props.data.category}</span>
+        <div className="flex gap-1 items-center text-xs sm:text-sm">
+          <BiBuildings color="gray" size={"1em"}></BiBuildings>
+          <span className="truncate">{props.data.category}</span>
         </div>
-        <div className="flex gap-2 py-2 flex-wrap">
+        <div className="flex gap-1 py-1 flex-wrap">
           {props.data.tags.map((tag) => {
             return (
               <span
-                className="border px-2 py-[2px] rounded-lg text-sm text-gray-500"
+                className="border px-1.5 py-[1px] rounded-md text-xs text-gray-500"
                 key={tag}
               >
                 {tag}
@@ -47,7 +46,7 @@ export default function Company(props: Props) {
           })}
         </div>
       </div>
-      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-xl py-3 cursor-pointer">
+      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer">
         查看更多工作機會 (43)
       </div>
     </div>

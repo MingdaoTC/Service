@@ -1,7 +1,6 @@
 // Components
 import JobList from "@/components/Home/JobList";
 import CompanyList from "@/components/Home/CompanyList";
-// import SearchBox from "@/components/Global/SearchBox";
 import SimpleSearch from "@/components/Global/SimpleSearch";
 
 const testCompanyData = {
@@ -25,17 +24,17 @@ const testJobData = {
 export default function Home() {
   return (
     <>
-      {/* Responsive hero section with search */}
-      <div className="bg-mingdao-blue-light min-h-[12rem] md:h-72 px-4 py-6 md:py-10 flex justify-center items-start">
-        <div className="w-full max-w-3xl">
+      {/* 縮小高度的 hero section */}
+      <div className="bg-mingdao-blue-light min-h-[10rem] md:h-60 p-3 md:p-6 flex justify-center items-start">
+        <div className="w-full max-w-2xl">
           <SimpleSearch />
         </div>
       </div>
 
-      {/* Main content with responsive width and spacing */}
-      <div className="flex flex-col gap-4 sm:gap-6 w-[95%] sm:w-[90%] max-w-6xl mx-auto my-4 md:my-6 relative -top-12 sm:-top-16 md:-top-24">
-        <JobList data={new Array(7).fill(testJobData)} />
-        <CompanyList data={new Array(5).fill(testCompanyData)} />
+      {/* 縮小間距並調整響應式位置 */}
+      <div className="flex flex-col gap-3 sm:gap-4 w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4 relative -top-20 sm:-top-14 md:-top-32">
+        <JobList data={new Array(4).fill(testJobData)} />
+        <CompanyList data={new Array(4).fill(testCompanyData)} />
       </div>
     </>
   );
