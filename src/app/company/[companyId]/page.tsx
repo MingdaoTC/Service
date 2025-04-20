@@ -38,35 +38,48 @@ const testCompanyData1: Company = {
 };
 
 const testJobData = {
+  id: "1",
+  description: "硬體研發工程師相關職缺描述",
   title: "硬體研發工程師(伺服器及工作站)",
+  companyId: "華碩電腦股份有限公司",
   company: "華碩電腦股份有限公司",
+  categoryId: "硬體研發",
+  salaryMin: 40000,
+  salaryMax: 999999,
+  negotiable: true,
+  employmentType: "contract",
   location: "台北市北投區",
   seniority: "兩年以上",
   education: "大學",
-  salary: "999999",
+  salary: "待遇面議 (經常性薪資達 4 萬元或以上)",
+  benefits: null,
+  management: "無需負擔管理責任",
+  businessTrip: "無須出差外派",
+  workingHours: "日班",
+  startDate: "一週內",
+  holiday: "依公司規定",
+  peopleRequired: "不限",
+  numberOfPositions: 1,
+  experience: "兩年以上",
+  major: "不拘",
+  language: "不拘",
+  skills: null,
+  others: null,
 };
 
 export default function companyID() {
-  const blockGap = "gap-14";
-  const jobListBlockGap = "gap-6";
-
   return (
     <>
       <Info data={{ ...testCompanyData0 }} />
-      <div
-        className={joinClass(
-          "w-[90dvw] m-auto my-[5dvh] flex flex-col",
-          blockGap
-        )}
-      >
-        <div className={joinClass("grid grid-cols-3", blockGap)}>
-          <div className="grid-cols-subgrid col-start-1 col-end-3 flex flex-col">
+      <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
+        <div className="flex flex-col lg:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
+          <div className="w-full lg:w-3/4">
             <Content
               data={{ ...testCompanyData0 }}
-              className=""
+              className="w-full"
             />
           </div>
-          <div className="grid-cols-subgrid col-start-3">
+          <div className="w-full lg:w-1/4">
             <Other<Company>
               title="適合你的其他公司"
               data={[testCompanyData1, testCompanyData1, testCompanyData1]}
@@ -75,7 +88,9 @@ export default function companyID() {
             />
           </div>
         </div>
-        <div className={joinClass("flex flex-col", jobListBlockGap)}>
+
+        <div className="flex flex-col gap-2 sm:gap-3">
+          <h2 className="text-xl font-bold text-mingdao-blue-dark mb-1 md:mb-2">公司職缺列表</h2>
           {new Array(7).fill(testJobData).map((data, index) => (
             <Job key={index} data={data} size="lg" />
           ))}
