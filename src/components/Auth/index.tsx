@@ -65,6 +65,52 @@ export default function AuthWrapperClient({ isAuthenticated, user, children }: A
     );
   }
 
+  if (isAuthenticated) {
+    if (user?.verified === "pending") {
+      return (
+        <div className={styles.authWrapper}>
+          {children}
+          <div className={styles.overlay}>
+            <div className={styles.authMessage}>
+              <h2>申請驗證</h2>
+              <p>您的驗證申請正在審核中<br />我們會在審核完畢後通知您</p>
+              <div className={styles.buttonGroup}>
+                <Button
+                  onClick={handleGoHome}
+                  className={styles.loginButton}
+                  type="danger"
+                >
+                  返回首頁
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    } else if (user?.verified === "true") {
+      return (
+        <div className={styles.authWrapper}>
+          {children}
+          <div className={styles.overlay}>
+            <div className={styles.authMessage}>
+              <h2>申請驗證</h2>
+              <p>您已經通過驗證申請<br />返回首頁來使用人才雲平台</p>
+              <div className={styles.buttonGroup}>
+                <Button
+                  onClick={handleGoHome}
+                  className={styles.loginButton}
+                  type="danger"
+                >
+                  返回首頁
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
+
   return (
     <div className={styles.authWrapper}>
       {children}

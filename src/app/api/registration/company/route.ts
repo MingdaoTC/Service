@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 
 // types
-import type { CompanyRegistration, User } from "@/prisma/client";
+import type { User } from "@/prisma/client";
 
 // libs
 import { auth } from '@/lib/auth/auth';
+import { updateUser } from '@/lib/db/user/update';
 import { findCompanyRegistration } from "@/lib/db/registration/company/find";
 import { createCompanyRegistration } from "@/lib/db/registration/company/create";
 
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
                 phone: phone,
                 notes: notes,
             });
+            await updateUser({ email: user.email }, { verified: "pending" });
         }
 
       return NextResponse.json({ status: 201, data: registration }, {status: 201});

@@ -14,16 +14,16 @@ export async function GET(request: NextRequest) {
         const session = await auth()
         const user: User = session?.user as User;
 
-        // if (!session?.user) {
-        //     return NextResponse.json(
-        //     { status: 403, error: '您沒有權限查看內容' },
-        //     { status: 403 }
-        //     );
-        // }
+        if (!session?.user) {
+            return NextResponse.json(
+            { status: 403, message: '您沒有權限查看內容' },
+            { status: 403 }
+            );
+        }
 
         if (user.role !== "admin" && user.role !== "superadmin") {
             return NextResponse.json(
-            { status: 403, error: '您沒有權限查看內容' },
+            { status: 403, message: '您沒有權限查看內容' },
             { status: 403 }
             );
         }
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: true, data: registration });
     } catch (error) {
         return NextResponse.json(
-        { success: 500, error: '伺服器發生錯誤，請稍後重試' },
+        { success: 500, message: '伺服器發生錯誤，請稍後重試' },
         { status: 500 }
         );
     }
