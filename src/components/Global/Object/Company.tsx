@@ -10,7 +10,7 @@ type Props = {
 
 export default function Company(props: Props) {
   return (
-    <div className={`border bg-white rounded-lg ${props.className}`}>
+    <div className={`border bg-white rounded-lg border-1 border-black border-opacity-20 ${props.className}`}>
       <div className="flex gap-2 items-center px-3 pt-3">
         <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1 flex-shrink-0 aspect-square">
           <div

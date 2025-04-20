@@ -19,7 +19,7 @@ export default function Job({
       return (
         <div
           className={joinClass(
-            "px-5 py-4 border bg-white rounded-lg flex",
+            "px-5 py-4 border bg-white rounded-lg flex border-1 border-black border-opacity-20",
             className
           )}
         >

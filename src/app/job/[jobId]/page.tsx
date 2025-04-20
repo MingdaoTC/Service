@@ -70,28 +70,27 @@ export default async function JobPage() {
   // @ts-ignore
   const user: User | null = session?.user || null;
 
-  const blockGap = "gap-8";
-
   return (
     <>
       <Info isLogin={!!user} data={testRecommendedJobData} />
-      <div className="grid grid-cols-3 gap-14 w-[90dvw] m-auto my-[5dvh]">
-        <div
-          className={`grid-cols-subgrid col-start-1 col-end-3 flex flex-col ${blockGap}`}
-        >
-          <Content data={testJobData.detail} className="" />
-          <Requirement data={testJobData.requirement} className="" />
-        </div>
-        <div className="grid-cols-subgrid col-start-3">
-          <Other<Job>
-            title="適合你的其他職缺"
-            data={[
-              testRecommendedJobData,
-              testRecommendedJobData,
-              testRecommendedJobData,
-            ]}
-            contentKey={{ title: "title", content0: "company" }}
-          />
+      <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
+        <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
+          <div className="w-full lg:w-3/4 flex flex-col gap-3 md:gap-4">
+            <Content data={testJobData.detail} className="w-full" />
+            <Requirement data={testJobData.requirement} className="w-full" />
+          </div>
+          <div className="w-full lg:w-1/4">
+            <Other<Job>
+              title="適合你的其他職缺"
+              data={[
+                testRecommendedJobData,
+                testRecommendedJobData,
+                testRecommendedJobData,
+              ]}
+              contentKey={{ title: "title", content0: "company" }}
+              className="h-full"
+            />
+          </div>
         </div>
       </div>
     </>

@@ -67,23 +67,30 @@ export default function Content(props: Props) {
   };
 
   return (
-    <div className={`border bg-white rounded-xl p-8 ${props.className}`}>
-      <h1 className="text-2xl text-mingdao-blue-dark font-extrabold mb-5">
+    <div className={`border bg-white rounded-lg p-4 sm:p-6 md:p-8 shadow-sm ${props.className}`}>
+      <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
         工作內容
       </h1>
-      <p className="mx-2 whitespace-pre-wrap">{props.data.description}</p>
-      {Object.keys(detail).map((key) => {
-        return (
-          <div className="flex gap-4 my-3" key={key}>
-            <h2 className="text-lg font-bold">{detail[key].title}</h2>
-            <p className="text-lg font-light">
-              {detail[key].content === "" || !detail[key].content
-                ? "-"
-                : detail[key].content}
-            </p>
-          </div>
-        );
-      })}
+      <p className="mx-1 sm:mx-2 mb-5 whitespace-pre-wrap text-sm sm:text-base">
+        {props.data.description}
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+        {Object.keys(detail).map((key) => {
+          return (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={key}>
+              <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0">
+                {detail[key].title}
+              </h2>
+              <p className="text-sm sm:text-base text-gray-700">
+                {detail[key].content === "" || !detail[key].content
+                  ? "-"
+                  : detail[key].content}
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

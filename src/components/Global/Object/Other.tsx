@@ -18,16 +18,25 @@ export default function Other<DataType>({
   }));
 
   return (
-    <div className={`border bg-white rounded-xl p-8 ${className}`}>
-      <h1 className="text-2xl text-mingdao-blue-dark font-extrabold mb-5">
+    <div className={`border bg-white rounded-lg p-4 sm:p-6 md:p-6 shadow-sm border-1 border-black border-opacity-10 ${className}`}>
+      <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4 text-center">
         {title}
       </h1>
-      {recommendedThings.map((recommendedThing, index) => (
-        <div className="my-3 w-fit cursor-pointer" key={index}>
-          <h2 className="font-medium">{recommendedThing.title}</h2>
-          <p className="font-light">{recommendedThing.content0}</p>
-        </div>
-      ))}
+      <div className="flex flex-col gap-3">
+        {recommendedThings.map((recommendedThing, index) => (
+          <div
+            className="p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer border border-gray-200 mb-2 "
+            key={index}
+          >
+            <h2 className="font-medium text-sm sm:text-base line-clamp-2 text-mingdao-blue-dark">
+              {recommendedThing.title}
+            </h2>
+            <p className="font-normal text-xs sm:text-sm text-gray-600 mt-1">
+              {recommendedThing.content0}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
