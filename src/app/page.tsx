@@ -7,7 +7,7 @@ const testCompanyData = {
   id: "1",
   name: "英屬維京群島商太古可口可樂(股)公司台灣分公司",
   address: "桃園市桃園區",
-  ccategoryId: "飲料製造業",
+  categoryId: "飲料製造業",
   tags: ["其他客服人員", "國內業務", "國外業務"],
   logoUrl: "https://cdn.lazco.dev/cocacola.png",
 };
@@ -35,8 +35,8 @@ export default function Home() {
 
       {/* 縮小間距並調整響應式位置 */}
       <div className="flex flex-col gap-3 sm:gap-4 w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4 relative -top-20 sm:-top-14 md:-top-32">
-        <JobList data={new Array(4).fill(testJobData)} />
-        <CompanyList data={new Array(4).fill(testCompanyData)} />
+        <JobList data={new Array(6).fill(testJobData)} />
+        <CompanyList data={new Array(6).fill(testCompanyData)} />
       </div >
     </>
   );
