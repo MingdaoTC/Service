@@ -120,3 +120,43 @@ model Resume {
 
   @@index([userId])
 }
+
+model AlumniRegistration {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  email               String
+  name                String
+  phone               String
+  notes               String
+
+  studentCardFront    String
+  studentCardBack     String
+  idDocumentFront     String
+  idDocumentBack      String
+  idDocumentPassport  String
+
+  status              String   @default("pending") // "pending", "approved", "rejected"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("alumni_registration")
+}
+
+model CorporateRegistration {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  email               String
+  companyId           String
+  companyName         String
+  name                String
+  phone               String
+  notes               String
+
+  status              String   @default("pending") // "pending", "approved", "rejected"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("corporate_registration")
+}

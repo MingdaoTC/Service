@@ -32,6 +32,8 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
     return file instanceof File && file.size > 0 && file.name !== "";
   };
 
+  const date = Date.now();
+
   let fileData = {};
 
   // 处理有效的文件
@@ -41,7 +43,7 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
     if (isValidFile(file.file)) {
       try {
         const extension = file.file.name.split(".").pop() || "";
-        const filename = `${email}_${file.type}_${Date.now()}.${extension}`;
+        const filename = `${email}_${file.type}_${date}.${extension}`;
         // const result = await upload(file.file, filename, file.file.type);
         const result = null;
         fileResults.push({ type: file.type, result, filename });
@@ -68,7 +70,7 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
 export async function handleCorporateRegister(email: any, formDataIn: any) {
   const form = formDataIn as HTMLFormElement;
   const formData = new FormData(form);
-  const company = formData.get("company");
+  const companyName = formData.get("company");
   const companyId = formData.get("companyid");
   const name = formData.get("name");
   const phone = formData.get("phone");
@@ -76,7 +78,7 @@ export async function handleCorporateRegister(email: any, formDataIn: any) {
 
   const registrationData = {
     email,
-    company,
+    companyName,
     companyId,
     name,
     phone,
