@@ -1,4 +1,11 @@
 import { upload } from "@/lib/r2/upload";
+import type { AlumniRegistration, CorporateRegistration } from "@/prisma/client";
+
+// libs
+import { findAlumniRegistration } from "@/lib/db/registration/alumni/find";
+import { findCorporateRegistration } from "@/lib/db/registration/corporate/find";
+import { createAlumniRegistration } from "@/lib/db/registration/alumni/create";
+import { createCoporateRegistration } from "@/lib/db/registration/corporate/create";
 
 export async function handleAlumniRegister(email: any, formDataIn: any) {
   const form = formDataIn as HTMLFormElement;
@@ -68,21 +75,26 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
 export async function handleCorporateRegister(email: any, formDataIn: any) {
   const form = formDataIn as HTMLFormElement;
   const formData = new FormData(form);
-  const companyName = formData.get("company");
-  const companyId = formData.get("companyid");
-  const name = formData.get("name");
-  const phone = formData.get("phone");
-  const notes = formData.get("notes");
+  const companyName = formData.get("company") as string;
+  const companyId = formData.get("companyid") as string;
+  const name = formData.get("name") as string;
+  const phone = formData.get("phone") as string;
+  const notes = formData.get("notes") as string;
 
-  const registrationData = {
-    email,
-    companyName,
-    companyId,
-    name,
-    phone,
-    notes,
-  };
+  let corporateRegistration = await findCorporateRegistration({ email: email });
 
-  console.log("Corporate registration data:", registrationData);
-  return registrationData;
+  if (corporateRegistration) {
+    return { exist: true, corporateRegistration};
+  } else {
+    corporateRegistration = await createCoporateRegistration({
+      email,
+      companyName,
+      companyId,
+      name,
+      phone,
+      notes,
+    });
+   
+  }
+  return { exist: false, corporateRegistration};
 }
