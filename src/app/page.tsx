@@ -4,6 +4,7 @@ import CompanyList from "@/components/Home/CompanyList";
 import SimpleSearch from "@/components/Global/Search/SimpleSearch";
 
 const testCompanyData = {
+  id: "1",
   name: "英屬維京群島商太古可口可樂(股)公司台灣分公司",
   address: "桃園市桃園區",
   ccategoryId: "飲料製造業",
