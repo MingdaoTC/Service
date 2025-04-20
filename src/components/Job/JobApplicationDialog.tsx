@@ -1,4 +1,4 @@
-import { useRef, useEffect, FormEvent } from "react";
+import { useRef, useEffect, useState, FormEvent, ChangeEvent } from "react";
 
 type JobApplicationDialogProps = {
   isOpen: boolean;
@@ -35,6 +35,18 @@ const JobApplicationDialog = ({
     e.preventDefault();
     onSubmit((e.target as HTMLFormElement).elements);
     onClose();
+  };
+
+  const [recommendationText, setRecommendationText] = useState<string>(
+    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
+  );
+  const maxLength = 2000;
+
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    if (newText.length <= maxLength) {
+      setRecommendationText(newText);
+    }
   };
 
   return (
@@ -88,24 +100,24 @@ const JobApplicationDialog = ({
           <h3 className="text-lg font-medium mb-4">自我推薦信</h3>
 
           <div className="border rounded-lg p-4 bg-gray-50">
-            <textarea className="w-full min-h-[100px] bg-gray-50 resize-none border-none focus:ring-0"></textarea>
-            <div className="text-right text-gray-500 text-sm">35/2000</div>
+            <textarea
+              className="w-full min-h-[100px] bg-gray-50 resize-none border-none focus:ring-0"
+              value={recommendationText}
+              onChange={handleTextChange}
+              maxLength={maxLength}
+            ></textarea>
+            <div className="text-right text-gray-500 text-sm">
+              {recommendationText.length}/{maxLength}
+            </div>
           </div>
 
           <div className="mt-4 flex items-start space-x-6">
             <label className="inline-flex items-center">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-blue-600"
+                className="rounded border-gray-300 text-mingdao-blue-dark"
               />
-              <span className="ml-2">儲存此次修改</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-blue-600"
-              />
-              <span className="ml-2">新增自我推薦信</span>
+              <span className="ml-2">儲存此次修改至個人資料</span>
             </label>
           </div>
         </div>
