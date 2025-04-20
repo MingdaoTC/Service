@@ -27,7 +27,6 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
     { type: "idDocumentPassport", file: idDocumentPassportFile },
   ];
 
-  // 检查文件是否为有效的 File 对象且有内容
   const isValidFile = (file: any): boolean => {
     return file instanceof File && file.size > 0 && file.name !== "";
   };
@@ -36,7 +35,6 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
 
   let fileData = {};
 
-  // 处理有效的文件
   const fileResults = [];
 
   for (const file of files) {
