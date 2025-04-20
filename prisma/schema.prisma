@@ -23,6 +23,7 @@ model User {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Resume      Resume[]
+  admin       Boolean       @default(false)
 
   @@map("user")
 }
