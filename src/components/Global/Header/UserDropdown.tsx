@@ -21,6 +21,9 @@ function UserDropdown({ user }: { user: User }) {
     guest: "訪客",
     alumni: "校友",
     company: "企業",
+    admin: "管理員",
+    superadmin: "超級管理員",
+
   };
   const verified = {
     true: "已驗證",
@@ -87,10 +90,10 @@ function UserDropdown({ user }: { user: User }) {
             <hr className="border-gray-300 my-2" />
             <div className="px-4">
               <p>
-                                登入身分：<span className="text-mingdao-blue-dark font-medium">{role[user.role as keyof typeof role]}</span>
+                登入身分：<span className="text-mingdao-blue-dark font-medium">{role[user.role as keyof typeof role]}</span>
               </p>
               <p>
-                                驗證身分：<span className={"font-medium " + verifiedColor[user.verified as keyof typeof verified]}>{verified[user.verified as keyof typeof verified]}</span>
+                驗證身分：<span className={"font-medium " + verifiedColor[user.verified as keyof typeof verified]}>{verified[user.verified as keyof typeof verified]}</span>
               </p>
             </div>
             <hr className="border-gray-300 my-2" />
@@ -100,14 +103,14 @@ function UserDropdown({ user }: { user: User }) {
                   href="/register"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
                 >
-                                    申請驗證
+                  申請驗證
                 </Link>
               )}
               <Link
                 href="#"
                 className="w-full text-left text-md text-black hover:text-mingdao-blue"
               >
-                                我的帳號 (開發中)
+                我的帳號 (開發中)
               </Link>
             </div>
 
@@ -117,7 +120,7 @@ function UserDropdown({ user }: { user: User }) {
                 type="submit"
                 className="w-full text-left text-md text-black hover:text-red-500"
               >
-                                登出
+                登出
               </button>
             </form>
           </div>
