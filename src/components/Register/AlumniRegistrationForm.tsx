@@ -7,12 +7,22 @@ import { handleAlumniRegister } from "@/lib/register-form";
 
 type IdDocumentType = "idCard" | "passport";
 type UploadedFile = {
-    file: File;
-    type: string;
-    side?: "front" | "back";
+  file: File;
+  type: string;
+  side?: "front" | "back";
 };
 
-export default function AlumniRegistrationForm() {
+export default function AlumniRegistrationForm({
+  setIsOpenDialog,
+  setTitle,
+  setMessage,
+  setbackHome
+}: {
+  setIsOpenDialog: (value: boolean) => void;
+  setTitle: (value: string) => void;
+  setMessage: (value: string) => void;
+  setbackHome: (value: boolean) => void;
+}): JSX.Element {
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
 
@@ -101,7 +111,24 @@ export default function AlumniRegistrationForm() {
       return;
     }
 
-    handleAlumniRegister(userMail, e.currentTarget);
+    (async () => {
+      const result: any = await handleAlumniRegister(userMail, e.currentTarget);
+      
+      if (result.status === 201) {
+        setTitle("審核資料已成功送出");
+        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setIsOpenDialog(true);
+      } else if (result.status === 409) {
+        setTitle("審核資料重複送出");
+        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setIsOpenDialog(true);
+      } else {
+        setTitle("審核資料送出失敗");
+        setMessage("出現非預期的錯誤，請稍後重試");
+        setIsOpenDialog(true);
+        setbackHome(false);
+      }
+    })();
   };
 
   return (
@@ -128,9 +155,9 @@ export default function AlumniRegistrationForm() {
       {/* 必填項目：學生證 */}
       <div className={styles.formGroup}>
         <label htmlFor="student-card" className={styles.required}>
-                    學生證
+          學生證
         </label>
-        <input type="checkbox" id="student-card" name="studentCard" required className="mr-1 mb-2" onChange={(e: any) => {
+        <input type="checkbox" id="student-card" name="studentCard" className="mr-1 mb-2" onChange={(e: any) => {
           setStuCardYes(!e.target.checked);
           if (e.target.checked) {
             if (fileInputStudentCardFrontRef.current) {
@@ -141,7 +168,7 @@ export default function AlumniRegistrationForm() {
             }
           }
         }} />
-                我沒有學生證
+        我沒有學生證
         <div className={styles.documentUploadContainer + (stuCardYes ? " " : " !hidden")}>
           <div className={styles.documentUploadSide}>
             <p className={styles.uploadLabel}>學生證正面</p>
@@ -171,7 +198,7 @@ export default function AlumniRegistrationForm() {
                   onClick={() => removeFile("studentCard", "front")}
                   className={styles.removeButton}
                 >
-                                    &times;
+                  &times;
                 </button>
               </div>
             )}
@@ -205,7 +232,7 @@ export default function AlumniRegistrationForm() {
                   onClick={() => removeFile("studentCard", "back")}
                   className={styles.removeButton}
                 >
-                                    &times;
+                  &times;
                 </button>
               </div>
             )}
@@ -257,7 +284,7 @@ export default function AlumniRegistrationForm() {
                     onClick={() => removeFile("idCard", "front")}
                     className={styles.removeButton}
                   >
-                                        &times;
+                    &times;
                   </button>
                 </div>
               )}
@@ -291,7 +318,7 @@ export default function AlumniRegistrationForm() {
                     onClick={() => removeFile("idCard", "back")}
                     className={styles.removeButton}
                   >
-                                        &times;
+                    &times;
                   </button>
                 </div>
               )}
@@ -328,7 +355,7 @@ export default function AlumniRegistrationForm() {
                   onClick={() => removeFile("passport")}
                   className={styles.removeButton}
                 >
-                                    &times;
+                  &times;
                 </button>
               </div>
             )}

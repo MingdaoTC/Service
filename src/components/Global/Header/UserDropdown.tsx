@@ -72,7 +72,7 @@ function UserDropdown({ user }: { user: User }) {
       </SimpleButton>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-auto rounded-md shadow-xl bg-white ring-1 ring-black ring-opacity-20 z-10">
+        <div className="absolute right-0 mt-2 w-auto rounded-md shadow-xl bg-white ring-1 ring-black ring-opacity-20 !z-[10000000]">
           <div className="py-2">
             <div className="flex px-4">
               <div className="w-12 h-12 mr-2">

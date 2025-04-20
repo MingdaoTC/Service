@@ -7,13 +7,6 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
   const phone = formData.get("phone");
   const notes = formData.get("notes");
 
-  const data = {
-    email,
-    name,
-    phone,
-    notes,
-  };
-
   const studentCardFrontFile = formData.get("studentCardFront") as File;
   const studentCardBackFile = formData.get("studentCardBack") as File;
   const idDocumentFrontFile = formData.get("idDocumentFront") as File;
@@ -33,7 +26,7 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
 
   const date = Date.now();
 
-  let fileData = {};
+  let fileData: { [key: string]: string } = {};
 
   const fileResults = [];
 
@@ -42,8 +35,8 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
       try {
         const extension = file.file.name.split(".").pop() || "";
         const filename = `${email}_${file.type}_${date}.${extension}`;
-        // const result = await upload(file.file, filename, file.file.type);
-        const result = null;
+        const result = await upload(file.file, filename, file.file.type);
+        // const result = null;
         fileResults.push({ type: file.type, result, filename });
       } catch (error) {
         console.error(`Error uploading file ${file.type}:`, error);
@@ -59,10 +52,34 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
     return acc;
   }, {});
 
-  console.log("Files data:", fileData);
-  console.log("Alumni registration data:", data);
+  const data = {
+    email,
+    name,
+    phone,
+    studentCardFront: fileData.studentCardFront || "false",
+    studentCardBack: fileData.studentCardBack || "false",
+    idDocumentFront: fileData.idDocumentFront || "false",
+    idDocumentBack: fileData.idDocumentBack || "false",
+    idDocumentPassport: fileData.idDocumentPassport || "false",
+    notes,
+  };
 
-  return { data, fileData };
+  const response = await fetch("/api/registration/alumni", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+  .then((res) => {
+    return res.json();
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+
+  return response;
 }
 
 export async function handleCorporateRegister(email: any, formDataIn: any) {
@@ -83,38 +100,19 @@ export async function handleCorporateRegister(email: any, formDataIn: any) {
     notes,
   };
 
-  fetch("/api/registration/company", {
+  const response = await fetch("/api/registration/company", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Success:", data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-  // let corporateRegistration = await findCorporateRegistration({ email: email });
+  .then((res) => {
+    return res.json();
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 
-  // if (corporateRegistration) {
-  //   return { exist: true, corporateRegistration};
-  // } else {
-  //   corporateRegistration = await createCoporateRegistration({
-  //     email,
-  //     companyName,
-  //     companyId,
-  //     name,
-  //     phone,
-  //     notes
-  //   });
-  // }
-  // return { exist: false, corporateRegistration};
+  return response;
 }

@@ -1,17 +1,45 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, SetStateAction, useEffect } from "react";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { handleCorporateRegister } from "@/lib/register-form";
 
-export default function CorporateRegistrationForm() {
+export default function CorporateRegistrationForm({
+  setIsOpenDialog,
+  setTitle,
+  setMessage,
+  setbackHome
+}: {
+  setIsOpenDialog: (value: boolean) => void;
+  setTitle: (value: string) => void;
+  setMessage: (value: string) => void;
+  setbackHome: (value: boolean) => void;
+}): JSX.Element {
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleCorporateRegister(userMail, e.currentTarget);
+
+
+    (async () => {
+      const result: any = await handleCorporateRegister(userMail, e.currentTarget);
+      if (result.status === 201) {
+        setTitle("審核資料已成功送出");
+        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setIsOpenDialog(true);
+      } else if (result.status === 409) {
+        setTitle("審核資料重複送出");
+        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setIsOpenDialog(true);
+      } else {
+        setTitle("審核資料送出失敗");
+        setMessage("出現非預期的錯誤，請稍後重試");
+        setIsOpenDialog(true);
+        setbackHome(false);
+      }
+    })();
   };
 
   return (

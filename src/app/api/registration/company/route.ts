@@ -8,6 +8,7 @@ import type { User } from "@/prisma/client";
 // libs
 import { auth } from '@/lib/auth/auth';
 import { updateUser } from '@/lib/db/user/update';
+import { findAlumniRegistration } from "@/lib/db/registration/alumni/find";
 import { findCompanyRegistration } from "@/lib/db/registration/company/find";
 import { createCompanyRegistration } from "@/lib/db/registration/company/create";
 
@@ -66,7 +67,9 @@ export async function POST(request: NextRequest) {
         }
 
         let registration =  await findCompanyRegistration({ email: user.email });
-        if (registration) {
+        let registration2 =  await findAlumniRegistration({ email: user.email });
+
+        if (registration || registration2) {
             return NextResponse.json(
                 { status: 409, message: '您已經送過申請驗證資料或是已經通過驗證' },
                 { status: 409 }
