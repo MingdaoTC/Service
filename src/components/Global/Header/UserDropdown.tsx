@@ -88,7 +88,7 @@ function UserDropdown({ user }: { user: User }) {
               </div>
             </div>
             <hr className="border-gray-300 my-2" />
-            <div className="px-4">
+            <div className="px-4 gap-1 flex flex-col">
               <p>
                 登入身分：<span className="text-mingdao-blue-dark font-medium">{role[user.role as keyof typeof role]}</span>
               </p>
@@ -96,8 +96,38 @@ function UserDropdown({ user }: { user: User }) {
                 驗證身分：<span className={"font-medium " + verifiedColor[user.verified as keyof typeof verified]}>{verified[user.verified as keyof typeof verified]}</span>
               </p>
             </div>
+            {(user.role === "admin" || user.role === "superadmin") && (
+              <>
+                <hr className="border-gray-300 my-2" />
+                <div className="px-4 flex flex-col gap-1">
+
+                  <Link
+                    href="/admin/registration"
+                    className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                  >
+                    申請驗證管理
+                  </Link>
+                  <Link
+                    // href="#/admin/users"
+                    href="#"
+                    className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                  >
+                    管理使用者 (開發中)
+                  </Link>
+                  {(user.role === "superadmin") && (
+                    <Link
+                      // href="/admin/settings"
+                      href="#"
+                      className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                    >
+                      管理員設定 (開發中)
+                    </Link>
+                  )}
+                </div>
+              </>
+            )}
             <hr className="border-gray-300 my-2" />
-            <div className="flex flex-col gap-2 px-4">
+            <div className="flex flex-col px-4 gap-1">
               {(user.verified === "false") && (
                 <Link
                   href="/register"

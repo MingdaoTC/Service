@@ -74,6 +74,34 @@ export async function handleCorporateRegister(email: any, formDataIn: any) {
   const phone = formData.get("phone") as string;
   const notes = formData.get("notes") as string;
 
+  const data = {
+    email,
+    companyName,
+    companyId,
+    name,
+    phone,
+    notes,
+  };
+
+  fetch("/api/registration/company", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
   // let corporateRegistration = await findCorporateRegistration({ email: email });
 
   // if (corporateRegistration) {
