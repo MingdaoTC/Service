@@ -2,7 +2,7 @@
 
 // Module
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 // Icons
 import { Activity, BadgeCheck, ShieldUser, User } from "lucide-react";
@@ -12,7 +12,8 @@ export default function AdminLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const [activeTab, setActiveTab] = useState("dashboard");
+    const pathname = usePathname();
+    const [activeTab, setActiveTab] = useState(pathname.split("/")[2] || "dashboard");
     const router = useRouter();
 
     const handleTabChange = (tab: string) => {
@@ -81,7 +82,9 @@ export default function AdminLayout({
                         </ul>
                     </nav>
                 </aside>
-                {children}
+                <div className="flex flex-1 p-4 overflow-auto h-[calc(100vh-6rem)]">
+                    {children}
+                </div>
             </div>
         </div>
     );
