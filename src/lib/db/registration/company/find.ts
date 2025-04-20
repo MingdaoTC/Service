@@ -1,16 +1,16 @@
 import { prisma } from "@/lib/db/prisma";
 
-export type findCorporateRegistrationTypes = {
+export type findCompanyRegistrationTypes = {
   id?: string;
   email?: string;
 };
 
-export async function findCorporateRegistration(param: findCorporateRegistrationTypes) {
+export async function findCompanyRegistration(param: findCompanyRegistrationTypes) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }
 
-  return await prisma.corporateRegistration.findUnique({
+  return await prisma.companyRegistration.findUnique({
     where: {
       id: param.id,
       email: param.email,

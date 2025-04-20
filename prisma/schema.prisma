@@ -17,13 +17,12 @@ model User {
   phone       String?
   email       String        @unique
   description String?
-  role        String        @default("guest") // "company", "alumni"
+  role        String        @default("guest") // "company", "alumni", ""
   verified    String        @default("false") // "true", "false", "pending"
   application Application[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Resume      Resume[]
-  admin       Boolean       @default(false)
 
   @@map("user")
 }
@@ -124,7 +123,7 @@ model Resume {
 
 model AlumniRegistration {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  email              String
+  email              String   @unique
   name               String
   phone              String
   notes              String?
@@ -140,7 +139,7 @@ model AlumniRegistration {
   @@map("alumni_registration")
 }
 
-model CorporateRegistration {
+model CompanyRegistration {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   email       String   @unique
   companyId   String
@@ -152,5 +151,5 @@ model CorporateRegistration {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("corporate_registration")
+  @@map("company_registration")
 }
