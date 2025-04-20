@@ -1,6 +1,6 @@
 // Module
 import React from "react";
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react";
 
 // Type
 import type { Metadata } from "next";

@@ -23,5 +23,6 @@
     "brace-style": ["error", "1tbs"],
     "no-unused-vars": "off"
   },
-  "extends": ["eslint:recommended", "next"]
+  "extends": ["eslint:recommended", "next"],
+  "ignorePatterns": ["node_modules", ".next", "src/prisma/client/**/*"]
 }

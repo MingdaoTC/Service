@@ -47,7 +47,7 @@ export default async function HeaderBar() {
                       <SimpleButton type="secondary" key={e.label}>{e.text}</SimpleButton>
                     </form>
                   )
-                )
+                );
               } else {
                 return (
                   <Button
@@ -58,8 +58,8 @@ export default async function HeaderBar() {
                   >
                     {e.text}
                   </Button>
-                )
-              };
+                );
+              }
             })}
           </nav>
         </div>
