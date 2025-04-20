@@ -26,10 +26,10 @@ export default async function HeaderBar() {
     <header className="w-full shadow-sm">
       <div className="flex flex-row items-center justify-between py-2 px-4 sm:px-6 md:px-8 w-full h-12 border-b">
         <Link href={"/"} className="logo select-none outline-0 ">
-          <Image
+          <img
             src="/images/logo.png"
-            width={208}
-            height={1000}
+            width="100%"
+            height="100%"
             alt="logo"
             className="w-32 sm:w-40 md:w-48 lg:w-52 translate-y-[0.25rem]"
           />
