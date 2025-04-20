@@ -102,27 +102,11 @@ function UserDropdown({ user }: { user: User }) {
                 <div className="px-4 flex flex-col gap-1">
 
                   <Link
-                    href="/admin/registration"
+                    href="/admin"
                     className="w-full text-left text-md text-black hover:text-mingdao-blue"
                   >
-                    申請驗證管理
+                    管理員後台
                   </Link>
-                  <Link
-                    // href="#/admin/users"
-                    href="#"
-                    className="w-full text-left text-md text-black hover:text-mingdao-blue"
-                  >
-                    管理使用者 (開發中)
-                  </Link>
-                  {(user.role === "superadmin") && (
-                    <Link
-                      // href="/admin/settings"
-                      href="#"
-                      className="w-full text-left text-md text-black hover:text-mingdao-blue"
-                    >
-                      管理員設定 (開發中)
-                    </Link>
-                  )}
                 </div>
               </>
             )}

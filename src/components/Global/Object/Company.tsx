@@ -37,11 +37,11 @@ export default function Company(props: Props) {
           <span className="truncate">{props.data.categoryId}</span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">
-          {props.data.tags.map((tag: any) => {
+          {props.data.tags.map((tag: any, index: any) => {
             return (
               <span
                 className="border px-1.5 py-[1px] rounded-md text-xs text-gray-500"
-                key={tag}
+                key={index}
               >
                 {tag}
               </span>
