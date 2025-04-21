@@ -8,16 +8,17 @@ generator client {
   output   = "../src/prisma/client"
 }
 
+enum UserRole {
+  GUEST
+  COMPANY
+  ALUMNI
+}
+
 model User {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  role        UserRole      @default(GUEST)
   username    String        @unique
   displayName String?
-  avatarUrl   String
-  website     String?
-  phone       String?
-  email       String        @unique
-  description String?
-  role        String        @default("guest") // "company", "alumni", ""
   verified    String        @default("false") // "true", "false", "pending"
   application Application[]
   createdAt   DateTime      @default(now())
@@ -25,6 +26,28 @@ model User {
   Resume      Resume[]
 
   @@map("user")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
+model UserProfile {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  avatarUrl       String?
+  website         String?
+  phone           String?
+  email           String        @unique
+  description     String?
+  gender          Gender
+  birthday        String
+  identityNumber  String        @unique
+  location        String?
+  talent          String?
+  education       String?
+  experience      String?
 }
 
 model Application {
@@ -49,7 +72,6 @@ model Company {
   capital           Int?
   numberOfEmployees Int?
   website           String?
-  tags              String[]
   phone             String?
   fax               String?
   address           String?
