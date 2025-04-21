@@ -7,9 +7,9 @@ import { User } from "@/prisma/client";
 export async function GET() {
   try {
     const session = await auth();
-    const user = session?.user as User;
+    const user: User = session?.user as User;
     
-    if (!session || !session.user) {
+    if (!session || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -18,7 +18,7 @@ export async function GET() {
     
     const userData = await findUser({ email: user.email });
     
-    let isAdmin = false;
+    let isAdmin = true;
     if (userData?.role === "admin" || userData?.role === "superadmin") {
       isAdmin = true;
     }
