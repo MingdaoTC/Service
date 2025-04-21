@@ -20,7 +20,7 @@ export async function GET() {
     
     let isAdmin = false;
     if (userData?.role === "admin" || userData?.role === "superadmin") {
-        isAdmin = true;
+      isAdmin = true;
     }
     
     return NextResponse.json({ isAdmin });

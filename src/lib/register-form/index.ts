@@ -71,12 +71,12 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
     },
     body: JSON.stringify(data),
   })
-  .then((res) => {
-    return res.json();
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
+    .then((res) => {
+      return res.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
 
   return response;
@@ -107,12 +107,12 @@ export async function handleCorporateRegister(email: any, formDataIn: any) {
     },
     body: JSON.stringify(data),
   })
-  .then((res) => {
-    return res.json();
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
+    .then((res) => {
+      return res.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
   return response;
 }

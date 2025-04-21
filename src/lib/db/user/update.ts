@@ -14,7 +14,7 @@ export async function updateUser(param: updateUserTypes, newData: Partial<User>)
 
   if (!newData) {
     throw new Error("No data to update.");
-}
+  }
 
   return await prisma.user.update({
     where: {

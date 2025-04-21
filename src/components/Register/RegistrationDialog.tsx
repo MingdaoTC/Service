@@ -74,7 +74,7 @@ export default function RegistrationDialog({
           type="button"
           onClick={() => {
             if (backHome) {
-              router.push("/")
+              router.push("/");
             } else {
               if (dialogRef.current) {
                 dialogRef.current.close();
@@ -88,4 +88,4 @@ export default function RegistrationDialog({
       </div>
     </dialog >
   );
-};
+}

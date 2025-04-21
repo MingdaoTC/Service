@@ -10,30 +10,30 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET
   });
   
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
 
   if (isAdminRoute) {
     try {
       const userResponse = await fetch(`${request.nextUrl.origin}/api/check-admin`, {
         headers: {
-          cookie: request.headers.get('cookie') || '',
-          'Content-Type': 'application/json',
+          cookie: request.headers.get("cookie") || "",
+          "Content-Type": "application/json",
         },
-        method: 'GET',
+        method: "GET",
       });
       
       if (!userResponse.ok) {
-        return NextResponse.rewrite(new URL('/not-found', request.url));
+        return NextResponse.rewrite(new URL("/not-found", request.url));
       }
       
       const userData = await userResponse.json();
       
       if (!userData.isAdmin) {
-        return NextResponse.rewrite(new URL('/not-found', request.url));
+        return NextResponse.rewrite(new URL("/not-found", request.url));
       }
     } catch (error) {
-      console.error('Error checking admin status:', error);
-      return NextResponse.rewrite(new URL('/not-found', request.url));
+      console.error("Error checking admin status:", error);
+      return NextResponse.rewrite(new URL("/not-found", request.url));
     }
   }
 

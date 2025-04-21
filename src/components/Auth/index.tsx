@@ -86,7 +86,7 @@ export default function AuthWrapperClient({ isAuthenticated, user, children }: A
             </div>
           </div>
         </div>
-      )
+      );
     } else if (user?.verified === "true") {
       return (
         <div className={styles.authWrapper}>
@@ -107,7 +107,7 @@ export default function AuthWrapperClient({ isAuthenticated, user, children }: A
             </div>
           </div>
         </div>
-      )
+      );
     }
   }
 
