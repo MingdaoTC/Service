@@ -13,7 +13,7 @@ enum UserRole {
   COMPANY
   ALUMNI
   ADMIN
-  SUPER_ADMIN
+  SUPERADMIN
 }
 
 enum AccountStatus {
