@@ -13,10 +13,10 @@
 //         },
 //         method: "GET",
 //       });
-      
+
 //       const userData = await userResponse.json();
 //       console.log("User Data:", userData);
-      
+
 //       if (!userData.isAdmin) {
 //         return NextResponse.rewrite(new URL("/not-found", request.url));
 //       }
@@ -33,15 +33,7 @@
 //   matcher: ["/admin", "/admin/:path*"],
 // };
 
-import { auth } from "@/lib/auth/auth";
- 
-export default auth((req) => {
-  console.log(req);
-  // if (!req.auth && req.nextUrl.pathname !== "/login") {
-  //   const newUrl = new URL("/login", req.nextUrl.origin);
-  //   return Response.redirect(newUrl);
-  // }
-});
+export { auth as middleware } from "@/lib/auth/auth";
 
 export const config = {
   matcher: ["/admin", "/admin/:path*"],

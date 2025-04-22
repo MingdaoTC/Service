@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ status: 200, data: registration }, {status: 200});
+    return NextResponse.json({ status: 200, data: registration }, { status: 200 });
   } catch (_error) {
     return NextResponse.json(
       { success: 500, error: "伺服器發生錯誤，請稍後重試" },
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       await updateUser({ email: user.email }, { status: AccountStatus.PENDING });
     }
 
-    return NextResponse.json({ status: 201, data: registration }, {status: 201});
+    return NextResponse.json({ status: 201, data: registration }, { status: 201 });
   } catch (_error) {
     return NextResponse.json(
       { success: 500, message: "伺服器發生錯誤，請稍後重試" },

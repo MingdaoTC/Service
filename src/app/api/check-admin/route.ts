@@ -9,7 +9,7 @@ export async function GET() {
     const session = await auth();
     const user: User = session?.user as User;
 
-    if (!session || !user) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

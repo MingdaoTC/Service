@@ -19,24 +19,24 @@ export async function GET(request: NextRequest) {
 
     if (!session?.user) {
       return NextResponse.json(
-        { status: 403, error: "您沒有權限查看內容" },
+        { status: 403, message: "您沒有權限查看內容" },
         { status: 403 }
       );
     }
 
     if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
       return NextResponse.json(
-        { status: 403, error: "您沒有權限查看內容" },
+        { status: 403, message: "您沒有權限查看內容" },
         { status: 403 }
       );
     }
 
     const registrations =  await findManyRegistration();
 
-    return NextResponse.json({ status: 200, data: registrations }, {status: 200});
+    return NextResponse.json({ status: 200, data: registrations }, { status: 200 });
   } catch (_error) {
     return NextResponse.json(
-      { success: 500, error: "伺服器發生錯誤，請稍後重試" },
+      { status: 500, message: "伺服器發生錯誤，請稍後重試" },
       { status: 500 }
     );
   }
