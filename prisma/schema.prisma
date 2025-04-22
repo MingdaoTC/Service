@@ -12,18 +12,31 @@ enum UserRole {
   GUEST
   COMPANY
   ALUMNI
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum AccountStatus {
+  UNVERIFIED
+  VERIFIED
+  PENDING
+  INACTIVE
+  BANNED
 }
 
 model User {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  email       String        @unique
   role        UserRole      @default(GUEST)
   username    String        @unique
+  avatarUrl   String
   displayName String?
-  verified    String        @default("false") // "true", "false", "pending"
+  status      AccountStatus @default(UNVERIFIED)
   application Application[]
+  userProfile UserProfile[]
+  resume      Resume[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  Resume      Resume[]
 
   @@map("user")
 }
@@ -35,31 +48,42 @@ enum Gender {
 }
 
 model UserProfile {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  avatarUrl       String?
-  website         String?
-  phone           String?
-  email           String        @unique
-  description     String?
-  gender          Gender
-  birthday        String
-  identityNumber  String        @unique
-  location        String?
-  talent          String?
-  education       String?
-  experience      String?
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String  @db.ObjectId
+  user           User    @relation(fields: [userId], references: [id])
+  avatarUrl      String?
+  website        String?
+  phone          String?
+  email          String  @unique
+  description    String?
+  gender         Gender
+  birthday       String
+  identityNumber String  @unique
+  location       String?
+  talent         String?
+  education      String?
+  experience     String?
+
+  @@map("user_profile")
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
 }
 
 model Application {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
-  jobId       String   @db.ObjectId
-  companyId   String   @db.ObjectId
-  status      String   @default("pending") // "pending", "reviewed", "accepted", "rejected"
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String            @db.ObjectId
+  jobId       String            @db.ObjectId
+  companyId   String            @db.ObjectId
+  status      ApplicationStatus @default(PENDING)
   appliedAt   DateTime
   resumeId    String
   coverLetter String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User              @relation(fields: [userId], references: [id])
 
   @@map("application")
 }
@@ -83,19 +107,31 @@ model Company {
   @@map("company")
 }
 
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum Location {
+  REMOTE
+  ONSITE
+}
+
 model Job {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId
   title             String
-  companyId         String  @db.ObjectId
+  companyId         String         @db.ObjectId
   description       String
-  categoryId        String  @db.ObjectId
-  salaryMin         Int     @default(0)
-  salaryMax         Int     @default(0)
+  categoryId        String         @db.ObjectId
+  salaryMin         Int            @default(0)
+  salaryMax         Int            @default(0)
   negotiable        Boolean
-  employmentType    String  @default("full-time") // "part-time", "contract", "internship"
-  location          String? // "remote", "on-site"
-  management        String? // "yes", "no"
-  businessTrip      String? // "yes", "no"
+  employmentType    EmploymentType @default(FULL_TIME) // "part-time", "contract", "internship"
+  location          Location?
+  management        String?
+  businessTrip      String?
   workingHours      String?
   startDate         String?
   numberOfPositions Int?
@@ -141,11 +177,18 @@ model Resume {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("resume")
+}
+
+enum RegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model AlumniRegistration {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  email              String   @unique
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  email              String             @unique
   name               String
   phone              String
   notes              String?
@@ -154,24 +197,24 @@ model AlumniRegistration {
   idDocumentFront    String?
   idDocumentBack     String?
   idDocumentPassport String?
-  status             String   @default("pending") // "pending", "approved", "rejected"
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  status             RegistrationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 
   @@map("alumni_registration")
 }
 
 model CompanyRegistration {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  email       String   @unique
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  email       String             @unique
   companyId   String
   companyName String
   name        String
   phone       String
   notes       String?
-  status      String   @default("pending") // "pending", "approved", "rejected"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      RegistrationStatus @default(PENDING)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   @@map("company_registration")
 }
