@@ -18,12 +18,15 @@ export async function GET() {
     let isAdmin = true;
     if (
       userData?.role === UserRole.ADMIN ||
-      userData?.role === UserRole.SUPER_ADMIN
+      userData?.role === UserRole.SUPERADMIN
     ) {
       isAdmin = true;
     }
 
-    return NextResponse.json({ isAdmin });
+    return NextResponse.json(
+      { success: 200, isAdmin: isAdmin },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error checking admin status:", error);
     return NextResponse.json(
@@ -32,3 +35,5 @@ export async function GET() {
     );
   }
 }
+
+export const dynamic = "force-dynamic";

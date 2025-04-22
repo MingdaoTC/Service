@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/Global/Button/Button";
 
 // Type
-import { User } from "@/prisma/client";
+import { User, AccountStatus } from "@/prisma/client";
 
 interface AuthWrapperClientProps {
   isAuthenticated: boolean;
@@ -66,7 +66,7 @@ export default function AuthWrapperClient({ isAuthenticated, user, children }: A
   }
 
   if (isAuthenticated) {
-    if (user?.verified === "pending") {
+    if (user?.status === AccountStatus.PENDING) {
       return (
         <div className={styles.authWrapper}>
           {children}
@@ -87,7 +87,7 @@ export default function AuthWrapperClient({ isAuthenticated, user, children }: A
           </div>
         </div>
       );
-    } else if (user?.verified === "true") {
+    } else if (user?.status === AccountStatus.VERIFIED) {
       return (
         <div className={styles.authWrapper}>
           {children}

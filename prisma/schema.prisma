@@ -94,6 +94,7 @@ model Company {
   logoUrl           String?
   categoryId        String           @db.ObjectId
   capital           Int?
+  tags              String[]
   numberOfEmployees Int?
   website           String?
   phone             String?

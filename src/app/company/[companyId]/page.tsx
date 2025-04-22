@@ -2,7 +2,6 @@ import { Content } from "@/components/Company/Content";
 import Info from "@/components/Company/Info";
 import Other from "@/components/Global/Object/Other";
 import type { Company } from "@/prisma/client";
-import { joinClass } from "@/modules/joinClass";
 import Job from "@/components/Global/Object/Job";
 
 const testCompanyData0: Company = {

@@ -6,7 +6,7 @@ import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
 import Other from "@/components/Global/Object/Other";
 import Requirement from "@/components/Job/Requirement";
-import type { Job } from "@/prisma/client";
+import { Job, EmploymentType, Location } from "@/prisma/client";
 
 const testRecommendedJobData = {
   id: "1",
@@ -18,8 +18,8 @@ const testRecommendedJobData = {
   salaryMin: 40000,
   salaryMax: 999999,
   negotiable: true,
-  employmentType: "contract",
-  location: "台北市北投區",
+  employmentType: EmploymentType.CONTRACT,
+  location: Location.REMOTE,
   seniority: "兩年以上",
   education: "大學",
   salary: "待遇面議 (經常性薪資達 4 萬元或以上)",

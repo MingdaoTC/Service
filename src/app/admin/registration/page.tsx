@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 // types
-import type { CompanyRegistration, AlumniRegistration } from "@/prisma/client";
+import { CompanyRegistration, AlumniRegistration, RegistrationStatus } from "@/prisma/client";
 
 
 export default function RegistrationApprovalPage() {
@@ -67,7 +67,7 @@ export default function RegistrationApprovalPage() {
                   <div className="col-span-3">{registration.companyId}</div>
                   <div className="col-span-3">{registration.companyName}</div>
                   <div className="col-span-1 flex justify-center gap-1">
-                    {registration.status === "pending" && (
+                    {registration.status === RegistrationStatus.PENDING && (
                       <div className="flex gap-1">
                         <button
                           onClick={() => handleView(registration.id)}
@@ -78,11 +78,11 @@ export default function RegistrationApprovalPage() {
                       </div>
                     )}
 
-                    {registration.status === "approved" && (
+                    {registration.status === RegistrationStatus.APPROVED && (
                       <span className="text-green-600 text-xs">已通過</span>
                     )}
 
-                    {registration.status === "rejected" && (
+                    {registration.status === RegistrationStatus.REJECTED && (
                       <span className="text-red-600 text-xs">已拒絕</span>
                     )}
                   </div>
@@ -112,7 +112,7 @@ export default function RegistrationApprovalPage() {
                   </div>
 
                   <div className="mt-5 flex justify-end gap-3">
-                    {registration.status === "pending" && (
+                    {registration.status === RegistrationStatus.PENDING && (
                       <>
                         <button
                           // onClick={() => handleApprove(registration.id)}
@@ -153,7 +153,7 @@ export default function RegistrationApprovalPage() {
                 <div className="grid grid-cols-7 items-center text-base">
                   <div className="col-span-6">{registration.name}</div>
                   <div className="col-span-1 flex justify-center gap-1">
-                    {registration.status === "pending" && (
+                    {registration.status === RegistrationStatus.PENDING && (
                       <div className="flex gap-1">
                         <button
                           onClick={() => handleView(registration.id)}
@@ -164,11 +164,11 @@ export default function RegistrationApprovalPage() {
                       </div>
                     )}
 
-                    {registration.status === "approved" && (
+                    {registration.status === RegistrationStatus.APPROVED && (
                       <span className="text-green-600 text-xs">已通過</span>
                     )}
 
-                    {registration.status === "rejected" && (
+                    {registration.status === RegistrationStatus.REJECTED && (
                       <span className="text-red-600 text-xs">已拒絕</span>
                     )}
                   </div>
@@ -257,7 +257,7 @@ export default function RegistrationApprovalPage() {
                   </div>
 
                   <div className="mt-5 flex justify-end gap-3">
-                    {registration.status === "pending" && (
+                    {registration.status === RegistrationStatus.PENDING && (
                       <>
                         <button
                           // onClick={() => handleApprove(registration.id)}

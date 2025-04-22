@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 // types
-import type { User } from "@/prisma/client";
+import { AccountStatus, User, UserRole } from "@/prisma/client";
 
 // libs
 import { auth } from "@/lib/auth/auth";
@@ -14,7 +14,7 @@ import { createCompanyRegistration } from "@/lib/db/registration/company/create"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  let email = searchParams.get("email") || null;
+  const email = searchParams.get("email") || null;
 
   try {
     const session = await auth();
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (user.role !== "admin" && user.role !== "superadmin") {
+    if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
       return NextResponse.json(
         { status: 403, error: "您沒有權限查看內容" },
         { status: 403 }
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ status: 200, data: registration }, {status: 200});
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: 500, error: "伺服器發生錯誤，請稍後重試" },
       { status: 500 }
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     let registration =  await findCompanyRegistration({ email: user.email });
-    let registration2 =  await findAlumniRegistration({ email: user.email });
+    const registration2 =  await findAlumniRegistration({ email: user.email });
 
     if (registration || registration2) {
       return NextResponse.json(
@@ -84,11 +84,11 @@ export async function POST(request: NextRequest) {
         phone: phone,
         notes: notes,
       });
-      await updateUser({ email: user.email }, { verified: "pending" });
+      await updateUser({ email: user.email }, { status: AccountStatus.PENDING });
     }
 
     return NextResponse.json({ status: 201, data: registration }, {status: 201});
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: 500, message: "伺服器發生錯誤，請稍後重試" },
       { status: 500 }

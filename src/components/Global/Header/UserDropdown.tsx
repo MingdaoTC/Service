@@ -11,7 +11,7 @@ import SimpleButton from "@/components/Global/Button/SimpleButton";
 import { handleSignOut } from "@/lib/auth/auth-actions";
 
 // Types
-import type { User } from "@/prisma/client";
+import { User, AccountStatus, UserRole } from "@/prisma/client";
 
 
 function UserDropdown({ user }: { user: User }) {
@@ -25,16 +25,28 @@ function UserDropdown({ user }: { user: User }) {
     superadmin: "超級管理員",
 
   };
-  const verified = {
-    true: "已驗證",
-    false: "未驗證",
-    pending: "審核中",
-  };
 
-  const verifiedColor = {
-    true: "text-green-500",
-    false: "text-red-500",
-    pending: "text-yellow-500",
+  const status = {
+    [AccountStatus.VERIFIED]: {
+      text: "已驗證",
+      color: "text-green-500",
+    },
+    [AccountStatus.INACTIVE]: {
+      text: "已停用",
+      color: "text-gray-500",
+    },
+    [AccountStatus.PENDING]: {
+      text: "審核中",
+      color: "text-yellow-500",
+    },
+    [AccountStatus.UNVERIFIED]: {
+      text: "未驗證",
+      color: "text-red-500",
+    },
+    [AccountStatus.BANNED]: {
+      text: "永久封禁",
+      color: "text-red-500",
+    },
   };
 
   // 處理點擊事件 - 切換下拉選單
@@ -93,10 +105,10 @@ function UserDropdown({ user }: { user: User }) {
                 登入身分：<span className="text-mingdao-blue-dark font-medium">{role[user.role as keyof typeof role]}</span>
               </p>
               <p>
-                驗證身分：<span className={"font-medium " + verifiedColor[user.verified as keyof typeof verified]}>{verified[user.verified as keyof typeof verified]}</span>
+                驗證身分：<span className={`font-medium ${status[user.status as keyof typeof status].color}`}>{status[user.status as keyof typeof status].text}</span>
               </p>
             </div>
-            {(user.role === "admin" || user.role === "superadmin") && (
+            {(user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN) && (
               <>
                 <hr className="border-gray-300 my-2" />
                 <div className="px-4 flex flex-col gap-1">
@@ -112,7 +124,7 @@ function UserDropdown({ user }: { user: User }) {
             )}
             <hr className="border-gray-300 my-2" />
             <div className="flex flex-col px-4 gap-1">
-              {(user.verified === "false") && (
+              {(user.status === AccountStatus.UNVERIFIED) && (
                 <Link
                   href="/register"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
