@@ -43,6 +43,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
         return false;
       }
+      return false;
     },
   },
   session: {
