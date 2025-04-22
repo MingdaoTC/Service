@@ -1,5 +1,3 @@
-//@/lib/auth/auth.ts
-
 // @ts-nocheck
 
 // Third-Party Modules
@@ -13,21 +11,18 @@ import { createUser } from "@/lib/db/user/create";
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google],
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ account, _profile }) {
       if (account.provider === "google") {
         return true;
       }
       return true;
     },
-    async session({ session, token }) {
+    async session({ session, _token }) {
       let user = await findUser({ email: session.user.email });
 
       if (!user) {
         user = await createUser({
-          username:
-            session.user.email.split("@")[0] +
-            "_" +
-            session.user.email.split("@")[1],
+          username:`${session.user.email.split("@")[0]}_${session.user.email.split("@")[1]}`,
           displayName: session.user.name,
           email: session.user.email,
           avatarUrl: session.user.image,

@@ -18,12 +18,11 @@ function UserDropdown({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const role = {
-    guest: "訪客",
-    alumni: "校友",
-    company: "企業",
-    admin: "管理員",
-    superadmin: "超級管理員",
-
+    [UserRole.ADMIN]: "管理員",
+    [UserRole.SUPERADMIN]: "超級管理員",
+    [UserRole.GUEST]: "訪客",
+    [UserRole.ALUMNI]: "校友",
+    [UserRole.COMPANY]: "企業",
   };
 
   const status = {
