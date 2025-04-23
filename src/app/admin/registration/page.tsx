@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 // types
 import { CompanyRegistration, AlumniRegistration, RegistrationStatus } from "@/prisma/client";
 
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export default function RegistrationApprovalPage() {
   const [companyRegistrations, setCompanyRegistrations] = useState<Array<CompanyRegistration>>();
@@ -197,9 +198,9 @@ export default function RegistrationApprovalPage() {
                     <div>
                       <p className="text-gray-500 mb-1">申請人學生證正面:</p>
                       {
-                        registration.studentCardFront ? (
+                        !(String(registration.studentCardFront).toLowerCase() === "false") ? (
                           <img
-                            src={process.env.CDN_URL + registration.studentCardFront}
+                            src={CDN_URL! + registration.studentCardFront!}
                             alt="Student Card Front"
                             className="w-32 h-32 object-cover rounded-md mb-2"
                           />
@@ -209,9 +210,9 @@ export default function RegistrationApprovalPage() {
                     <div>
                       <p className="text-gray-500 mb-1">申請人學生證反面:</p>
                       {
-                        registration.studentCardBack ? (
+                        !(String(registration.studentCardBack).toLowerCase() === "false") ? (
                           <img
-                            src={process.env.CDN_URL + registration.studentCardBack}
+                            src={CDN_URL! + registration.studentCardBack!}
                             alt="Student Card Back"
                             className="w-32 h-32 object-cover rounded-md mb-2"
                           />
@@ -221,9 +222,9 @@ export default function RegistrationApprovalPage() {
                     <div>
                       <p className="text-gray-500 mb-1">申請人身分證正面:</p>
                       {
-                        registration.idDocumentFront ? (
+                        !(String(registration.idDocumentFront).toLowerCase() === "false") ? (
                           <img
-                            src={process.env.CDN_URL + registration.idDocumentFront}
+                            src={CDN_URL + registration.idDocumentFront!}
                             alt="ID Document Front"
                             className="w-32 h-32 object-cover rounded-md mb-2"
                           />
@@ -233,9 +234,9 @@ export default function RegistrationApprovalPage() {
                     <div>
                       <p className="text-gray-500 mb-1">申請人身分證反面:</p>
                       {
-                        registration.idDocumentBack ? (
+                        !(String(registration.idDocumentBack).toLowerCase() === "false") ? (
                           <img
-                            src={process.env.CDN_URL + registration.idDocumentBack}
+                            src={CDN_URL + registration.idDocumentBack!}
                             alt="ID Document Back"
                             className="w-32 h-32 object-cover rounded-md mb-2"
                           />
@@ -245,9 +246,9 @@ export default function RegistrationApprovalPage() {
                     <div>
                       <p className="text-gray-500 mb-1">申請人護照:</p>
                       {
-                        registration.idDocumentPassport ? (
+                        !(String(registration.idDocumentPassport).toLowerCase() === "false") ? (
                           <img
-                            src={process.env.CDN_URL + registration.idDocumentPassport}
+                            src={CDN_URL + registration.idDocumentPassport!}
                             alt="ID Document Passport"
                             className="w-32 h-32 object-cover rounded-md mb-2"
                           />
