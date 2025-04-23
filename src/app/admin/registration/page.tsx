@@ -60,8 +60,8 @@ export default function RegistrationApprovalPage() {
         </div>
 
         <div className="divide-y">
-          {companyRegistrations?.map((registration: CompanyRegistration) => (
-            <div key={registration.id} className="">
+          {companyRegistrations?.map((registration: CompanyRegistration, index) => (
+            <div key={index}>
               <div className="px-4 py-3">
                 <div className="grid grid-cols-7 items-center text-base">
                   <div className="col-span-3">{registration.companyId}</div>
@@ -147,8 +147,8 @@ export default function RegistrationApprovalPage() {
         </div>
 
         <div className="divide-y">
-          {alumniRegistrations?.map((registration: AlumniRegistration) => (
-            <div key={registration.id} className="">
+          {alumniRegistrations?.map((registration: AlumniRegistration, index) => (
+            <div key={index} className="">
               <div className="px-4 py-3">
                 <div className="grid grid-cols-7 items-center text-base">
                   <div className="col-span-6">{registration.name}</div>

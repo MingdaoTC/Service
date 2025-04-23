@@ -37,21 +37,21 @@ export default async function HeaderBar() {
 
         <div className="flex flex-row items-center gap-6">
           <nav className="flex items-center space-x-5">
-            {navConfig.buttons.map((e: any) => {
+            {navConfig.buttons.map((e: any, index) => {
               if (e.label === "login") {
                 return (
                   user ? (
-                    <UserDropdown user={user} key={e.label} />
+                    <UserDropdown user={user} key={index} />
                   ) : (
                     <form action={handleSignIn}>
-                      <SimpleButton type="secondary" key={e.label}>{e.text}</SimpleButton>
+                      <SimpleButton type="secondary" key={index}>{e.text}</SimpleButton>
                     </form>
                   )
                 );
               } else {
                 return (
                   <Button
-                    key={e.label}
+                    key={index}
                     type={e?.type}
                     href={e.href}
                     className="flex items-center gap-3 ml-4"

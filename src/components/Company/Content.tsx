@@ -60,15 +60,15 @@ export function Content({
       <div className="block md:hidden">
         {/* 手機版垂直排列 */}
         <div className="space-y-3">
-          {Object.keys(detailColumn0).map((key) => (
-            <div key={key} className="border-b border-gray-100 pb-2">
+          {Object.keys(detailColumn0).map((key, index) => (
+            <div key={index} className="border-b border-gray-100 pb-2">
               <div className="font-bold text-sm sm:text-base">{detailColumn0[key].title}</div>
               <div className="text-sm sm:text-base text-gray-700">{detailColumn0[key].content}</div>
             </div>
           ))}
 
-          {Object.keys(detailColumn1).map((key) => (
-            <div key={key} className="border-b border-gray-100 pb-2">
+          {Object.keys(detailColumn1).map((key, index) => (
+            <div key={index} className="border-b border-gray-100 pb-2">
               <div className="font-bold text-sm sm:text-base">{detailColumn1[key].title}</div>
               <div className="text-sm sm:text-base text-gray-700">{detailColumn1[key].content}</div>
             </div>
@@ -85,7 +85,7 @@ export function Content({
               const column1Key = Object.keys(detailColumn1)[index];
               const column1 = column1Key ? detailColumn1[column1Key] : null;
               return (
-                <tr className="[&>td]:pb-3" key={key}>
+                <tr className="[&>td]:pb-3" key={index}>
                   <td className="text-base font-bold w-24">{column0.title}</td>
                   <td className="text-base text-gray-700">{column0.content}</td>
 

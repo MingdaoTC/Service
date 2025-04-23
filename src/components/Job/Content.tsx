@@ -76,9 +76,9 @@ export default function Content(props: Props) {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-        {Object.keys(detail).map((key) => {
+        {Object.keys(detail).map((key, index) => {
           return (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={key}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={index}>
               <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0">
                 {detail[key].title}
               </h2>

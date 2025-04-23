@@ -59,11 +59,11 @@ export default function Requirement(props: Props) {
       </h1>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-        {Object.keys(detail).map((key) => {
+        {Object.keys(detail).map((key, index) => {
           // 特別處理需要整行顯示的文字框類型
           if (detail[key].textbox) {
             return (
-              <div className="col-span-1 sm:col-span-2 py-2 border-b border-gray-100" key={key}>
+              <div className="col-span-1 sm:col-span-2 py-2 border-b border-gray-100" key={index}>
                 <h2 className="text-sm sm:text-base font-bold mb-2">
                   {detail[key].title}
                 </h2>
@@ -77,7 +77,7 @@ export default function Requirement(props: Props) {
           }
           
           return (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={key}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={index}>
               <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0">
                 {detail[key].title}
               </h2>
