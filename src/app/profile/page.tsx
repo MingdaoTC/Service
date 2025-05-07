@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth/auth";
 import { User } from "@/prisma/client";
 
+import BasicInfo from "./_profile/BasicInfo";
+
 export default async function Profile() {
   const session = await auth();
   // @ts-ignore
@@ -22,5 +24,9 @@ export default async function Profile() {
     );
   }
 
-  return <>Hello, welcome to your profile! Enjoy your stay!</>;
+  return (
+    <div>
+      <BasicInfo user={user} />
+    </div>
+  );
 }
