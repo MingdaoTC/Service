@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/auth";
+import { auth } from "@/library/auth";
 import { User } from "@/prisma/client";
 
 import BasicInfo from "./_profile/BasicInfo";

@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/auth";
+import { auth } from "@/library/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { User, UserRole } from "./prisma/client";
 

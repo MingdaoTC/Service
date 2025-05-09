@@ -7,8 +7,8 @@ import UserDropdown from "@/components/Global/Header/UserDropdown";
 import Link from "next/link";
 
 // Lib
-import { auth } from "@/lib/auth/auth";
-import { handleSignIn } from "@/lib/auth/auth-actions";
+import { auth } from "@/library/auth";
+import { handleSignIn } from "@/library/auth/auth-actions";
 
 // Type
 import { User } from "@/prisma/client";

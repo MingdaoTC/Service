@@ -3,7 +3,7 @@
 import {
   signIn as nextAuthSignIn,
   signOut as nextAuthSignOut,
-} from "@/lib/auth/auth";
+} from "@/library/auth";
 
 export async function handleSignIn() {
   await nextAuthSignIn("google");

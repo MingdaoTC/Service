@@ -1,4 +1,4 @@
-import { upload } from "@/lib/r2/upload";
+import { upload } from "@/library/r2/upload";
 
 export async function handleAlumniRegister(email: any, formDataIn: any) {
   const form = formDataIn as HTMLFormElement;

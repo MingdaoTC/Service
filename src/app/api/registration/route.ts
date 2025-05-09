@@ -5,8 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { User, UserRole } from "@/prisma/client";
 
 // libs
-import { auth } from "@/lib/auth/auth";
-import { findManyRegistration } from "@/lib/db/registration/findMany";
+import { auth } from "@/library/auth";
+import { findManyRegistration } from "@/library/db/registration/findMany";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

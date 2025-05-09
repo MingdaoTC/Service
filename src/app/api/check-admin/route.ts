@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth/auth";
-import { findUser } from "@/lib/db/user/find";
+import { auth } from "@/library/auth";
+import { findUser } from "@/library/db/user/find";
 import { User, UserRole } from "@/prisma/client";
 // app/api/check-admin/route.ts
 import { NextResponse } from "next/server";

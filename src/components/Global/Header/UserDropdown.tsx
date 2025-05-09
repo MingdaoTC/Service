@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import SimpleButton from "@/components/Global/Button/SimpleButton";
 
 // Libraries
-import { handleSignOut } from "@/lib/auth/auth-actions";
+import { handleSignOut } from "@/library/auth/auth-actions";
 
 // Types
 import { AccountStatus, User, UserRole } from "@/prisma/client";

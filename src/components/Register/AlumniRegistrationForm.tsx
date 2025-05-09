@@ -1,6 +1,6 @@
 "use client";
 
-import { handleAlumniRegister } from "@/lib/register-form";
+import { handleAlumniRegister } from "@/library/register-form";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";

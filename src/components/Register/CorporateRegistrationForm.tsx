@@ -1,6 +1,6 @@
 "use client";
 
-import { handleCorporateRegister } from "@/lib/register-form";
+import { handleCorporateRegister } from "@/library/register-form";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { FormEvent } from "react";

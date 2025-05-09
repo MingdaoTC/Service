@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { User, UserRole } from "@/prisma/client";
 
 // libs
-import { auth } from "@/lib/auth/auth";
-import { createUser } from "@/lib/db/user/create";
-import { findUser } from "@/lib/db/user/find";
-import { updateUser } from "@/lib/db/user/update"; // Ensure this is imported
+import { auth } from "@/library/auth";
+import { createUser } from "@/library/db/user/create";
+import { findUser } from "@/library/db/user/find";
+import { updateUser } from "@/library/db/user/update"; // Ensure this is imported
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

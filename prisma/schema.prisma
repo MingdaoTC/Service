@@ -33,12 +33,10 @@ model User {
   displayName String?
   status      AccountStatus @default(UNVERIFIED)
   application Application[]
-  userProfile UserProfile[]
+  userProfile UserProfile?
   resume      Resume[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
-  @@map("user")
 }
 
 enum Gender {
@@ -48,23 +46,21 @@ enum Gender {
 }
 
 model UserProfile {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String  @db.ObjectId
-  user           User    @relation(fields: [userId], references: [id])
-  avatarUrl      String?
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  email          String   @unique
+  user           User     @relation(fields: [email], references: [email])
   website        String?
   phone          String?
-  email          String  @unique
   description    String?
   gender         Gender
   birthday       String
-  identityNumber String  @unique
+  identityNumber String   @unique
   location       String?
   talent         String?
   education      String?
   experience     String?
-
-  @@map("user_profile")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum ApplicationStatus {
@@ -76,16 +72,14 @@ enum ApplicationStatus {
 
 model Application {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String            @db.ObjectId
+  email       String            @unique
   jobId       String            @db.ObjectId
   companyId   String            @db.ObjectId
   status      ApplicationStatus @default(PENDING)
   appliedAt   DateTime
   resumeId    String
   coverLetter String
-  user        User              @relation(fields: [userId], references: [id])
-
-  @@map("application")
+  user        User              @relation(fields: [email], references: [email])
 }
 
 model Company {
@@ -104,8 +98,6 @@ model Company {
   description       String?
   jobs              Job[]
   CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
-
-  @@map("company")
 }
 
 enum EmploymentType {
@@ -129,7 +121,7 @@ model Job {
   salaryMin         Int            @default(0)
   salaryMax         Int            @default(0)
   negotiable        Boolean
-  employmentType    EmploymentType @default(FULL_TIME) // "part-time", "contract", "internship"
+  employmentType    EmploymentType @default(FULL_TIME)
   location          Location?
   management        String?
   businessTrip      String?
@@ -146,39 +138,29 @@ model Job {
 
   company  Company     @relation(fields: [companyId], references: [id])
   category JobCategory @relation(fields: [categoryId], references: [id])
-
-  @@map("job")
 }
 
 model CompanyCategory {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String    @unique
   companies Company[]
-
-  @@map("company_category")
 }
 
 model JobCategory {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String @unique
   jobs Job[]
-
-  @@map("job_category")
 }
 
 model Resume {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
   name      String
   fileName  String
   fileUrl   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("resume")
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
 }
 
 enum RegistrationStatus {
@@ -201,8 +183,6 @@ model AlumniRegistration {
   status             RegistrationStatus @default(PENDING)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-
-  @@map("alumni_registration")
 }
 
 model CompanyRegistration {
@@ -216,6 +196,4 @@ model CompanyRegistration {
   status      RegistrationStatus @default(PENDING)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
-
-  @@map("company_registration")
 }

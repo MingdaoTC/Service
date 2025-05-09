@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/library/db/prisma";
 
 export type findCompanyRegistrationTypes = {
   id?: string;
