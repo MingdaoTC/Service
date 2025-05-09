@@ -1,8 +1,8 @@
 import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/modules/joinClass";
-import Button from "../Global/Button/Button";
 import type { Company } from "@/prisma/client";
+import Button from "../Global/Button/Button";
 
 export default function Info({
   data,
@@ -27,7 +27,7 @@ export default function Info({
                 style={{
                   backgroundImage: `url(${data.logoUrl})`,
                 }}
-              ></div>
+              />
             </div>
           )}
           <h1 className="text-xl sm:text-2xl md:text-3xl text-mingdao-blue-dark font-bold line-clamp-2 sm:line-clamp-none">

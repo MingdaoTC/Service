@@ -1,5 +1,5 @@
-import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 type RegistrationDialogProps = {
   isOpen: boolean;
@@ -52,7 +52,7 @@ export default function RegistrationDialog({
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M5 13l4 4L19 7"
-              ></path>
+              />
             </svg>
           </div>
           <h2 className="text-center text-blue-800 text-xl font-medium">
@@ -62,13 +62,12 @@ export default function RegistrationDialog({
         </div>
       </div>
 
-
       <div className="border-t pt-4 text-center text-gray-500">
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
         <div dangerouslySetInnerHTML={{ __html: message }} />
         {/* <p>我們已收到您的申請資料，將會盡快審核</p>
         <p>審核完畢我們將會透過您留下的資料聯絡您</p> */}
       </div>
-
       <div className="flex justify-center pt-4 mt-2">
         <button
           type="button"
@@ -83,9 +82,9 @@ export default function RegistrationDialog({
           }}
           className="px-6 py-2 bg-mingdao-blue rounded-md text-white font-medium mb-4"
         >
-          {(backHome) ? "返回首頁" : "關閉"}
+          {backHome ? "返回首頁" : "關閉"}
         </button>
       </div>
-    </dialog >
+    </dialog>
   );
 }

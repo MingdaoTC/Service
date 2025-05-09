@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, ChangeEvent, FormEvent, useEffect } from "react";
+import { handleAlumniRegister } from "@/lib/register-form";
 import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
-import { handleAlumniRegister } from "@/lib/register-form";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 
 type IdDocumentType = "idCard" | "passport";
 type UploadedFile = {
@@ -16,7 +16,7 @@ export default function AlumniRegistrationForm({
   setIsOpenDialog,
   setTitle,
   setMessage,
-  setbackHome
+  setbackHome,
 }: {
   setIsOpenDialog: (value: boolean) => void;
   setTitle: (value: string) => void;
@@ -27,7 +27,8 @@ export default function AlumniRegistrationForm({
   const userMail = session?.user?.email || "";
 
   const [stuCardYes, setStuCardYes] = useState(true);
-  const [idDocumentType, setIdDocumentType] = useState<IdDocumentType>("idCard");
+  const [idDocumentType, setIdDocumentType] =
+    useState<IdDocumentType>("idCard");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
   const fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
@@ -38,10 +39,16 @@ export default function AlumniRegistrationForm({
   const handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setIdDocumentType(e.target.value as IdDocumentType);
     // 清空已上傳的其他證件文件，保留學生證
-    setUploadedFiles(prev => prev.filter(file => file.type === "studentCard"));
+    setUploadedFiles((prev) =>
+      prev.filter((file) => file.type === "studentCard"),
+    );
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, type: string, side?: "front" | "back") => {
+  const handleFileChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: string,
+    side?: "front" | "back",
+  ) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const fileType = type;
@@ -49,7 +56,7 @@ export default function AlumniRegistrationForm({
       // 檢查是否已存在相同類型和面向的文件
       const newFiles = [...uploadedFiles];
       const existingIndex = newFiles.findIndex(
-        f => f.type === fileType && f.side === side
+        (f) => f.type === fileType && f.side === side,
       );
 
       if (existingIndex !== -1) {
@@ -65,8 +72,8 @@ export default function AlumniRegistrationForm({
   };
 
   const removeFile = (type: string, side?: "front" | "back") => {
-    setUploadedFiles(prev =>
-      prev.filter(file => !(file.type === type && file.side === side))
+    setUploadedFiles((prev) =>
+      prev.filter((file) => !(file.type === type && file.side === side)),
     );
   };
 
@@ -78,8 +85,12 @@ export default function AlumniRegistrationForm({
     let errorMessage = "";
 
     // 檢查學生證正反面是否已上傳
-    const hasStudentCardFront = uploadedFiles.some(f => f.type === "studentCard" && f.side === "front");
-    const hasStudentCardBack = uploadedFiles.some(f => f.type === "studentCard" && f.side === "back");
+    const hasStudentCardFront = uploadedFiles.some(
+      (f) => f.type === "studentCard" && f.side === "front",
+    );
+    const hasStudentCardBack = uploadedFiles.some(
+      (f) => f.type === "studentCard" && f.side === "back",
+    );
 
     if (stuCardYes) {
       if (!hasStudentCardFront || !hasStudentCardBack) {
@@ -90,19 +101,25 @@ export default function AlumniRegistrationForm({
 
     // 檢查身分證或護照是否已上傳
     if (idDocumentType === "idCard") {
-      const hasIdCardFront = uploadedFiles.some(f => f.type === "idCard" && f.side === "front");
-      const hasIdCardBack = uploadedFiles.some(f => f.type === "idCard" && f.side === "back");
+      const hasIdCardFront = uploadedFiles.some(
+        (f) => f.type === "idCard" && f.side === "front",
+      );
+      const hasIdCardBack = uploadedFiles.some(
+        (f) => f.type === "idCard" && f.side === "back",
+      );
 
       if (!hasIdCardFront || !hasIdCardBack) {
         isValid = false;
-        errorMessage = errorMessage ? errorMessage + " 以及身分證正反面" : "請上傳身分證正反面";
+        errorMessage = errorMessage
+          ? `${errorMessage} 以及身分證正反面`
+          : "請上傳身分證正反面";
       }
     } else if (idDocumentType === "passport") {
-      const hasPassport = uploadedFiles.some(f => f.type === "passport");
+      const hasPassport = uploadedFiles.some((f) => f.type === "passport");
 
       if (!hasPassport) {
         isValid = false;
-        errorMessage = errorMessage ? errorMessage + " 以及護照" : "請上傳護照";
+        errorMessage = errorMessage ? `${errorMessage} 以及護照` : "請上傳護照";
       }
     }
 
@@ -113,14 +130,18 @@ export default function AlumniRegistrationForm({
 
     (async () => {
       const result: any = await handleAlumniRegister(userMail, e.currentTarget);
-      
+
       if (result.status === 201) {
         setTitle("審核資料已成功送出");
-        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setMessage(
+          "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
+        );
         setIsOpenDialog(true);
       } else if (result.status === 409) {
         setTitle("審核資料重複送出");
-        setMessage("<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>");
+        setMessage(
+          "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
+        );
         setIsOpenDialog(true);
       } else {
         setTitle("審核資料送出失敗");
@@ -132,22 +153,44 @@ export default function AlumniRegistrationForm({
   };
 
   return (
-    <form id="alumni-registration-form" className={styles.form} onSubmit={handleSubmit}>
-      <input type="hidden" id="account-type" name="accountType" value="alumni" />
+    <form
+      id="alumni-registration-form"
+      className={styles.form}
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="hidden"
+        id="account-type"
+        name="accountType"
+        value="alumni"
+      />
 
       <div className={styles.formGroup}>
-        <label htmlFor="email" className={styles.required}>電子郵件</label>
-        <input type="email" id="email" name="email" required disabled value={userMail} />
+        <label htmlFor="email" className={styles.required}>
+          電子郵件
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          disabled
+          value={userMail}
+        />
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="name" className={styles.required}>姓名</label>
+        <label htmlFor="name" className={styles.required}>
+          姓名
+        </label>
         <input type="text" id="name" name="name" required />
         <p className={styles.helpText}>請填寫您的真實姓名</p>
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="phone" className={styles.required}>手機號碼</label>
+        <label htmlFor="phone" className={styles.required}>
+          手機號碼
+        </label>
         <input type="tel" id="phone" name="phone" required />
         <p className={styles.helpText}>請填寫能夠聯絡道您的手機號碼</p>
       </div>
@@ -157,23 +200,45 @@ export default function AlumniRegistrationForm({
         <label htmlFor="student-card" className={styles.required}>
           學生證
         </label>
-        <input type="checkbox" id="student-card" name="studentCard" className="mr-1 mb-2" onChange={(e: any) => {
-          setStuCardYes(!e.target.checked);
-          if (e.target.checked) {
-            if (fileInputStudentCardFrontRef.current) {
-              fileInputStudentCardFrontRef.current.value = "";
+        <input
+          type="checkbox"
+          id="student-card"
+          name="studentCard"
+          className="mr-1 mb-2"
+          onChange={(e: any) => {
+            setStuCardYes(!e.target.checked);
+            if (e.target.checked) {
+              if (fileInputStudentCardFrontRef.current) {
+                fileInputStudentCardFrontRef.current.value = "";
+              }
+              if (fileInputStudentCardBackRef.current) {
+                fileInputStudentCardBackRef.current.value = "";
+              }
             }
-            if (fileInputStudentCardBackRef.current) {
-              fileInputStudentCardBackRef.current.value = "";
-            }
-          }
-        }} />
+          }}
+        />
         我沒有學生證
-        <div className={styles.documentUploadContainer + (stuCardYes ? " " : " !hidden")}>
+        <div
+          className={
+            styles.documentUploadContainer + (stuCardYes ? " " : " !hidden")
+          }
+        >
           <div className={styles.documentUploadSide}>
             <p className={styles.uploadLabel}>學生證正面</p>
-            <div className={styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")}>
-              <label htmlFor="student-card-front" className={styles.fileUploadLabel + (stuCardYes ? " " : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")}>
+            <div
+              className={
+                styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")
+              }
+            >
+              <label
+                htmlFor="student-card-front"
+                className={
+                  styles.fileUploadLabel +
+                  (stuCardYes
+                    ? " "
+                    : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")
+                }
+              >
                 <span className={styles.fileUploadIcon}>📎</span>
                 <span>點擊上傳</span>
               </label>
@@ -188,10 +253,16 @@ export default function AlumniRegistrationForm({
               />
             </div>
 
-            {uploadedFiles.some(f => f.type === "studentCard" && f.side === "front") && (
+            {uploadedFiles.some(
+              (f) => f.type === "studentCard" && f.side === "front",
+            ) && (
               <div className={styles.uploadedFile}>
                 <span>
-                  {uploadedFiles.find(f => f.type === "studentCard" && f.side === "front")?.file.name}
+                  {
+                    uploadedFiles.find(
+                      (f) => f.type === "studentCard" && f.side === "front",
+                    )?.file.name
+                  }
                 </span>
                 <button
                   type="button"
@@ -206,8 +277,20 @@ export default function AlumniRegistrationForm({
 
           <div className={styles.documentUploadSide}>
             <p className={styles.uploadLabel}>學生證反面</p>
-            <div className={styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")}>
-              <label htmlFor="student-card-back" className={styles.fileUploadLabel + (stuCardYes ? " " : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")}>
+            <div
+              className={
+                styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")
+              }
+            >
+              <label
+                htmlFor="student-card-back"
+                className={
+                  styles.fileUploadLabel +
+                  (stuCardYes
+                    ? " "
+                    : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")
+                }
+              >
                 <span className={styles.fileUploadIcon}>📎</span>
                 <span>點擊上傳</span>
               </label>
@@ -222,10 +305,16 @@ export default function AlumniRegistrationForm({
               />
             </div>
 
-            {uploadedFiles.some(f => f.type === "studentCard" && f.side === "back") && (
+            {uploadedFiles.some(
+              (f) => f.type === "studentCard" && f.side === "back",
+            ) && (
               <div className={styles.uploadedFile}>
                 <span>
-                  {uploadedFiles.find(f => f.type === "studentCard" && f.side === "back")?.file.name}
+                  {
+                    uploadedFiles.find(
+                      (f) => f.type === "studentCard" && f.side === "back",
+                    )?.file.name
+                  }
                 </span>
                 <button
                   type="button"
@@ -242,7 +331,9 @@ export default function AlumniRegistrationForm({
 
       {/* 其他身份證明文件選項 */}
       <div className={styles.formGroup}>
-        <label htmlFor="id-document-type" className={styles.required}>其他身份驗證文件</label>
+        <label htmlFor="id-document-type" className={styles.required}>
+          其他身份驗證文件
+        </label>
         <select
           id="id-document-type"
           className={styles.select}
@@ -259,7 +350,10 @@ export default function AlumniRegistrationForm({
             <div className={styles.documentUploadSide}>
               <p className={styles.uploadLabel}>身分證正面</p>
               <div className={styles.fileUpload}>
-                <label htmlFor="id-document-front" className={styles.fileUploadLabel}>
+                <label
+                  htmlFor="id-document-front"
+                  className={styles.fileUploadLabel}
+                >
                   <span className={styles.fileUploadIcon}>📎</span>
                   <span>點擊上傳</span>
                 </label>
@@ -274,10 +368,16 @@ export default function AlumniRegistrationForm({
                 />
               </div>
 
-              {uploadedFiles.some(f => f.type === "idCard" && f.side === "front") && (
+              {uploadedFiles.some(
+                (f) => f.type === "idCard" && f.side === "front",
+              ) && (
                 <div className={styles.uploadedFile}>
                   <span>
-                    {uploadedFiles.find(f => f.type === "idCard" && f.side === "front")?.file.name}
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "idCard" && f.side === "front",
+                      )?.file.name
+                    }
                   </span>
                   <button
                     type="button"
@@ -293,7 +393,10 @@ export default function AlumniRegistrationForm({
             <div className={styles.documentUploadSide}>
               <p className={styles.uploadLabel}>身分證反面</p>
               <div className={styles.fileUpload}>
-                <label htmlFor="id-document-back" className={styles.fileUploadLabel}>
+                <label
+                  htmlFor="id-document-back"
+                  className={styles.fileUploadLabel}
+                >
                   <span className={styles.fileUploadIcon}>📎</span>
                   <span>點擊上傳</span>
                 </label>
@@ -308,10 +411,16 @@ export default function AlumniRegistrationForm({
                 />
               </div>
 
-              {uploadedFiles.some(f => f.type === "idCard" && f.side === "back") && (
+              {uploadedFiles.some(
+                (f) => f.type === "idCard" && f.side === "back",
+              ) && (
                 <div className={styles.uploadedFile}>
                   <span>
-                    {uploadedFiles.find(f => f.type === "idCard" && f.side === "back")?.file.name}
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "idCard" && f.side === "back",
+                      )?.file.name
+                    }
                   </span>
                   <button
                     type="button"
@@ -330,7 +439,10 @@ export default function AlumniRegistrationForm({
           <div>
             <p className={styles.uploadLabel}>護照照片</p>
             <div className={styles.fileUpload}>
-              <label htmlFor="id-document-passport" className={styles.fileUploadLabel}>
+              <label
+                htmlFor="id-document-passport"
+                className={styles.fileUploadLabel}
+              >
                 <span className={styles.fileUploadIcon}>📎</span>
                 <span>點擊上傳</span>
               </label>
@@ -345,10 +457,10 @@ export default function AlumniRegistrationForm({
               />
             </div>
 
-            {uploadedFiles.some(f => f.type === "passport") && (
+            {uploadedFiles.some((f) => f.type === "passport") && (
               <div className={styles.uploadedFile}>
                 <span>
-                  {uploadedFiles.find(f => f.type === "passport")?.file.name}
+                  {uploadedFiles.find((f) => f.type === "passport")?.file.name}
                 </span>
                 <button
                   type="button"
@@ -365,11 +477,13 @@ export default function AlumniRegistrationForm({
 
       <div className={styles.formGroup}>
         <label htmlFor="notes">備註</label>
-        <textarea id="notes" name="notes" rows={4}></textarea>
+        <textarea id="notes" name="notes" rows={4} />
         <p className={styles.helpText}>如有其他需要說明的事項，請在此填寫</p>
       </div>
 
-      <button type="submit" className={`${styles.btn} ${styles.btnBlock}`}>送出申請</button>
-    </form >
+      <button type="submit" className={`${styles.btn} ${styles.btnBlock}`}>
+        送出申請
+      </button>
+    </form>
   );
 }

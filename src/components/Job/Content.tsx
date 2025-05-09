@@ -67,7 +67,9 @@ export default function Content(props: Props) {
   };
 
   return (
-    <div className={`border bg-white rounded-lg p-4 sm:p-6 md:p-8 shadow-sm ${props.className}`}>
+    <div
+      className={`border bg-white rounded-lg p-4 sm:p-6 md:p-8 shadow-sm ${props.className}`}
+    >
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
         工作內容
       </h1>
@@ -78,7 +80,10 @@ export default function Content(props: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {Object.keys(detail).map((key, index) => {
           return (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100" key={index}>
+            <div
+              className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 py-2 border-b border-gray-100"
+              key={index}
+            >
               <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0">
                 {detail[key].title}
               </h2>

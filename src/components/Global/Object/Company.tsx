@@ -1,7 +1,7 @@
-import { BiMap } from "react-icons/bi";
-import { BiBuildings } from "react-icons/bi";
 import type { Company as TCompany } from "@/prisma/client";
 import Link from "next/link";
+import { BiMap } from "react-icons/bi";
+import { BiBuildings } from "react-icons/bi";
 
 type Props = {
   data: TCompany;
@@ -10,7 +10,9 @@ type Props = {
 
 export default function Company(props: Props) {
   return (
-    <div className={`border bg-white rounded-lg border-1 border-black border-opacity-20 ${props.className}`}>
+    <div
+      className={`border bg-white rounded-lg border-1 border-black border-opacity-20 ${props.className}`}
+    >
       <div className="flex gap-2 items-center px-3 pt-3">
         <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1 flex-shrink-0 aspect-square">
           <div
@@ -21,7 +23,7 @@ export default function Company(props: Props) {
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
             }}
-          ></div>
+          />
         </div>
         <h2 className="text-base text-mingdao-blue-dark font-bold line-clamp-2">
           {props.data.name}
@@ -29,11 +31,11 @@ export default function Company(props: Props) {
       </div>
       <div className="py-2 px-3">
         <div className="flex gap-1 items-center text-xs sm:text-sm">
-          <BiMap color="gray" size={"1em"}></BiMap>
+          <BiMap color="gray" size={"1em"} />
           <span className="truncate">{props.data.address}</span>
         </div>
         <div className="flex gap-1 items-center text-xs sm:text-sm">
-          <BiBuildings color="gray" size={"1em"}></BiBuildings>
+          <BiBuildings color="gray" size={"1em"} />
           <span className="truncate">{props.data.categoryId}</span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">
@@ -54,6 +56,6 @@ export default function Company(props: Props) {
           查看工作機會 (43)
         </Link>
       </div>
-    </div >
+    </div>
   );
 }

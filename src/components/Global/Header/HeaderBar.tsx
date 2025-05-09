@@ -1,10 +1,9 @@
+import Button from "@/components/Global/Button/Button";
 // Components
 import SimpleButton from "@/components/Global/Button/SimpleButton";
-import Button from "@/components/Global/Button/Button";
 import UserDropdown from "@/components/Global/Header/UserDropdown";
 
 // Third-Party Library
-import Image from "next/image";
 import Link from "next/link";
 
 // Lib
@@ -18,7 +17,7 @@ import { User } from "@/prisma/client";
 import { navConfig } from "@/config/header";
 
 export default async function HeaderBar() {
-  let session = await auth();
+  const session = await auth();
   //@ts-ignore
   const user: User = session?.user;
 
@@ -39,14 +38,14 @@ export default async function HeaderBar() {
           <nav className="flex items-center space-x-5">
             {navConfig.buttons.map((e: any, index) => {
               if (e.label === "login") {
-                return (
-                  user ? (
-                    <UserDropdown user={user} key={index} />
-                  ) : (
-                    <form action={handleSignIn}>
-                      <SimpleButton type="secondary" key={index}>{e.text}</SimpleButton>
-                    </form>
-                  )
+                return user ? (
+                  <UserDropdown user={user} key={index} />
+                ) : (
+                  <form action={handleSignIn}>
+                    <SimpleButton type="secondary" key={index}>
+                      {e.text}
+                    </SimpleButton>
+                  </form>
                 );
               } else {
                 return (

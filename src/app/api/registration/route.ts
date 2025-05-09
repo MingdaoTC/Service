@@ -1,9 +1,8 @@
 // Modules
 import { NextRequest, NextResponse } from "next/server";
 
-
 // types
-import { UserRole, User } from "@/prisma/client";
+import { User, UserRole } from "@/prisma/client";
 
 // libs
 import { auth } from "@/lib/auth/auth";
@@ -20,24 +19,27 @@ export async function GET(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.json(
         { status: 403, message: "您沒有權限查看內容" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
       return NextResponse.json(
         { status: 403, message: "您沒有權限查看內容" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
-    const registrations =  await findManyRegistration();
+    const registrations = await findManyRegistration();
 
-    return NextResponse.json({ status: 200, data: registrations }, { status: 200 });
+    return NextResponse.json(
+      { status: 200, data: registrations },
+      { status: 200 },
+    );
   } catch (_error) {
     return NextResponse.json(
       { status: 500, message: "伺服器發生錯誤，請稍後重試" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

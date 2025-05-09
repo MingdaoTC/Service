@@ -6,8 +6,8 @@ import { User, UserRole } from "@/prisma/client";
 
 // libs
 import { auth } from "@/lib/auth/auth";
-import { findUser } from "@/lib/db/user/find";
 import { createUser } from "@/lib/db/user/create";
+import { findUser } from "@/lib/db/user/find";
 import { updateUser } from "@/lib/db/user/update"; // Ensure this is imported
 
 export async function GET(request: NextRequest) {

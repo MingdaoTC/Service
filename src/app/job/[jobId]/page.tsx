@@ -1,12 +1,12 @@
 import { auth } from "@/lib/auth/auth";
 import { User } from "@/prisma/client";
 
+import Other from "@/components/Global/Object/Other";
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import Other from "@/components/Global/Object/Other";
 import Requirement from "@/components/Job/Requirement";
-import { Job, EmploymentType, Location } from "@/prisma/client";
+import { EmploymentType, Job, Location } from "@/prisma/client";
 
 const testRecommendedJobData = {
   id: "1",

@@ -5,7 +5,9 @@ export type findAlumniRegistrationTypes = {
   email?: string;
 };
 
-export async function findAlumniRegistration(param: findAlumniRegistrationTypes) {
+export async function findAlumniRegistration(
+  param: findAlumniRegistrationTypes,
+) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }

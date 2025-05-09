@@ -7,7 +7,10 @@ export type updateUserTypes = {
   email?: string;
 };
 
-export async function updateUser(param: updateUserTypes, newData: Partial<User>) {
+export async function updateUser(
+  param: updateUserTypes,
+  newData: Partial<User>,
+) {
   if (!param.id && !param.username && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }

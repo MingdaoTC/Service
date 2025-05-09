@@ -78,7 +78,6 @@ export async function handleAlumniRegister(email: any, formDataIn: any) {
       console.error("Error:", error);
     });
 
-
   return response;
 }
 

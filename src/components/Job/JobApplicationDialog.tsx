@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, FormEvent, ChangeEvent } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 type JobApplicationDialogProps = {
   isOpen: boolean;
@@ -38,7 +38,7 @@ const JobApplicationDialog = ({
   };
 
   const [recommendationText, setRecommendationText] = useState<string>(
-    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
+    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！",
   );
   const maxLength = 2000;
 
@@ -105,7 +105,7 @@ const JobApplicationDialog = ({
               value={recommendationText}
               onChange={handleTextChange}
               maxLength={maxLength}
-            ></textarea>
+            />
             <div className="text-right text-gray-500 text-sm">
               {recommendationText.length}/{maxLength}
             </div>
@@ -139,7 +139,7 @@ const JobApplicationDialog = ({
               fill="currentColor"
               viewBox="0 0 20 20"
             >
-              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
             </svg>
             確認送出
           </button>

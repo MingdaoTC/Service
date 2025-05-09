@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
   /* Set after:bg-[color] to specify the color of the underline */
   .animated-underline-left {
     position: relative;

@@ -1,7 +1,7 @@
-// LoginPromptDialog.jsx
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+// LoginPromptDialog.jsx
+import { useEffect, useRef, useState } from "react";
 
 const LoginPromptDialog = ({
   isOpen,
@@ -10,13 +10,12 @@ const LoginPromptDialog = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [_isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    console.log(isOpen);
     if (isOpen && dialogRef.current) {
       dialogRef.current.showModal();
     } else if (dialogRef.current) {

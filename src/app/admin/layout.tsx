@@ -1,8 +1,8 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 // Module
 import React, { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
 
 // Icons
 import { Activity, BadgeCheck, ShieldUser, User } from "lucide-react";
@@ -10,10 +10,12 @@ import { Activity, BadgeCheck, ShieldUser, User } from "lucide-react";
 export default function AdminLayout({
   children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [activeTab, setActiveTab] = useState(pathname.split("/")[2] || "dashboard");
+  const [activeTab, setActiveTab] = useState(
+    pathname.split("/")[2] || "dashboard",
+  );
   const router = useRouter();
 
   const handleTabChange = (tab: string) => {
@@ -34,9 +36,10 @@ export default function AdminLayout({
               <li>
                 <button
                   onClick={() => handleTabChange("dashboard")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${activeTab === "dashboard"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100"
+                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
+                    activeTab === "dashboard"
+                      ? "bg-blue-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <Activity className="w-5 h-5 mr-3" />
@@ -46,9 +49,10 @@ export default function AdminLayout({
               <li>
                 <button
                   onClick={() => handleTabChange("registration")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${activeTab === "registration"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100"
+                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
+                    activeTab === "registration"
+                      ? "bg-blue-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <BadgeCheck className="w-5 h-5 mr-3" />
@@ -58,9 +62,10 @@ export default function AdminLayout({
               <li>
                 <button
                   onClick={() => handleTabChange("users")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${activeTab === "users"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100"
+                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
+                    activeTab === "users"
+                      ? "bg-blue-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <User className="w-5 h-5 mr-3" />
@@ -70,9 +75,10 @@ export default function AdminLayout({
               <li>
                 <button
                   onClick={() => handleTabChange("admins")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${activeTab === "admins"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100"
+                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
+                    activeTab === "admins"
+                      ? "bg-blue-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <ShieldUser className="w-5 h-5 mr-3" />

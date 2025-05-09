@@ -5,7 +5,9 @@ export type findCompanyRegistrationTypes = {
   email?: string;
 };
 
-export async function findCompanyRegistration(param: findCompanyRegistrationTypes) {
+export async function findCompanyRegistration(
+  param: findCompanyRegistrationTypes,
+) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }

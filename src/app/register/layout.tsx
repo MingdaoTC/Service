@@ -1,9 +1,11 @@
-import { auth } from "@/lib/auth/auth";
 import AuthWrapperClient from "@/components/Auth";
+import { auth } from "@/lib/auth/auth";
 import { User } from "@/prisma/client";
 import React from "react";
 
-export default async function AuthPage({ children }: { children: React.ReactNode }) {
+export default async function AuthPage({
+  children,
+}: { children: React.ReactNode }) {
   // 在服務端執行身份驗證檢查
   const session = await auth();
   //@ts-ignore

@@ -1,20 +1,28 @@
 // components/Modal.tsx
-import React, { useState } from "react";
+import React from "react";
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-    buttons: {
-        label: string;
-        onClick: () => void;
-        variant?: "primary" | "secondary" | "danger";
-    }[];
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  buttons: {
+    label: string;
+    onClick: () => void;
+    variant?: "primary" | "secondary" | "danger";
+  }[];
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, buttons }) => {
-  if (!isOpen) return null;
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  buttons,
+}) => {
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -25,19 +33,28 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, buttons
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
           >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
-        <div className="mb-6">
-          {children}
-        </div>
+        <div className="mb-6">{children}</div>
 
         <div className="flex justify-end space-x-2">
           {buttons.map((button, index) => {
-            let buttonClass = "px-4 py-2 rounded-md font-medium focus:outline-none transition-colors";
+            let buttonClass =
+              "px-4 py-2 rounded-md font-medium focus:outline-none transition-colors";
 
             switch (button.variant) {
               case "primary":
@@ -46,7 +63,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, buttons
               case "danger":
                 buttonClass += " bg-red-600 hover:bg-red-700 text-white";
                 break;
-              case "secondary":
               default:
                 buttonClass += " bg-gray-200 hover:bg-gray-300 text-gray-800";
                 break;

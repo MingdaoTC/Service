@@ -6,10 +6,10 @@ import { AccountStatus, User, UserRole } from "@/prisma/client";
 
 // libs
 import { auth } from "@/lib/auth/auth";
-import { updateUser } from "@/lib/db/user/update";
+import { createAlumniRegistration } from "@/lib/db/registration/alumni/create";
 import { findAlumniRegistration } from "@/lib/db/registration/alumni/find";
 import { findCompanyRegistration } from "@/lib/db/registration/company/find";
-import { createAlumniRegistration } from "@/lib/db/registration/alumni/create";
+import { updateUser } from "@/lib/db/user/update";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -22,34 +22,38 @@ export async function GET(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.json(
         { status: 403, message: "您沒有權限查看內容" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
       return NextResponse.json(
         { status: 403, message: "您沒有權限查看內容" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
-    const registration =  await findAlumniRegistration({ email: email || user.email  });
+    const registration = await findAlumniRegistration({
+      email: email || user.email,
+    });
     if (!registration) {
       return NextResponse.json(
         { status: 404, message: "您查詢的驗證申請資料不存在" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    return NextResponse.json({ success: true, data: registration }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: registration },
+      { status: 200 },
+    );
   } catch (_error) {
     return NextResponse.json(
       { success: 500, message: "伺服器發生錯誤，請稍後重試" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 export async function POST(request: NextRequest) {
   try {
@@ -57,22 +61,31 @@ export async function POST(request: NextRequest) {
     const user: User = session?.user as User;
 
     const body = await request.json();
-    const { name, phone, studentCardFront, studentCardBack, idDocumentFront, idDocumentBack, idDocumentPassport, notes } = body;
+    const {
+      name,
+      phone,
+      studentCardFront,
+      studentCardBack,
+      idDocumentFront,
+      idDocumentBack,
+      idDocumentPassport,
+      notes,
+    } = body;
 
     if (!session?.user) {
       return NextResponse.json(
         { status: 403, error: "您沒有權限查看內容" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
-    let registration =  await findCompanyRegistration({ email: user.email });
-    const registration2 =  await findAlumniRegistration({ email: user.email });
+    let registration = await findCompanyRegistration({ email: user.email });
+    const registration2 = await findAlumniRegistration({ email: user.email });
 
     if (registration || registration2) {
       return NextResponse.json(
         { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-        { status: 409 }
+        { status: 409 },
       );
     } else {
       //@ts-ignore
@@ -87,14 +100,20 @@ export async function POST(request: NextRequest) {
         idDocumentPassport: idDocumentPassport,
         notes: notes,
       });
-      await updateUser({ email: user.email }, { status: AccountStatus.PENDING });
+      await updateUser(
+        { email: user.email },
+        { status: AccountStatus.PENDING },
+      );
     }
 
-    return NextResponse.json({ status: 201, data: registration }, { status: 201 });
+    return NextResponse.json(
+      { status: 201, data: registration },
+      { status: 201 },
+    );
   } catch (_error) {
     return NextResponse.json(
       { success: 500, message: "伺服器發生錯誤，請稍後重試" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

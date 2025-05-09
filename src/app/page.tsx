@@ -1,7 +1,7 @@
+import SimpleSearch from "@/components/Global/Search/SimpleSearch";
+import CompanyList from "@/components/Home/CompanyList";
 // Components
 import JobList from "@/components/Home/JobList";
-import CompanyList from "@/components/Home/CompanyList";
-import SimpleSearch from "@/components/Global/Search/SimpleSearch";
 
 const testCompanyData = {
   id: "1",
@@ -37,7 +37,7 @@ export default function Home() {
       <div className="flex flex-col gap-3 sm:gap-4 w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4 relative -top-20 sm:-top-14 md:-top-32">
         <JobList data={new Array(6).fill(testJobData)} />
         <CompanyList data={new Array(6).fill(testCompanyData)} />
-      </div >
+      </div>
     </>
   );
 }

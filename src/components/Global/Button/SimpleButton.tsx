@@ -1,13 +1,13 @@
+import Link from "next/link";
 // Third-Party Library
 import React from "react";
-import Link from "next/link";
 
 type TProps = {
-    children: Readonly<React.ReactNode>;
-    type?: "primary" | "secondary" | "danger";
-    href?: string;
-    onClick?: () => void;
-    className?: string;
+  children: Readonly<React.ReactNode>;
+  type?: "primary" | "secondary" | "danger";
+  href?: string;
+  onClick?: () => void;
+  className?: string;
 };
 
 export default function SimpleButton({

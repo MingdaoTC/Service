@@ -5,11 +5,13 @@ import { useState } from "react";
 import Button from "../Button/Button";
 
 export default function SearchBox() {
-  const [keyword, setKeyword] = useState("");
-  const [location, setLocation] = useState("");
-  const [category, setCategory] = useState("");
+  const [_keyword, _setKeyword] = useState("");
+  const [_location, _setLocation] = useState("");
+  const [_category, _setCategory] = useState("");
 
-  const handleSearch = () => { };
+  const handleSearch = () => {
+    return;
+  };
 
   return (
     <div className="flex flex-row items-start justify-start gap-2 bg-white border border-mingdao-blue rounded-xl p-2">
