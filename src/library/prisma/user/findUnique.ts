@@ -1,12 +1,7 @@
-import { prisma } from "@/library/db/prisma";
+import { prisma } from "@/library/prisma";
+import { User } from "@/prisma/client";
 
-export type findUserTypes = {
-  id?: string;
-  username?: string;
-  email?: string;
-};
-
-export async function findUser(param: findUserTypes) {
+export async function findUniqueUser(param: Partial<User>) {
   if (!param.id && !param.username && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }

@@ -16,8 +16,10 @@ const testCompanyData0: Company = {
   website: null,
   phone: null,
   fax: null,
-  email: null,
+  email: "test@example.com",
   numberOfEmployees: null,
+  createdAt: new Date(),
+  updatedAt: new Date()
 };
 
 const testCompanyData1: Company = {
@@ -32,8 +34,10 @@ const testCompanyData1: Company = {
   website: null,
   phone: null,
   fax: null,
-  email: null,
+  email: "test@example.com",
   numberOfEmployees: null,
+  createdAt: new Date(),
+  updatedAt: new Date()
 };
 
 const testJobData = {

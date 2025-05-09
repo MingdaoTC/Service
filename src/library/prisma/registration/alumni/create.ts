@@ -1,10 +1,8 @@
-import { prisma } from "@/library/db/prisma";
-
+import { prisma } from "@/library/prisma";
 import { AlumniRegistration } from "@/prisma/client";
 
 export async function createAlumniRegistration(newData: AlumniRegistration) {
-  const registration = await prisma.alumniRegistration.create({
+  return await prisma.alumniRegistration.create({
     data: newData,
   });
-  return registration;
 }

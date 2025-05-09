@@ -1,12 +1,8 @@
-import { prisma } from "@/library/db/prisma";
+import { prisma } from "@/library/prisma";
+import { CompanyRegistration } from "@/prisma/client";
 
-export type findCompanyRegistrationTypes = {
-  id?: string;
-  email?: string;
-};
-
-export async function findCompanyRegistration(
-  param: findCompanyRegistrationTypes,
+export async function findUniqueCompanyRegistration(
+  param: Partial<CompanyRegistration>
 ) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");

@@ -9,6 +9,8 @@ import Requirement from "@/components/Job/Requirement";
 import { EmploymentType, Job, Location } from "@/prisma/client";
 
 const testRecommendedJobData = {
+  createdAt: new Date(),
+  updatedAt: new Date(),
   id: "1",
   description: "硬體研發工程師相關職缺描述",
   title: "硬體研發工程師(伺服器及工作站)",

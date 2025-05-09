@@ -1,21 +1,12 @@
-import { prisma } from "@/library/db/prisma";
+import { prisma } from "@/library/prisma";
 import { User } from "@/prisma/client";
 
-export type updateUserTypes = {
-  id?: string;
-  username?: string;
-  email?: string;
-};
-
-export async function updateUser(
-  param: updateUserTypes,
-  newData: Partial<User>,
-) {
+export async function updateUser(param: Partial<User>, data: Partial<User>) {
   if (!param.id && !param.username && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }
 
-  if (!newData) {
+  if (!data) {
     throw new Error("No data to update.");
   }
 
@@ -25,6 +16,6 @@ export async function updateUser(
       username: param.username,
       email: param.email,
     },
-    data: newData,
+    data: data,
   });
 }

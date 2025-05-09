@@ -25,18 +25,21 @@ enum AccountStatus {
 }
 
 model User {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  email       String        @unique
-  role        UserRole      @default(GUEST)
-  username    String        @unique
-  avatarUrl   String
-  displayName String?
-  status      AccountStatus @default(UNVERIFIED)
-  application Application[]
-  userProfile UserProfile?
-  resume      Resume[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  email               String               @unique
+  role                UserRole             @default(GUEST)
+  username            String               @unique
+  avatarUrl           String
+  displayName         String?
+  status              AccountStatus        @default(UNVERIFIED)
+  application         Application[]
+  userProfile         UserProfile?
+  resume              Resume[]
+  CompanyRegistration CompanyRegistration?
+  AlumniRegistration  AlumniRegistration?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  Company             Company?
 }
 
 enum Gender {
@@ -84,6 +87,7 @@ model Application {
 
 model Company {
   id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  email             String           @unique
   name              String
   logoUrl           String?
   categoryId        String           @db.ObjectId
@@ -94,10 +98,12 @@ model Company {
   phone             String?
   fax               String?
   address           String?
-  email             String?
   description       String?
   jobs              Job[]
   CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
+  user              User             @relation(fields: [email], references: [email])
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 enum EmploymentType {
@@ -135,9 +141,10 @@ model Job {
   skills            String?
   others            String?
   benefits          String?
-
-  company  Company     @relation(fields: [companyId], references: [id])
-  category JobCategory @relation(fields: [categoryId], references: [id])
+  company           Company        @relation(fields: [companyId], references: [id])
+  category          JobCategory    @relation(fields: [categoryId], references: [id])
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 }
 
 model CompanyCategory {
@@ -181,6 +188,7 @@ model AlumniRegistration {
   idDocumentBack     String?
   idDocumentPassport String?
   status             RegistrationStatus @default(PENDING)
+  user               User               @relation(fields: [email], references: [email], onDelete: Cascade)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 }
@@ -194,6 +202,7 @@ model CompanyRegistration {
   phone       String
   notes       String?
   status      RegistrationStatus @default(PENDING)
+  user        User               @relation(fields: [email], references: [email], onDelete: Cascade)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 }

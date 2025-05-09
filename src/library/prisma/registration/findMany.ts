@@ -1,4 +1,4 @@
-import { prisma } from "@/library/db/prisma";
+import { prisma } from "@/library/prisma";
 
 export async function findManyRegistration() {
   const companyRegistration = await prisma.companyRegistration.findMany();
