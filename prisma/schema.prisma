@@ -55,7 +55,7 @@ model UserProfile {
   website        String?
   phone          String?
   description    String?
-  gender         Gender
+  gender         Gender   @default(UNSPECIFIED)
   birthday       String
   identityNumber String   @unique
   location       String?
