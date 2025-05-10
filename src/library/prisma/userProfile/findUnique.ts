@@ -1,7 +1,7 @@
 import { prisma } from "@/library/prisma";
 import { UserProfile } from "@/prisma/client";
 
-export async function findUniqueUser(param: Partial<UserProfile>) {
+export async function findUniqueUserProfile(param: Partial<UserProfile>) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");
   }
