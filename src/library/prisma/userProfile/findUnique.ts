@@ -12,13 +12,16 @@ export async function findUserProfileByEmail(email: string) {
     });
 
     if (!userWithProfile) {
-      return { user: null, profileExists: false, error: null };
+      return { profile: null, profileExists: false, error: null };
     }
 
     const profileExists = userWithProfile.userProfile !== null;
 
-    return { user: userWithProfile, profileExists: profileExists };
+    return {
+      profile: userWithProfile.userProfile,
+      profileExists: profileExists,
+    };
   } catch (error) {
-    return { user: null, profileExists: false, error: error };
+    return { profile: null, profileExists: false, error: error };
   }
 }
