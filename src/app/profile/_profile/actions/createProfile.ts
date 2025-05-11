@@ -33,9 +33,9 @@ export async function createProfile(formData: FormData) {
 
     await createUserProfile(user.email, data);
     revalidatePath("/profile");
-
-    redirect("/profile");
-  } catch (_) {
+  } catch (error) {
+    console.error("Failed to create profile", error);
     return { error: "Failed to create profile" };
   }
+  redirect("/profile");
 }

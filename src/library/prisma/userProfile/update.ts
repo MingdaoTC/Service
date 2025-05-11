@@ -15,7 +15,6 @@ export async function updateUserProfile(
 
   return await prisma.userProfile.update({
     where: {
-      id: param.id,
       email: param.email,
     },
     data: data,

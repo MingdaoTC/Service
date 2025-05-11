@@ -11,7 +11,7 @@ import { User } from "next-auth";
 
 export type UserProfileUpdate = Omit<
   UserProfile,
-  "id" | "email" | "createdAt" | "updatedAt" | "identityNumber"
+  "id" | "email" | "createdAt" | "updatedAt" | "identityNumber" | "birthday"
 >;
 
 export async function updateProfile(formData: FormData) {
@@ -28,7 +28,6 @@ export async function updateProfile(formData: FormData) {
       phone: formData.get("phone") as string,
       description: formData.get("description") as string,
       gender: formData.get("gender") as Gender,
-      birthday: formData.get("birthday") as string,
       location: formData.get("location") as string,
       talent: formData.get("talent") as string,
       education: formData.get("education") as string,
@@ -37,17 +36,15 @@ export async function updateProfile(formData: FormData) {
 
     await updateUserProfile(
       {
-        id: user.id,
         email: user.email as string,
       },
       data,
     );
 
     revalidatePath("/profile");
-
-    redirect("/profile");
   } catch (error) {
-    console.error("Updating data error:", error);
-    return { error: "" };
+    return { error: (error as Error).message };
   }
+
+  redirect("/profile");
 }

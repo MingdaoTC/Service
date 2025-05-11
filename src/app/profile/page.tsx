@@ -1,7 +1,9 @@
 import { auth } from "@/library/auth";
-import { User } from "@/prisma/client";
+import { User, UserProfile } from "@/prisma/client";
 
 import BasicInfo from "./_profile/BasicInfo";
+import UpdateForm from "./_profile/UpdateForm";
+import { getProfile } from "./_profile/actions/getProfile";
 
 export default async function Profile() {
   const session = await auth();
@@ -24,9 +26,19 @@ export default async function Profile() {
     );
   }
 
+  const userProfile = await getProfile(user.email);
+
   return (
     <div>
       <BasicInfo user={user} />
+      {!userProfile.profileExists && !userProfile.error ? (
+        <UpdateForm mode="create" />
+      ) : (
+        <UpdateForm
+          initialData={userProfile.profile as UserProfile}
+          mode="update"
+        />
+      )}
     </div>
   );
 }
