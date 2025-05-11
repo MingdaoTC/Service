@@ -4,6 +4,7 @@ import { useState, useRef, Fragment } from "react";
 
 import { updateProfile } from "../actions/updateProfile";
 import { createProfile } from "../actions/createProfile";
+import OperationInfoDialog from "../UpdateForm/OperationInfoDialog";
 import { UserProfile } from "@/prisma/client";
 
 type FieldOption = {
@@ -42,6 +43,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
 
   async function handleSubmit(formData: FormData) {
     setIsPending(true);
@@ -54,11 +57,16 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
 
     if (result?.error) {
       setError(result?.error);
+      setDialogMessage(result?.error);
+      setIsDialogOpen(true);
     } else {
       formRef.current?.reset();
     }
 
     setIsPending(false);
+
+    setDialogMessage(mode === "update" ? "更新成功" : "新增成功");
+    setIsDialogOpen(true);
   }
 
   const formFields: FormField[] = [
@@ -176,35 +184,42 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
   };
 
   return (
-    <form
-      ref={formRef}
-      action={handleSubmit}
-      className="flex flex-col gap-4 w-[90dvw] max-w-[1440px] mx-auto py-6"
-    >
-      {mode === "create" ? (
-        <h1 className="text-2xl text-gray-900">
-          你還沒有創建個人檔案，馬上來創建吧！
-        </h1>
-      ) : (
-        <h1 className="text-3xl">更新個人檔案</h1>
-      )}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {formFields.map(renderField)}
-
-      <button
-        type="submit"
-        disabled={isPending}
-        className="px-4 py-2 bg-mingdao-blue text-white rounded border-mingdao-blue border hover:bg-transparent hover:text-mingdao-blue transition duration-300 ease-in-out"
+    <>
+      <OperationInfoDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        message={dialogMessage}
+      />
+      <form
+        ref={formRef}
+        action={handleSubmit}
+        className="flex flex-col gap-4 w-[90dvw] max-w-[1440px] mx-auto py-6"
       >
-        {isPending
-          ? mode === "update"
-            ? "Updating..."
-            : "Creating..."
-          : mode === "update"
-          ? "Update"
-          : "Create"}
-      </button>
-    </form>
+        {mode === "create" ? (
+          <h1 className="text-2xl text-gray-900">
+            你還沒有創建個人檔案，馬上來創建吧！
+          </h1>
+        ) : (
+          <h1 className="text-3xl">更新個人檔案</h1>
+        )}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {formFields.map(renderField)}
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="px-4 py-2 bg-mingdao-blue text-white rounded border-mingdao-blue border hover:bg-transparent hover:text-mingdao-blue transition duration-300 ease-in-out"
+        >
+          {isPending
+            ? mode === "update"
+              ? "Updating..."
+              : "Creating..."
+            : mode === "update"
+            ? "Update"
+            : "Create"}
+        </button>
+      </form>
+    </>
   );
 }
