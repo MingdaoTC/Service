@@ -1,15 +1,24 @@
 import { prisma } from "@/library/prisma";
-import { UserProfile } from "@/prisma/client";
 
-export async function findUniqueUserProfile(param: Partial<UserProfile>) {
-  if (!param.id && !param.email) {
-    throw new Error("At least one parameter should be provided.");
+export async function findUserProfileByEmail(email: string) {
+  try {
+    const userWithProfile = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+      include: {
+        userProfile: true,
+      },
+    });
+
+    if (!userWithProfile) {
+      return { user: null, profileExists: false, error: null };
+    }
+
+    const profileExists = userWithProfile.userProfile !== null;
+
+    return { user: userWithProfile, profileExists: profileExists };
+  } catch (error) {
+    return { user: null, profileExists: false, error: error };
   }
-
-  return await prisma.userProfile.findUnique({
-    where: {
-      id: param.id,
-      email: param.email,
-    },
-  });
 }
