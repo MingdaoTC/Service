@@ -7,6 +7,8 @@ import { createProfile } from "../actions/createProfile";
 import OperationInfoDialog from "../UpdateForm/OperationInfoDialog";
 import { UserProfile } from "@/prisma/client";
 
+import { validateTaiwanId } from "@/library/validators/taiwanId";
+
 type FieldOption = {
   value: string;
   label: string;
@@ -17,6 +19,8 @@ type BaseField = {
   placeholder?: string;
   title: string;
   disabled?: boolean;
+  pattern?: RegExp;
+  required?: boolean;
 };
 
 type InputField = BaseField & {
@@ -50,6 +54,32 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     setIsPending(true);
     setError(null);
 
+    // check birthday
+    if (
+      formData.get("birthday") &&
+      new Date(formData.get("birthday")?.toString() as string).toString() ===
+        "Invalid Date"
+    ) {
+      setError("生日格式不正確");
+      setDialogMessage("生日格式不正確");
+      setIsDialogOpen(true);
+      setIsPending(false);
+      return;
+    }
+
+    // check identity Number
+    if (
+      formData.get("identityNumber") &&
+      validateTaiwanId(formData.get("identityNumber")?.toString() as string)
+        .error
+    ) {
+      setError("身分證號碼格式不正確");
+      setDialogMessage("身分證號碼格式不正確");
+      setIsDialogOpen(true);
+      setIsPending(false);
+      return;
+    }
+
     const result: { error: string | null } =
       mode === "update"
         ? await updateProfile(formData)
@@ -74,8 +104,10 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       name: "birthday",
       type: "text",
       placeholder: "Birthday",
-      title: "生日",
+      title: "生日 (YYYY/MM/DD 格式，如 2000/01/01)",
       disabled: mode === "update",
+      pattern: /^\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/gm,
+      required: true,
     },
     {
       name: "identityNumber",
@@ -83,6 +115,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       placeholder: "Identity Number",
       title: "身分證號碼",
       disabled: mode === "update",
+      pattern: /^[A-Z][12]\d{8}$/gm,
+      required: true,
     },
     {
       name: "website",
@@ -177,6 +211,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               defaultValue={value as string}
               className="border border-gray-300 rounded px-4 py-2"
               disabled={field.disabled}
+              pattern={field.pattern?.source}
+              required={field.required}
             />
           </Fragment>
         );
