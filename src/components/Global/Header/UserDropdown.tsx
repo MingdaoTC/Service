@@ -75,7 +75,9 @@ function UserDropdown({ user }: { user: User }) {
         {user?.displayName}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`h-4 w-4 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -116,7 +118,9 @@ function UserDropdown({ user }: { user: User }) {
               <p>
                 驗證身分：
                 <span
-                  className={`font-medium ${status[user.status as keyof typeof status].color}`}
+                  className={`font-medium ${
+                    status[user.status as keyof typeof status].color
+                  }`}
                 >
                   {status[user.status as keyof typeof status].text}
                 </span>
@@ -147,7 +151,7 @@ function UserDropdown({ user }: { user: User }) {
                 </Link>
               )}
               <Link
-                href="#"
+                href="/profile"
                 className="w-full text-left text-md text-black hover:text-mingdao-blue"
               >
                 我的帳號 (開發中)
