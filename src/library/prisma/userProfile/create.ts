@@ -1,8 +1,21 @@
 import { prisma } from "@/library/prisma";
-import { UserProfile } from "@/prisma/client";
+import { Prisma } from "@/prisma/client";
 
-export async function createUserProfile(data: UserProfile) {
-  return await prisma.userProfile.create({
-    data: data,
+export async function createUserProfile(
+  email: string,
+  data: Prisma.UserProfileCreateWithoutUserInput,
+) {
+  return await prisma.user.update({
+    where: {
+      email: email,
+    },
+    data: {
+      userProfile: {
+        create: data,
+      },
+    },
+    include: {
+      userProfile: true,
+    },
   });
 }
