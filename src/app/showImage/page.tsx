@@ -2,13 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export default function ShowImagePage() {
     const searchParams = useSearchParams();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
@@ -50,12 +49,45 @@ export default function ShowImagePage() {
     }, [imagePath, imageUrl]);
 
     // 處理檔案名稱顯示，根據螢幕寬度截斷長檔案名
-    const getTruncatedFileName = (fileName: any) => {
+    const getTruncatedFileName = (fileName) => {
         return (
             <div className="truncate max-w-full">
                 {fileName}
             </div>
         );
+    };
+
+    // 添加強制下載功能
+    const forceDownload = async (url, filename) => {
+        try {
+            // 獲取圖片數據
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('圖片下載失敗');
+            }
+
+            // 將響應轉換為blob
+            const blob = await response.blob();
+
+            // 創建一個blob URL
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            // 創建一個臨時的a標籤
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+
+            // 添加到文檔並模擬點擊
+            document.body.appendChild(link);
+            link.click();
+
+            // 清理
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+            console.error('下載過程中發生錯誤:', err);
+            alert('下載圖片時發生錯誤，請稍後再試。');
+        }
     };
 
     return (
@@ -119,18 +151,17 @@ export default function ShowImagePage() {
                                 </div>
                             </div>
 
-                            {/* 下載按鈕 */}
+                            {/* 下載按鈕 - 修改為使用按鈕並調用forceDownload函數 */}
                             <div className="mt-4 flex flex-wrap gap-4 max-[376px]:flex-col">
-                                <a
-                                    href={imageUrl}
-                                    download={fileName}
+                                <button
+                                    onClick={() => forceDownload(imageUrl, fileName)}
                                     className="px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-700 hover:bg-gray-200 transition flex items-center"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                     </svg>
                                     <span className="whitespace-nowrap mx-auto">下載圖片</span>
-                                </a>
+                                </button>
                                 <a
                                     href={imageUrl}
                                     target="_blank"
