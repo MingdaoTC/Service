@@ -1,5 +1,5 @@
 import Button from "@/components/Global/Button/Button";
-import { joinClass } from "@/modules/joinClass";
+import { joinClass } from "@/library/joinClass";
 import { Job as TJob } from "@/prisma/client";
 import Link from "next/link";
 import { AiOutlineMail } from "react-icons/ai";

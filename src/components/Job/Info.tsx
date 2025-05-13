@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
 
-import { joinClass } from "@/modules/joinClass";
+import { joinClass } from "@/library/joinClass";
 import Button from "../Global/Button/Button";
 import LoginPromptDialog from "../Global/LoginPromptDialog/LoginPromptDialog";
 import JobApplicationDialog from "./JobApplicationDialog";

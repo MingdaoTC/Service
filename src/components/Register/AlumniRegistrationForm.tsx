@@ -32,6 +32,8 @@ export default function AlumniRegistrationForm({
   const [idDocumentType, setIdDocumentType] =
     useState<IdDocumentType>("idCard");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  // 添加一個狀態來跟蹤表單提交狀態
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
   const fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
   const fileInputFrontRef = useRef<HTMLInputElement>(null);
@@ -131,6 +133,9 @@ export default function AlumniRegistrationForm({
       return;
     }
 
+    // 設置為正在提交
+    setIsSubmitting(true);
+
     try {
       // Create FormData from the form
       const formData = new FormData(e.currentTarget);
@@ -159,6 +164,8 @@ export default function AlumniRegistrationForm({
         setMessage("出現非預期的錯誤，請稍後重試");
         setIsOpenDialog(true);
         setbackHome(false);
+        // 如果失敗，重設提交狀態以便用戶重試
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -166,6 +173,8 @@ export default function AlumniRegistrationForm({
       setMessage("出現非預期的錯誤，請稍後重試");
       setIsOpenDialog(true);
       setbackHome(false);
+      // 如果失敗，重設提交狀態以便用戶重試
+      setIsSubmitting(false);
     }
   };
 
@@ -499,8 +508,12 @@ export default function AlumniRegistrationForm({
         <p className={styles.helpText}>如有其他需要說明的事項，請在此填寫</p>
       </div>
 
-      <button type="submit" className={`${styles.btn} ${styles.btnBlock}`}>
-        送出申請
+      <button
+        type="submit"
+        className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? '處理中...' : '送出申請'}
       </button>
     </form>
   );

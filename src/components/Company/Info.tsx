@@ -1,6 +1,6 @@
 import { BiBookmark } from "react-icons/bi";
 
-import { joinClass } from "@/modules/joinClass";
+import { joinClass } from "@/library/joinClass";
 import type { Company } from "@/prisma/client";
 import Button from "../Global/Button/Button";
 

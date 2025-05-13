@@ -2,12 +2,39 @@
 
 import { revalidatePath } from "next/cache";
 import { upload } from "@/library/r2/upload";
+import { headers } from "next/headers";
+import { cookies } from "next/headers";
+import { auth } from "@/library/auth";
+
+/**
+ * 獲取當前的主機URL，用於構建API請求地址
+ */
+function getBaseUrl() {
+  // 獲取請求頭
+  const headersList = headers();
+  // 獲取主機名
+  const host = headersList.get('host') || 'localhost:3000';
+  // 確定協議（如果有X-Forwarded-Proto使用它，否則預設為https）
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  
+  return `${protocol}://${host}`;
+}
 
 /**
  * Server action to handle alumni registration form submissions
  */
 export async function handleAlumniRegister(formData: FormData) {
   try {
+    // 確保有有效的用戶會話
+    const session = await auth();
+    if (!session?.user) {
+      return { 
+        success: false, 
+        error: "未登入或會話已過期",
+        data: { status: 403 }
+      };
+    }
+
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const notes = formData.get("notes") as string;
@@ -72,13 +99,26 @@ export async function handleAlumniRegister(formData: FormData) {
       notes,
     };
 
-    // Send data to API
-    const response = await fetch("/api/registration/alumni", {
+    // 獲取完整的API URL
+    const baseUrl = getBaseUrl();
+    const apiUrl = `${baseUrl}/api/registration/alumni`;
+
+    // 獲取所有 cookies 以保留身份驗證信息
+    const cookieStore = cookies();
+    const allCookies = cookieStore.getAll();
+    const cookieHeader = allCookies
+      .map(cookie => `${cookie.name}=${cookie.value}`)
+      .join('; ');
+
+    // Send data to API with cookies for authentication
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Cookie": cookieHeader // 傳遞 cookies 以保持身份驗證
       },
       body: JSON.stringify(data),
+      credentials: 'include' // 包含憑證
     });
 
     // Process response
@@ -105,6 +145,16 @@ export async function handleAlumniRegister(formData: FormData) {
  */
 export async function handleCorporateRegister(formData: FormData) {
   try {
+    // 確保有有效的用戶會話
+    const session = await auth();
+    if (!session?.user) {
+      return { 
+        success: false, 
+        error: "未登入或會話已過期",
+        data: { status: 403 }
+      };
+    }
+
     const companyName = formData.get("company") as string;
     const companyId = formData.get("companyid") as string;
     const name = formData.get("name") as string;
@@ -122,13 +172,26 @@ export async function handleCorporateRegister(formData: FormData) {
       notes,
     };
 
-    // Send data to API
-    const response = await fetch("/api/registration/company", {
+    // 獲取完整的API URL
+    const baseUrl = getBaseUrl();
+    const apiUrl = `${baseUrl}/api/registration/company`;
+
+    // 獲取所有 cookies 以保留身份驗證信息
+    const cookieStore = cookies();
+    const allCookies = cookieStore.getAll();
+    const cookieHeader = allCookies
+      .map(cookie => `${cookie.name}=${cookie.value}`)
+      .join('; ');
+
+    // Send data to API with cookies for authentication
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Cookie": cookieHeader // 傳遞 cookies 以保持身份驗證
       },
       body: JSON.stringify(data),
+      credentials: 'include' // 包含憑證
     });
 
     // Process response

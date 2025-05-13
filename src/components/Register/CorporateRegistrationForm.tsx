@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 import styles from "@/styles/Register/index.module.css";
 
 // Import the server action
@@ -21,9 +21,14 @@ export default function CorporateRegistrationForm({
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
   const formRef = useRef<HTMLFormElement>(null);
+  // 添加一個狀態來跟蹤表單提交狀態
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 設置為正在提交
+    setIsSubmitting(true);
 
     try {
       // Create FormData from the form
@@ -53,6 +58,8 @@ export default function CorporateRegistrationForm({
         setMessage("出現非預期的錯誤，請稍後重試");
         setIsOpenDialog(true);
         setbackHome(false);
+        // 如果失敗，重設提交狀態以便用戶重試
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -60,6 +67,8 @@ export default function CorporateRegistrationForm({
       setMessage("出現非預期的錯誤，請稍後重試");
       setIsOpenDialog(true);
       setbackHome(false);
+      // 如果失敗，重設提交狀態以便用戶重試
+      setIsSubmitting(false);
     }
   };
 
@@ -120,8 +129,12 @@ export default function CorporateRegistrationForm({
         <p className={styles.helpText}>如有其他需要說明的事項，請在此填寫</p>
       </div>
 
-      <button type="submit" className={`${styles.btn} ${styles.btnBlock}`}>
-        送出申請
+      <button
+        type="submit"
+        className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? '處理中...' : '送出申請'}
       </button>
     </form>
   );

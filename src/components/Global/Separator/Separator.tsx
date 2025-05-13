@@ -1,4 +1,4 @@
-import { joinClass } from "@/modules/joinClass";
+import { joinClass } from "@/library/joinClass";
 
 export function Separator({ className }: { className?: string }) {
   return (

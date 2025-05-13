@@ -1,5 +1,5 @@
 import { Separator } from "@/components/Global/Separator/Separator";
-import { joinClass } from "@/modules/joinClass";
+import { joinClass } from "@/library/joinClass";
 import type { Company } from "@/prisma/client";
 
 export function Content({
