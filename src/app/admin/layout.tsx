@@ -225,19 +225,11 @@ export default function AdminLayout({
           </div>
         </div>
       )}
-
       {/* 主內容區域 */}
-      {isMobile ?
-        (
-          <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-9.5rem)] flex">
-            {children}
-          </div>
-        ) : (
-          <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-6rem)] flex">
-            {children}
-          </div>
-        )
-      }
+      <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-6rem)] flex">
+        {children}
+      </div>
+
     </div>
   );
 }
