@@ -1,9 +1,11 @@
 "use client";
 
-import { handleAlumniRegister } from "@/library/register-form";
-import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import styles from "@/styles/Register/index.module.css";
+
+// Import the server action
+import { handleAlumniRegister } from "@/app/register/_register/action/submitForm";
 
 type IdDocumentType = "idCard" | "passport";
 type UploadedFile = {
@@ -35,6 +37,7 @@ export default function AlumniRegistrationForm({
   const fileInputFrontRef = useRef<HTMLInputElement>(null);
   const fileInputBackRef = useRef<HTMLInputElement>(null);
   const fileInputPassportRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setIdDocumentType(e.target.value as IdDocumentType);
@@ -77,7 +80,7 @@ export default function AlumniRegistrationForm({
     );
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 驗證文件是否已上傳
@@ -128,16 +131,24 @@ export default function AlumniRegistrationForm({
       return;
     }
 
-    (async () => {
-      const result: any = await handleAlumniRegister(userMail, e.currentTarget);
+    try {
+      // Create FormData from the form
+      const formData = new FormData(e.currentTarget);
 
-      if (result.status === 201) {
+      // Add email explicitly
+      formData.append("email", userMail);
+
+      // Call the server action
+      const result = await handleAlumniRegister(formData);
+
+      // Process the result based on status
+      if (result.success && result.data?.status === 201) {
         setTitle("審核資料已成功送出");
         setMessage(
           "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
         );
         setIsOpenDialog(true);
-      } else if (result.status === 409) {
+      } else if (result.success && result.data?.status === 409) {
         setTitle("審核資料重複送出");
         setMessage(
           "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
@@ -149,7 +160,13 @@ export default function AlumniRegistrationForm({
         setIsOpenDialog(true);
         setbackHome(false);
       }
-    })();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTitle("審核資料送出失敗");
+      setMessage("出現非預期的錯誤，請稍後重試");
+      setIsOpenDialog(true);
+      setbackHome(false);
+    }
   };
 
   return (
@@ -157,6 +174,7 @@ export default function AlumniRegistrationForm({
       id="alumni-registration-form"
       className={styles.form}
       onSubmit={handleSubmit}
+      ref={formRef}
     >
       <input
         type="hidden"
@@ -256,23 +274,23 @@ export default function AlumniRegistrationForm({
             {uploadedFiles.some(
               (f) => f.type === "studentCard" && f.side === "front",
             ) && (
-              <div className={styles.uploadedFile}>
-                <span>
-                  {
-                    uploadedFiles.find(
-                      (f) => f.type === "studentCard" && f.side === "front",
-                    )?.file.name
-                  }
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeFile("studentCard", "front")}
-                  className={styles.removeButton}
-                >
-                  &times;
-                </button>
-              </div>
-            )}
+                <div className={styles.uploadedFile}>
+                  <span>
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "studentCard" && f.side === "front",
+                      )?.file.name
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile("studentCard", "front")}
+                    className={styles.removeButton}
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
           </div>
 
           <div className={styles.documentUploadSide}>
@@ -308,23 +326,23 @@ export default function AlumniRegistrationForm({
             {uploadedFiles.some(
               (f) => f.type === "studentCard" && f.side === "back",
             ) && (
-              <div className={styles.uploadedFile}>
-                <span>
-                  {
-                    uploadedFiles.find(
-                      (f) => f.type === "studentCard" && f.side === "back",
-                    )?.file.name
-                  }
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeFile("studentCard", "back")}
-                  className={styles.removeButton}
-                >
-                  &times;
-                </button>
-              </div>
-            )}
+                <div className={styles.uploadedFile}>
+                  <span>
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "studentCard" && f.side === "back",
+                      )?.file.name
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile("studentCard", "back")}
+                    className={styles.removeButton}
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -371,23 +389,23 @@ export default function AlumniRegistrationForm({
               {uploadedFiles.some(
                 (f) => f.type === "idCard" && f.side === "front",
               ) && (
-                <div className={styles.uploadedFile}>
-                  <span>
-                    {
-                      uploadedFiles.find(
-                        (f) => f.type === "idCard" && f.side === "front",
-                      )?.file.name
-                    }
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile("idCard", "front")}
-                    className={styles.removeButton}
-                  >
-                    &times;
-                  </button>
-                </div>
-              )}
+                  <div className={styles.uploadedFile}>
+                    <span>
+                      {
+                        uploadedFiles.find(
+                          (f) => f.type === "idCard" && f.side === "front",
+                        )?.file.name
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile("idCard", "front")}
+                      className={styles.removeButton}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                )}
             </div>
 
             <div className={styles.documentUploadSide}>
@@ -414,23 +432,23 @@ export default function AlumniRegistrationForm({
               {uploadedFiles.some(
                 (f) => f.type === "idCard" && f.side === "back",
               ) && (
-                <div className={styles.uploadedFile}>
-                  <span>
-                    {
-                      uploadedFiles.find(
-                        (f) => f.type === "idCard" && f.side === "back",
-                      )?.file.name
-                    }
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile("idCard", "back")}
-                    className={styles.removeButton}
-                  >
-                    &times;
-                  </button>
-                </div>
-              )}
+                  <div className={styles.uploadedFile}>
+                    <span>
+                      {
+                        uploadedFiles.find(
+                          (f) => f.type === "idCard" && f.side === "back",
+                        )?.file.name
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile("idCard", "back")}
+                      className={styles.removeButton}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                )}
             </div>
           </div>
         )}

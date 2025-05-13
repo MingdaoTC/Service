@@ -1,9 +1,11 @@
 "use client";
 
-import { handleCorporateRegister } from "@/library/register-form";
-import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
-import { FormEvent } from "react";
+import { FormEvent, useRef } from "react";
+import styles from "@/styles/Register/index.module.css";
+
+// Import the server action
+import { handleCorporateRegister } from "@/app/register/_register/action/submitForm";
 
 export default function CorporateRegistrationForm({
   setIsOpenDialog,
@@ -18,22 +20,29 @@ export default function CorporateRegistrationForm({
 }): JSX.Element {
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    (async () => {
-      const result: any = await handleCorporateRegister(
-        userMail,
-        e.currentTarget,
-      );
-      if (result.status === 201) {
+    try {
+      // Create FormData from the form
+      const formData = new FormData(e.currentTarget);
+
+      // Add email explicitly
+      formData.append("email", userMail);
+
+      // Call the server action
+      const result = await handleCorporateRegister(formData);
+
+      // Process the result based on status
+      if (result.success && result.data?.status === 201) {
         setTitle("審核資料已成功送出");
         setMessage(
           "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
         );
         setIsOpenDialog(true);
-      } else if (result.status === 409) {
+      } else if (result.success && result.data?.status === 409) {
         setTitle("審核資料重複送出");
         setMessage(
           "<p>我們已收到您的申請資料</p><p>審核完畢後我們將會聯絡您</p>",
@@ -45,7 +54,13 @@ export default function CorporateRegistrationForm({
         setIsOpenDialog(true);
         setbackHome(false);
       }
-    })();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTitle("審核資料送出失敗");
+      setMessage("出現非預期的錯誤，請稍後重試");
+      setIsOpenDialog(true);
+      setbackHome(false);
+    }
   };
 
   return (
@@ -53,6 +68,7 @@ export default function CorporateRegistrationForm({
       id="corporate-registration-form"
       className={styles.form}
       onSubmit={handleSubmit}
+      ref={formRef}
     >
       <div className={styles.formGroup}>
         <label htmlFor="email" className={styles.required}>
