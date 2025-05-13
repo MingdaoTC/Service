@@ -20,6 +20,9 @@ export default function ShowImagePage() {
     // 完整圖片 URL
     const imageUrl = imagePath && CDN_URL ? `${CDN_URL}${imagePath}` : "";
 
+    // 獲取檔案名稱並處理長檔案名在手機版的顯示
+    const fileName = imagePath?.split("/").pop() || "未知";
+
     useEffect(() => {
         if (!imagePath) {
             setError("未提供圖片路徑");
@@ -46,8 +49,17 @@ export default function ShowImagePage() {
         img.src = imageUrl;
     }, [imagePath, imageUrl]);
 
+    // 處理檔案名稱顯示，根據螢幕寬度截斷長檔案名
+    const getTruncatedFileName = (fileName: any) => {
+        return (
+            <div className="truncate max-w-full">
+                {fileName}
+            </div>
+        );
+    };
+
     return (
-        <div className="h-[calc(100dvh-6rem)] bg-gray-100 py-8">
+        <div className="h-[calc(100dvh-6rem)] bg-gray-100 py-8 overflow-auto">
             <div className="max-w-7xl mx-auto px-4">
                 {/* 導航頭部 */}
                 <div className="flex items-center justify-between mb-6">
@@ -82,13 +94,13 @@ export default function ShowImagePage() {
                         <div className="flex flex-col items-center">
                             {/* 圖片信息 */}
                             <div className="mb-4 w-full bg-gray-50 p-3 rounded-lg">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                    <div>
-                                        <span className="text-gray-500">圖片名稱：</span>
-                                        <span>{imagePath?.split("/").pop() || "未知"}</span>
+                                <div className="gap-3 text-sm flex max-md:flex-col">
+                                    <div className="overflow-hidden flex">
+                                        <span className="text-gray-500 flex-none">圖片名稱：</span>
+                                        {getTruncatedFileName(fileName)}
                                     </div>
-                                    <div>
-                                        <span className="text-gray-500">圖片尺寸：</span>
+                                    <div className="overflow-hidden flex flex-none">
+                                        <span className="text-gray-500 flex-none">圖片尺寸：</span>
                                         <span>{imageSize.width} x {imageSize.height} 像素</span>
                                     </div>
                                 </div>
@@ -108,16 +120,16 @@ export default function ShowImagePage() {
                             </div>
 
                             {/* 下載按鈕 */}
-                            <div className="mt-4 flex gap-4">
+                            <div className="mt-4 flex flex-wrap gap-4 max-[376px]:flex-col">
                                 <a
                                     href={imageUrl}
-                                    download={imagePath?.split("/").pop() || "image"}
+                                    download={fileName}
                                     className="px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-700 hover:bg-gray-200 transition flex items-center"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                     </svg>
-                                    下載圖片
+                                    <span className="whitespace-nowrap mx-auto">下載圖片</span>
                                 </a>
                                 <a
                                     href={imageUrl}
@@ -128,7 +140,7 @@ export default function ShowImagePage() {
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
-                                    在新窗口打開
+                                    <span className="whitespace-nowrap mx-auto">在新窗口打開</span>
                                 </a>
                             </div>
                         </div>
