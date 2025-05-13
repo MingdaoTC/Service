@@ -154,7 +154,7 @@ function UserDropdown({ user }: { user: User }) {
                 href="/profile"
                 className="w-full text-left text-md text-black hover:text-mingdao-blue"
               >
-                我的帳號 (開發中)
+                我的檔案
               </Link>
             </div>
 
