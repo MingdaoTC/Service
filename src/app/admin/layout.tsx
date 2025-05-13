@@ -69,6 +69,7 @@ export default function AdminLayout({
   const router = useRouter();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // 新增 isLoading 狀態
 
   // 確定當前活動頁籤的函數
   const getActiveTabFromPath = (path: string) => {
@@ -101,6 +102,7 @@ export default function AdminLayout({
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
+      setIsLoading(false); // 在檢查完螢幕尺寸後將 isLoading 設為 false
     };
 
     // 初始檢查
@@ -176,6 +178,19 @@ export default function AdminLayout({
       </li>
     );
   };
+
+  // 如果還在加載中，顯示加載界面或返回空
+  if (isLoading) {
+    return (
+      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-6rem)]">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+            載入中...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-6rem)]">
