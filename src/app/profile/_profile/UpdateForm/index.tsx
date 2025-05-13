@@ -104,7 +104,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       name: "birthday",
       type: "text",
       placeholder: "Birthday",
-      title: "生日 (YYYY/MM/DD 格式，如 2000/01/01)",
+      title:
+        mode === "update" ? "生日" : "生日 (YYYY/MM/DD 格式，如 2000/01/01)",
       disabled: mode === "update",
       pattern: /^\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/gm,
       required: true,
