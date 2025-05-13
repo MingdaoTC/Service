@@ -2,10 +2,63 @@
 
 import { usePathname, useRouter } from "next/navigation";
 // Module
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Icons
-import { Activity, BadgeCheck, ShieldUser, User } from "lucide-react";
+import { Activity, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
+
+// 菜单配置类型定义 - 簡化後的版本
+type MenuItem = {
+  id: string;               // 路由 ID
+  label: string;            // 顯示的標籤
+  icon: LucideIcon;         // 圖標組件
+  path?: string;            // 路徑 (為空時使用 /admin/{id})
+  disabled?: boolean;       // 是否禁用（無法點擊）
+  beta?: boolean;           // 是否為開發中功能
+  onClick?: () => void;     // 可選的自定義點擊處理函數
+};
+
+// 集中管理的菜單配置
+const menuItems: MenuItem[] = [
+  {
+    id: "dashboard",
+    label: "網站狀態",
+    icon: Activity,
+    path: "/admin",
+    beta: true,
+    disabled: false
+  },
+  {
+    id: "registration",
+    label: "申請驗證審核",
+    icon: BadgeCheck,
+    path: "/admin/registration",
+    beta: false,
+    disabled: false
+  },
+  {
+    id: "users",
+    label: "使用者管理",
+    icon: User,
+    path: "/admin/users",
+    beta: true,
+    disabled: false
+  },
+  {
+    id: "admins",
+    label: "管理員設定",
+    icon: ShieldUser,
+    path: "/admin/admins",
+    beta: true,
+    disabled: false
+  }
+  // {
+  //   id: "help",
+  //   label: "幫助中心",
+  //   icon: HelpCircle,
+  //   onClick: () => window.open('https://help.example.com', '_blank')
+  // }
+];
 
 export default function AdminLayout({
   children,
@@ -13,85 +66,178 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [activeTab, setActiveTab] = useState(
-    pathname.split("/")[2] || "dashboard",
-  );
   const router = useRouter();
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === "dashboard") {
-      router.push("/admin");
-    } else {
-      router.push(`/admin/${tab}`);
+  // 確定當前活動頁籤的函數
+  const getActiveTabFromPath = (path: string) => {
+    // 處理根路徑 /admin
+    if (path === "/admin") {
+      return "dashboard";
     }
+
+    // 查找匹配的菜單項
+    const matchedItem = menuItems.find(item => item.path === path);
+    if (matchedItem) {
+      return matchedItem.id;
+    }
+
+    // 處理 /admin/xxx 格式的路徑
+    const segments = path.split("/");
+    if (segments.length >= 3 && segments[1] === "admin") {
+      const potentialId = segments[2];
+      const menuItem = menuItems.find(item => item.id === potentialId);
+      if (menuItem) {
+        return menuItem.id;
+      }
+    }
+
+    // 默認返回 dashboard
+    return "dashboard";
+  };
+
+  // 監聽窗口大小變化
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // 初始檢查
+    checkScreenSize();
+
+    // 添加監聽器
+    window.addEventListener('resize', checkScreenSize);
+
+    // 清理監聽器
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  // 獲取當前頁面標題
+  const getCurrentPageTitle = () => {
+    const activeTab = getActiveTabFromPath(pathname);
+    const currentItem = menuItems.find(item => item.id === activeTab);
+    return currentItem ? currentItem.label : "";
+  };
+
+  const handleTabChange = (item: MenuItem) => {
+    // 如果禁用，直接返回，不做任何操作
+    if (item.disabled) {
+      return;
+    }
+
+    // 如果在移動設備上，關閉選單
+    if (isMobile) {
+      setShowMobileMenu(false);
+    }
+
+    // 如果有自定義點擊處理函數，執行它
+    if (item.onClick) {
+      item.onClick();
+      return;
+    }
+
+    // 否則執行默認導航
+    router.push(item.path || `/admin/${item.id}`);
+  };
+
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
+  };
+
+  // 渲染菜單項
+  const renderMenuItem = (item: MenuItem, index: number) => {
+    const Icon = item.icon;
+    const activeTab = getActiveTabFromPath(pathname);
+
+    return (
+      <li key={index}>
+        <button
+          onClick={() => handleTabChange(item)}
+          disabled={item.disabled}
+          className={`
+            flex items-center w-full px-4 py-3 rounded-lg text-left 
+            ${item.disabled
+              ? 'opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500'
+              : activeTab === item.id
+                ? "bg-blue-100 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-100"
+            }
+            transition-colors duration-150
+          `}
+        >
+          <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
+          <span className="truncate">
+            {item.label} {item.beta && "(開發中)"}
+          </span>
+        </button>
+      </li>
+    );
   };
 
   return (
-    <div className="h-[calc(100dvh-6rem)] bg-blue-50">
-      <div className="flex">
-        <aside className="w-auto bg-white h-[calc(100vh-6rem)] shadow-sm flex-none">
+    <div className="bg-blue-50 flex flex-col md:flex-row">
+      {/* 手機板頂部導航欄 */}
+      {isMobile && (
+        <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-800">{getCurrentPageTitle()}</h1>
+          <button
+            onClick={toggleMobileMenu}
+            className="p-1 rounded-md text-gray-700 hover:bg-gray-100"
+            aria-label="顯示選單"
+          >
+            <MenuIcon className="w-6 h-6" />
+          </button>
+        </div>
+      )}
+
+      {/* 電腦版側邊欄 */}
+      {!isMobile && (
+        <aside className="w-64 bg-white shadow-sm h-[calc(100vh-6rem)] flex-shrink-0">
           <nav className="p-4">
             <ul className="space-y-1">
-              <li>
-                <button
-                  onClick={() => handleTabChange("dashboard")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
-                    activeTab === "dashboard"
-                      ? "bg-blue-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Activity className="w-5 h-5 mr-3" />
-                  <span>網站狀態 (開發中)</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleTabChange("registration")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
-                    activeTab === "registration"
-                      ? "bg-blue-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <BadgeCheck className="w-5 h-5 mr-3" />
-                  <span>申請驗證審核</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleTabChange("users")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
-                    activeTab === "users"
-                      ? "bg-blue-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <User className="w-5 h-5 mr-3" />
-                  <span>使用者管理 (開發中)</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleTabChange("admins")}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
-                    activeTab === "admins"
-                      ? "bg-blue-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <ShieldUser className="w-5 h-5 mr-3" />
-                  <span>管理員設定 (開發中)</span>
-                </button>
-              </li>
+              {menuItems.map(renderMenuItem)}
             </ul>
           </nav>
         </aside>
-        <div className="flex flex-1 p-4 overflow-auto h-[calc(100vh-6rem)]">
-          {children}
+      )}
+
+      {/* 手機板的選單彈出層 */}
+      {isMobile && showMobileMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white rounded-lg w-11/12 max-w-md overflow-hidden shadow-lg">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold">選單</h3>
+              <button
+                onClick={toggleMobileMenu}
+                className="p-1 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4">
+              <ul className="space-y-2">
+                {menuItems.map(renderMenuItem)}
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* 主內容區域 */}
+      {isMobile ?
+        (
+          <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-9.5rem)] flex">
+            {children}
+          </div>
+        ) : (
+          <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-6rem)] flex">
+            {children}
+          </div>
+        )
+      }
     </div>
   );
 }
