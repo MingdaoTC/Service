@@ -3,7 +3,7 @@ import { User, UserProfile } from "@/prisma/client";
 
 import BasicInfo from "./_profile/BasicInfo";
 import UpdateForm from "./_profile/UpdateForm";
-import ResumeUpload from "./_profile/ResumeUpload";
+import ResumeManage from "./_profile/ResumeManage";
 import { getProfile } from "./_profile/actions/getProfile";
 
 export default async function Profile() {
@@ -44,7 +44,7 @@ export default async function Profile() {
           )}
         </div>
         <div className="">
-          <ResumeUpload />
+          <ResumeManage />
         </div>
       </div>
     </div>
