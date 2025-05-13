@@ -1,13 +1,13 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, useEffect, useState } from "react";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export default function ShowImagePage() {
     const searchParams = useSearchParams();
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
@@ -49,7 +49,7 @@ export default function ShowImagePage() {
     }, [imagePath, imageUrl]);
 
     // 處理檔案名稱顯示，根據螢幕寬度截斷長檔案名
-    const getTruncatedFileName = (fileName) => {
+    const getTruncatedFileName = (fileName: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined) => {
         return (
             <div className="truncate max-w-full">
                 {fileName}
@@ -58,7 +58,7 @@ export default function ShowImagePage() {
     };
 
     // 添加強制下載功能
-    const forceDownload = async (url, filename) => {
+    const forceDownload = async (url: string | URL | Request, filename: string) => {
         try {
             // 獲取圖片數據
             const response = await fetch(url);

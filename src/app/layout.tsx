@@ -32,8 +32,8 @@ export default function RootLayout({
           className={`${NotoSansTC.className} [&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden`}
         >
           <HeaderBar />
-          <div className="h-[calc(100vh-3rem)] overflow-auto">
-            <div className="h-auto min-h-[calc(100%-3rem)]">{children}</div>
+          <div className="h-[calc(100dvh-3rem)] overflow-auto">
+            <div className="h-[calc(100dvh-6rem)]">{children}</div>
             <Footer />
           </div>
         </body>

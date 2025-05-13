@@ -178,10 +178,10 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="bg-blue-50 flex flex-col md:flex-row">
+    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-6rem)]">
       {/* 手機板頂部導航欄 */}
       {isMobile && (
-        <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between">
+        <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
           <h1 className="text-lg font-semibold text-gray-800">{getCurrentPageTitle()}</h1>
           <button
             onClick={toggleMobileMenu}

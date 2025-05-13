@@ -217,7 +217,7 @@ export default function RegistrationApprovalPage() {
                     value={searchQuery}
                     onChange={handleSearchQueryChange}
                     placeholder="輸入關鍵字搜尋..."
-                    className="w-full h-10 pl-10 pr-8 border border-gray-300 rounded-l-md text-sm outline-none focus:border-mingdao-blue focus:ring-1 focus:ring-mingdao-blue"
+                    className="max-md:rounded-md w-full h-10 pl-10 pr-8 border border-gray-300 rounded-l-md text-sm outline-none focus:border-mingdao-blue focus:ring-1 focus:ring-mingdao-blue"
                   />
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,7 +238,7 @@ export default function RegistrationApprovalPage() {
                 <select
                   value={searchType}
                   onChange={handleSearchTypeChange}
-                  className="h-10 px-3 border border-l-0 border-gray-300 rounded-r-md text-sm outline-none w-full md:w-auto mt-2 md:mt-0 md:min-w-[120px]"
+                  className="h-10 px-3 border md:border-l-0 border-gray-300 max-md:rounded-md rounded-r-md text-sm outline-none w-full md:w-auto mt-2 md:mt-0 md:min-w-[120px]"
                 >
                   <option value="both">全部欄位</option>
                   <option value="name">姓名/公司</option>
