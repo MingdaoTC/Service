@@ -4,7 +4,7 @@ import { useState, useRef, Fragment } from "react";
 
 import { updateProfile } from "../actions/updateProfile";
 import { createProfile } from "../actions/createProfile";
-import OperationInfoDialog from "../UpdateForm/OperationInfoDialog";
+import OperationInfoDialog from "@/components/Global/OperationInfoDialog";
 import { UserProfile } from "@/prisma/client";
 
 import { validateTaiwanId } from "@/library/validators/taiwanId";
