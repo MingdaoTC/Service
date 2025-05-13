@@ -1,8 +1,8 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Button from "../Button/Button";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 type TProps = {
   searchText?: string;

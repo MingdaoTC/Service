@@ -1,9 +1,7 @@
-import React from "react";
-
-// components
-import Result from "@/components/Search/Results";
 // import SearchBox from "@/components/Global/SearchBox";
 import SimpleSearch from "@/components/Global/Search/SimpleSearch";
+// components
+import Result from "@/components/Search/Results";
 
 const search = () => {
   return (

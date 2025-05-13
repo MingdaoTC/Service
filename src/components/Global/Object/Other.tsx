@@ -18,7 +18,9 @@ export default function Other<DataType>({
   }));
 
   return (
-    <div className={`border bg-white rounded-lg p-4 sm:p-6 md:p-6 shadow-sm border-1 border-black border-opacity-10 ${className}`}>
+    <div
+      className={`border bg-white rounded-lg p-4 sm:p-6 md:p-6 shadow-sm border-1 border-black border-opacity-10 ${className}`}
+    >
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4 text-center">
         {title}
       </h1>

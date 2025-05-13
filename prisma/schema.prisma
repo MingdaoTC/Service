@@ -25,20 +25,21 @@ enum AccountStatus {
 }
 
 model User {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  email       String        @unique
-  role        UserRole      @default(GUEST)
-  username    String        @unique
-  avatarUrl   String
-  displayName String?
-  status      AccountStatus @default(UNVERIFIED)
-  application Application[]
-  userProfile UserProfile[]
-  resume      Resume[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  @@map("user")
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  email               String               @unique
+  role                UserRole             @default(GUEST)
+  username            String               @unique
+  avatarUrl           String
+  displayName         String?
+  status              AccountStatus        @default(UNVERIFIED)
+  application         Application[]
+  userProfile         UserProfile?
+  resume              Resume[]
+  CompanyRegistration CompanyRegistration?
+  AlumniRegistration  AlumniRegistration?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  Company             Company?
 }
 
 enum Gender {
@@ -48,23 +49,21 @@ enum Gender {
 }
 
 model UserProfile {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String  @db.ObjectId
-  user           User    @relation(fields: [userId], references: [id])
-  avatarUrl      String?
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  email          String   @unique
+  user           User     @relation(fields: [email], references: [email])
   website        String?
   phone          String?
-  email          String  @unique
   description    String?
-  gender         Gender
+  gender         Gender   @default(UNSPECIFIED)
   birthday       String
-  identityNumber String  @unique
+  identityNumber String   @unique
   location       String?
   talent         String?
   education      String?
   experience     String?
-
-  @@map("user_profile")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum ApplicationStatus {
@@ -76,20 +75,19 @@ enum ApplicationStatus {
 
 model Application {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String            @db.ObjectId
+  email       String            @unique
   jobId       String            @db.ObjectId
   companyId   String            @db.ObjectId
   status      ApplicationStatus @default(PENDING)
   appliedAt   DateTime
   resumeId    String
   coverLetter String
-  user        User              @relation(fields: [userId], references: [id])
-
-  @@map("application")
+  user        User              @relation(fields: [email], references: [email])
 }
 
 model Company {
   id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  email             String           @unique
   name              String
   logoUrl           String?
   categoryId        String           @db.ObjectId
@@ -100,12 +98,12 @@ model Company {
   phone             String?
   fax               String?
   address           String?
-  email             String?
   description       String?
   jobs              Job[]
   CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
-
-  @@map("company")
+  user              User             @relation(fields: [email], references: [email])
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 enum EmploymentType {
@@ -129,7 +127,7 @@ model Job {
   salaryMin         Int            @default(0)
   salaryMax         Int            @default(0)
   negotiable        Boolean
-  employmentType    EmploymentType @default(FULL_TIME) // "part-time", "contract", "internship"
+  employmentType    EmploymentType @default(FULL_TIME)
   location          Location?
   management        String?
   businessTrip      String?
@@ -143,42 +141,33 @@ model Job {
   skills            String?
   others            String?
   benefits          String?
-
-  company  Company     @relation(fields: [companyId], references: [id])
-  category JobCategory @relation(fields: [categoryId], references: [id])
-
-  @@map("job")
+  company           Company        @relation(fields: [companyId], references: [id])
+  category          JobCategory    @relation(fields: [categoryId], references: [id])
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 }
 
 model CompanyCategory {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String    @unique
   companies Company[]
-
-  @@map("company_category")
 }
 
 model JobCategory {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String @unique
   jobs Job[]
-
-  @@map("job_category")
 }
 
 model Resume {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
   name      String
   fileName  String
   fileUrl   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("resume")
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
 }
 
 enum RegistrationStatus {
@@ -199,10 +188,9 @@ model AlumniRegistration {
   idDocumentBack     String?
   idDocumentPassport String?
   status             RegistrationStatus @default(PENDING)
+  user               User               @relation(fields: [email], references: [email], onDelete: Cascade)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-
-  @@map("alumni_registration")
 }
 
 model CompanyRegistration {
@@ -214,8 +202,7 @@ model CompanyRegistration {
   phone       String
   notes       String?
   status      RegistrationStatus @default(PENDING)
+  user        User               @relation(fields: [email], references: [email], onDelete: Cascade)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
-
-  @@map("company_registration")
 }

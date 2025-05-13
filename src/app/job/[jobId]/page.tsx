@@ -1,14 +1,16 @@
-import { auth } from "@/lib/auth/auth";
+import { auth } from "@/library/auth";
 import { User } from "@/prisma/client";
 
+import Other from "@/components/Global/Object/Other";
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import Other from "@/components/Global/Object/Other";
 import Requirement from "@/components/Job/Requirement";
-import { Job, EmploymentType, Location } from "@/prisma/client";
+import { EmploymentType, Job, Location } from "@/prisma/client";
 
 const testRecommendedJobData = {
+  createdAt: new Date(),
+  updatedAt: new Date(),
   id: "1",
   description: "硬體研發工程師相關職缺描述",
   title: "硬體研發工程師(伺服器及工作站)",

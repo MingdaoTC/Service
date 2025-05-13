@@ -1,13 +1,12 @@
 // Modules
 import { NextRequest, NextResponse } from "next/server";
 
-
 // types
-import { UserRole, User } from "@/prisma/client";
+import { User, UserRole } from "@/prisma/client";
 
 // libs
-import { auth } from "@/lib/auth/auth";
-import { findManyRegistration } from "@/lib/db/registration/findMany";
+import { auth } from "@/library/auth";
+import { findManyRegistration } from "@/library/prisma/registration/findMany";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -31,9 +30,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const registrations =  await findManyRegistration();
+    const registrations = await findManyRegistration();
 
-    return NextResponse.json({ status: 200, data: registrations }, { status: 200 });
+    return NextResponse.json(
+      { status: 200, data: registrations },
+      { status: 200 }
+    );
   } catch (_error) {
     return NextResponse.json(
       { status: 500, message: "伺服器發生錯誤，請稍後重試" },

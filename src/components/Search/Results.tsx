@@ -2,8 +2,8 @@
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { joinClass } from "@/modules/joinClass";
 import Job from "@/components/Global/Object/Job";
+import { joinClass } from "@/modules/joinClass";
 
 const testJobData = {
   title: "硬體研發工程師(伺服器及工作站)",
@@ -15,14 +15,16 @@ const testJobData = {
 };
 
 const SearchResult = () => {
-  const blockGap = "gap-14";
+  const _blockGap = "gap-14";
   const jobListBlockGap = "gap-6";
 
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
 
   useEffect(() => {
-    if (!query) redirect("/");
+    if (!query) {
+      redirect("/");
+    }
   }, [query]);
 
   return (

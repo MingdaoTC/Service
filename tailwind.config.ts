@@ -5,7 +5,7 @@ const mingdaoBlue = {
     light: "#CAECFF",
     DEFAULT: "#00A3FF",
     dark: "#00446A",
-  }
+  },
 };
 
 const config: Config = {
@@ -22,10 +22,10 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        ...mingdaoBlue
+        ...mingdaoBlue,
       },
       backgroundColor: {
-        ...mingdaoBlue
+        ...mingdaoBlue,
       },
     },
   },

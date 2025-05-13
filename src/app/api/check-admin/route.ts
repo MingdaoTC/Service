@@ -1,8 +1,8 @@
+import { auth } from "@/library/auth";
+import { findUniqueUser } from "@/library/prisma/user/findUnique";
+import { User, UserRole } from "@/prisma/client";
 // app/api/check-admin/route.ts
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { findUser } from "@/lib/db/user/find";
-import { User, UserRole } from "@/prisma/client";
 
 export async function GET() {
   try {
@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userData = await findUser({ email: user.email });
+    const userData = await findUniqueUser({ email: user.email });
 
     let isAdmin = true;
     if (
@@ -25,13 +25,13 @@ export async function GET() {
 
     return NextResponse.json(
       { success: 200, isAdmin: isAdmin },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error checking admin status:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

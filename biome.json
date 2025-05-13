@@ -7,7 +7,21 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/out/**",
+      "**/.next/**",
+      "**/.turbo/**",
+      "**/.vercel/**",
+      "**/.cache/**",
+      "**/.idea/**",
+      "**/.vscode/**",
+      "**/coverage/**",
+      "**/public/**",
+      "**/src/prisma/**"
+    ]
   },
   "formatter": {
     "formatWithErrors": false,

@@ -6,8 +6,8 @@ import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/modules/joinClass";
 import Button from "../Global/Button/Button";
-import JobApplicationDialog from "./JobApplicationDialog";
 import LoginPromptDialog from "../Global/LoginPromptDialog/LoginPromptDialog";
+import JobApplicationDialog from "./JobApplicationDialog";
 
 export default function Info({
   data,
@@ -27,9 +27,8 @@ export default function Info({
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleSubmit = (formElements: HTMLFormControlsCollection) => {
-    // Process form data
-    console.log("Form submitted");
+  const handleSubmit = (_formElements: HTMLFormControlsCollection) => {
+    return;
   };
 
   return (
@@ -50,7 +49,7 @@ export default function Info({
       <div
         className={joinClass(
           "w-full bg-white shadow-md border-b py-4 sm:py-6 mb-3 sm:mb-5 px-2",
-          className
+          className,
         )}
       >
         <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
@@ -59,11 +58,11 @@ export default function Info({
               {data.title}
             </h1>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 pt-2 sm:pt-3">
-              <p className="text-mingdao-blue text-sm sm:text-base">{data.company}</p>
-              <a
-                href="#"
-                className="text-mingdao-blue text-sm sm:text-base"
-              >
+              <p className="text-mingdao-blue text-sm sm:text-base">
+                {data.company}
+              </p>
+              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+              <a href={"#"} className="text-mingdao-blue text-sm sm:text-base">
                 本公司其他工作
               </a>
             </div>

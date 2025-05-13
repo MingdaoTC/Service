@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { AiOutlineMail } from "react-icons/ai";
-import { BiBookmark } from "react-icons/bi";
 import Button from "@/components/Global/Button/Button";
 import { joinClass } from "@/modules/joinClass";
 import { Job as TJob } from "@/prisma/client";
+import Link from "next/link";
+import { AiOutlineMail } from "react-icons/ai";
+import { BiBookmark } from "react-icons/bi";
 
 export default function Job({
   data,
@@ -20,7 +20,7 @@ export default function Job({
         <div
           className={joinClass(
             "px-5 py-4 border bg-white rounded-lg flex border-1 border-black border-opacity-20",
-            className
+            className,
           )}
         >
           <div className="flex-grow">
@@ -30,7 +30,9 @@ export default function Job({
               </h2>
             </Link>
             <div className="py-2">
-              <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
+              <p className="text-mingdao-blue-dark font-bold text-sm">
+                {data.companyId}
+              </p>
               <div className="flex flex-wrap text-sm">
                 <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                   {data.location}
@@ -70,7 +72,9 @@ export default function Job({
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
+            <p className="text-mingdao-blue-dark font-bold text-sm">
+              {data.companyId}
+            </p>
             <div className="flex flex-wrap text-xs">
               <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.location}
@@ -95,7 +99,9 @@ export default function Job({
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">{data.companyId}</p>
+            <p className="text-mingdao-blue-dark font-bold text-sm">
+              {data.companyId}
+            </p>
             <div className="flex flex-wrap text-xs">
               <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.location}
