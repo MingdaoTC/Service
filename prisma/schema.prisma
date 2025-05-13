@@ -189,20 +189,28 @@ model AlumniRegistration {
   idDocumentPassport String?
   status             RegistrationStatus @default(PENDING)
   user               User               @relation(fields: [email], references: [email], onDelete: Cascade)
+  rejectReason       String?
+  rejectAt           DateTime?
+  approvedAt         DateTime?
+  approvedBy         String?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 }
 
 model CompanyRegistration {
-  id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  email       String             @unique
-  companyId   String
-  companyName String
-  name        String
-  phone       String
-  notes       String?
-  status      RegistrationStatus @default(PENDING)
-  user        User               @relation(fields: [email], references: [email], onDelete: Cascade)
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  email        String             @unique
+  companyId    String
+  companyName  String
+  name         String
+  phone        String
+  notes        String?
+  status       RegistrationStatus @default(PENDING)
+  user         User               @relation(fields: [email], references: [email], onDelete: Cascade)
+  rejectReason String?
+  rejectAt     DateTime?
+  approvedAt   DateTime?
+  approvedBy   String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }

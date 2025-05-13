@@ -1,7 +1,7 @@
 "use client";
 
 // Module
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 
 // types
@@ -10,6 +10,10 @@ import {
   CompanyRegistration,
   RegistrationStatus,
 } from "@/prisma/client";
+
+// Server Actions
+import { approveRegistration } from '@/app/admin/registration/_registration/action/approve';
+import { rejectRegistration } from '@/app/admin/registration/_registration/action/reject';
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
@@ -36,21 +40,175 @@ export default function RegistrationApprovalPage() {
   // 搜尋類型
   const [searchType, setSearchType] = useState<"name" | "email" | "both">("both");
 
+  // 新增的審核相關狀態
+  const [isPending, startTransition] = useTransition();
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectingRegistration, setRejectingRegistration] = useState<{
+    id: string;
+    type: 'alumni' | 'company';
+  } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
+
   // 處理查看詳情
   const handleView = (id: string) => {
     setSelectedId(id === selectedId ? null : id);
   };
 
-  // 處理通過申請
-  const handleApprove = (id: string) => {
-    // 實現通過申請的邏輯
-    alert(`已核准ID為 ${id} 的申請`);
+  // 處理通過申請 - 更新為使用 Server Action
+  const handleApprove = (id: string, type: 'alumni' | 'company') => {
+    setProcessingId(id);
+
+    // 建立 FormData
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('type', type);
+
+    // 使用 Server Action
+    startTransition(async () => {
+      try {
+        const result = await approveRegistration(formData);
+
+        if (result.success) {
+          // 更新本地狀態
+          if (type === 'company') {
+            setCompanyRegistrations(prevRegistrations =>
+              prevRegistrations?.map(reg =>
+                reg.id === id ? {
+                  ...reg,
+                  status: RegistrationStatus.APPROVED,
+                  approvedAt: new Date()
+                } : reg
+              )
+            );
+          } else {
+            // 校友註冊沒有 approvedAt 欄位，只更新狀態
+            setAlumniRegistrations(prevRegistrations =>
+              prevRegistrations?.map(reg =>
+                reg.id === id ? {
+                  ...reg,
+                  status: RegistrationStatus.APPROVED
+                  // 不設置 approvedAt
+                } : reg
+              )
+            );
+          }
+
+          setStatusMessage({
+            type: 'success',
+            text: '審核成功：' + result.message
+          });
+        } else {
+          setStatusMessage({
+            type: 'error',
+            text: '審核失敗：' + (result.message || '核准過程中發生錯誤')
+          });
+        }
+      } catch (error) {
+        console.error('核准過程中發生錯誤:', error);
+        setStatusMessage({
+          type: 'error',
+          text: '系統錯誤：核准過程中發生錯誤'
+        });
+      } finally {
+        setProcessingId(null);
+        // 3秒後清除狀態訊息
+        setTimeout(() => setStatusMessage(null), 3000);
+      }
+    });
   };
 
-  // 處理拒絕申請
-  const handleReject = (id: string) => {
-    // 實現拒絕申請的邏輯
-    alert(`已拒絕ID為 ${id} 的申請`);
+  // 顯示拒絕對話框
+  const showRejectDialogHandler = (id: string, type: 'alumni' | 'company') => {
+    setRejectingRegistration({ id, type });
+    setRejectReason('');
+    setShowRejectDialog(true);
+  };
+
+  // 處理拒絕原因變更
+  const handleRejectReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRejectReason(e.target.value);
+  };
+
+  // 提交拒絕申請
+  const submitReject = () => {
+    if (!rejectingRegistration) return;
+
+    setProcessingId(rejectingRegistration.id);
+
+    // 建立 FormData
+    const formData = new FormData();
+    formData.append('id', rejectingRegistration.id);
+    formData.append('type', rejectingRegistration.type);
+    formData.append('rejectReason', rejectReason);
+
+    // 使用 Server Action
+    startTransition(async () => {
+      try {
+        const result = await rejectRegistration(formData);
+
+        if (result.success) {
+          // 更新本地狀態
+          if (rejectingRegistration.type === 'company') {
+            setCompanyRegistrations(prevRegistrations =>
+              prevRegistrations?.map(reg =>
+                reg.id === rejectingRegistration.id ? {
+                  ...reg,
+                  status: RegistrationStatus.REJECTED,
+                  rejectReason,
+                  rejectAt: new Date()
+                } : reg
+              )
+            );
+          } else {
+            // 校友註冊沒有 rejectAt 和 rejectReason 欄位，只更新狀態
+            setAlumniRegistrations(prevRegistrations =>
+              prevRegistrations?.map(reg =>
+                reg.id === rejectingRegistration.id ? {
+                  ...reg,
+                  status: RegistrationStatus.REJECTED
+                  // 不設置 rejectAt 和 rejectReason
+                } : reg
+              )
+            );
+          }
+
+          setStatusMessage({
+            type: 'success',
+            text: '審核成功：' + result.message
+          });
+
+          // 關閉對話框
+          setShowRejectDialog(false);
+        } else {
+          setStatusMessage({
+            type: 'error',
+            text: '審核失敗：' + (result.message || '拒絕過程中發生錯誤')
+          });
+        }
+      } catch (error) {
+        console.error('拒絕過程中發生錯誤:', error);
+        setStatusMessage({
+          type: 'error',
+          text: '系統錯誤：拒絕過程中發生錯誤'
+        });
+      } finally {
+        setProcessingId(null);
+        // 3秒後清除狀態訊息
+        setTimeout(() => setStatusMessage(null), 3000);
+      }
+    });
+  };
+
+  // 取消拒絕
+  const cancelReject = () => {
+    setShowRejectDialog(false);
+    setRejectingRegistration(null);
+    setRejectReason('');
   };
 
   // 篩選類型變更
@@ -202,6 +360,83 @@ export default function RegistrationApprovalPage() {
 
   return (
     <div className="w-full mx-auto h-full">
+      {/* 新增: 狀態訊息 */}
+      {statusMessage && (
+        <div className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === 'success' ? 'bg-green-100 border-l-4 border-green-500' : 'bg-red-100 border-l-4 border-red-500'
+          } transition-all duration-500 ease-in-out`}>
+          <div className="flex items-center">
+            {statusMessage.type === 'success' ? (
+              <svg className="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="h-6 w-6 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            )}
+            <p className={statusMessage.type === 'success' ? 'text-green-700' : 'text-red-700'}>
+              {statusMessage.text}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 新增: 拒絕對話框 */}
+      {showRejectDialog && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          {/* 背景遮罩 */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={cancelReject}
+          ></div>
+
+          {/* 對話框 */}
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 z-10 overflow-hidden transform transition-all">
+            <div className="px-6 py-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-900">請輸入拒絕原因</h3>
+            </div>
+
+            <div className="p-6">
+              <textarea
+                placeholder="請輸入拒絕此申請的原因..."
+                value={rejectReason}
+                onChange={handleRejectReasonChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              ></textarea>
+            </div>
+
+            <div className="px-6 py-4 bg-gray-50 border-t flex justify-end space-x-3">
+              <button
+                onClick={cancelReject}
+                disabled={isPending}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+              >
+                取消
+              </button>
+              <button
+                onClick={submitReject}
+                disabled={isPending || !rejectReason.trim()}
+                className={`px-4 py-2 rounded-md text-sm font-medium text-white ${isPending || !rejectReason.trim()
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F44336] hover:bg-[#d32f2f]"
+                  } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition flex items-center`}
+              >
+                {isPending && rejectingRegistration?.id === processingId ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    處理中...
+                  </>
+                ) : "確認拒絕"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 篩選和搜尋選項 */}
       <div className="mb-6 bg-white shadow-sm rounded-lg border p-4">
         <h2 className="text-lg font-semibold text-mingdao-blue-dark mb-3">篩選與搜尋選項</h2>
@@ -217,7 +452,7 @@ export default function RegistrationApprovalPage() {
                     value={searchQuery}
                     onChange={handleSearchQueryChange}
                     placeholder="輸入關鍵字搜尋..."
-                    className="max-md:rounded-md w-full h-10 pl-10 pr-8 border border-gray-300 rounded-l-md text-sm outline-none focus:border-mingdao-blue focus:ring-1 focus:ring-mingdao-blue"
+                    className="max-md:rounded-md w-full h-10 pl-10 pr-8 border border-gray-300 rounded-l-md text-sm outline-none"
                   />
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -414,22 +649,49 @@ export default function RegistrationApprovalPage() {
                         <div className="mt-5 flex flex-wrap justify-end gap-3">
                           {registration.status === RegistrationStatus.PENDING && (
                             <>
+                              {/* 更新: 通過企業申請按鈕 */}
                               <button
-                                onClick={() => handleApprove(registration.id)}
-                                className="px-4 py-1.5 bg-[#4CAF50] text-white text-sm font-medium rounded hover:bg-[#3f9142] shadow-sm transition"
+                                onClick={() => handleApprove(registration.id, "company")}
+                                disabled={isPending && processingId === registration.id}
+                                className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                  ? "bg-gray-400"
+                                  : "bg-[#4CAF50] hover:bg-[#3f9142]"
+                                  } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
                               >
-                                通過
+                                {isPending && processingId === registration.id ? (
+                                  <>
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    處理中...
+                                  </>
+                                ) : "通過"}
                               </button>
+                              {/* 更新: 拒絕企業申請按鈕 */}
                               <button
-                                onClick={() => handleReject(registration.id)}
-                                className="px-4 py-1.5 bg-[#F44336] text-white text-sm font-medium rounded hover:bg-[#d32f2f] shadow-sm transition"
+                                onClick={() => showRejectDialogHandler(registration.id, "company")}
+                                disabled={isPending && processingId === registration.id}
+                                className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                  ? "bg-gray-400"
+                                  : "bg-[#F44336] hover:bg-[#d32f2f]"
+                                  } text-white text-sm font-medium rounded shadow-sm transition`}
                               >
                                 拒絕
                               </button>
                             </>
                           )}
                           {registration.status !== RegistrationStatus.PENDING && (
-                            <span className="text-gray-500 text-sm italic">已處理完畢</span>
+                            <div className="text-gray-500 text-sm">
+                              <span className="italic">已處理完畢</span>
+                              {/* 顯示拒絕原因 */}
+                              {registration.status === RegistrationStatus.REJECTED && registration.rejectReason && (
+                                <div className="mt-1">
+                                  <span className="font-medium">拒絕原因：</span>
+                                  <span>{registration.rejectReason}</span>
+                                </div>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -535,15 +797,33 @@ export default function RegistrationApprovalPage() {
                         <div className="mt-5 flex flex-wrap justify-end gap-3">
                           {registration.status === RegistrationStatus.PENDING && (
                             <>
+                              {/* 更新: 通過校友申請按鈕 */}
                               <button
-                                onClick={() => handleApprove(registration.id)}
-                                className="px-4 py-1.5 bg-[#4CAF50] text-white text-sm font-medium rounded hover:bg-[#3f9142] shadow-sm transition"
+                                onClick={() => handleApprove(registration.id, "alumni")}
+                                disabled={isPending && processingId === registration.id}
+                                className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                  ? "bg-gray-400"
+                                  : "bg-[#4CAF50] hover:bg-[#3f9142]"
+                                  } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
                               >
-                                通過
+                                {isPending && processingId === registration.id ? (
+                                  <>
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    處理中...
+                                  </>
+                                ) : "通過"}
                               </button>
+                              {/* 更新: 拒絕校友申請按鈕 */}
                               <button
-                                onClick={() => handleReject(registration.id)}
-                                className="px-4 py-1.5 bg-[#F44336] text-white text-sm font-medium rounded hover:bg-[#d32f2f] shadow-sm transition"
+                                onClick={() => showRejectDialogHandler(registration.id, "alumni")}
+                                disabled={isPending && processingId === registration.id}
+                                className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                  ? "bg-gray-400"
+                                  : "bg-[#F44336] hover:bg-[#d32f2f]"
+                                  } text-white text-sm font-medium rounded shadow-sm transition`}
                               >
                                 拒絕
                               </button>
