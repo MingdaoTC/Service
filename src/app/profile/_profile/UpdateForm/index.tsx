@@ -176,7 +176,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className="border border-gray-300 rounded px-4 py-2"
+              className={`border border-gray-300 rounded px-4 py-2 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
             />
           </Fragment>
@@ -189,7 +191,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               key={field.name}
               name={field.name}
               defaultValue={field.options[0].value}
-              className="border border-gray-300 rounded px-4 py-2"
+              className={`border border-gray-300 rounded px-4 py-2 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
             >
               {field.options.map((option) => (
@@ -210,7 +214,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className="border border-gray-300 rounded px-4 py-2"
+              className={`border border-gray-300 rounded px-4 py-2 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
               pattern={field.pattern?.source}
               required={field.required}
@@ -230,7 +236,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       <form
         ref={formRef}
         action={handleSubmit}
-        className="flex flex-col gap-4 w-[90dvw] max-w-[1440px] mx-auto py-6"
+        className="flex flex-col gap-4 w-full"
       >
         {mode === "create" ? (
           <h1 className="text-2xl text-gray-900">

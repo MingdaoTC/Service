@@ -3,6 +3,7 @@ import { User, UserProfile } from "@/prisma/client";
 
 import BasicInfo from "./_profile/BasicInfo";
 import UpdateForm from "./_profile/UpdateForm";
+import ResumeUpload from "./_profile/ResumeUpload";
 import { getProfile } from "./_profile/actions/getProfile";
 
 export default async function Profile() {
@@ -31,14 +32,21 @@ export default async function Profile() {
   return (
     <div>
       <BasicInfo user={user} />
-      {!userProfile.profileExists && !userProfile.error ? (
-        <UpdateForm mode="create" />
-      ) : (
-        <UpdateForm
-          initialData={userProfile.profile as UserProfile}
-          mode="update"
-        />
-      )}
+      <div className="w-[90dvw] max-w-[1440px] mx-auto py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-transparent rounded-lg">
+          {!userProfile.profileExists && !userProfile.error ? (
+            <UpdateForm mode="create" />
+          ) : (
+            <UpdateForm
+              initialData={userProfile.profile as UserProfile}
+              mode="update"
+            />
+          )}
+        </div>
+        <div className="">
+          <ResumeUpload />
+        </div>
+      </div>
     </div>
   );
 }
