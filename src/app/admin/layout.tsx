@@ -226,10 +226,9 @@ export default function AdminLayout({
         </div>
       )}
       {/* 主內容區域 */}
-      <div className="flex-1 p-4 overflow-auto min-h-[calc(100dvh-6rem)] flex">
+      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-6rem)] flex">
         {children}
       </div>
-
     </div>
   );
 }

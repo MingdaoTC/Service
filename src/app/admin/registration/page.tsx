@@ -201,7 +201,7 @@ export default function RegistrationApprovalPage() {
   };
 
   return (
-    <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto h-full">
+    <div className="w-full mx-auto h-full">
       {/* 篩選和搜尋選項 */}
       <div className="mb-6 bg-white shadow-sm rounded-lg border p-4">
         <h2 className="text-lg font-semibold text-mingdao-blue-dark mb-3">篩選與搜尋選項</h2>
@@ -450,7 +450,7 @@ export default function RegistrationApprovalPage() {
               註冊申請驗證審核 - 校友註冊
             </h1>
           </div>
-          <div className="bg-white shadow-sm rounded-lg border overflow-hidden mt-2 mb-6">
+          <div className="bg-white shadow-sm rounded-lg border overflow-hidden mt-2">
             <div className="p-4 bg-gray-50 border-b">
               <div className="grid grid-cols-7 text-base font-medium text-gray-600">
                 <div className="col-span-6">姓名</div>
