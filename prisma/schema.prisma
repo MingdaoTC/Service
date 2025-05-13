@@ -161,7 +161,7 @@ model JobCategory {
 
 model Resume {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
+  email     String
   name      String
   fileName  String
   fileUrl   String
