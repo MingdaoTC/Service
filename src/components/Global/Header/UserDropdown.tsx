@@ -159,7 +159,7 @@ function UserDropdown({ user }: { user: User }) {
               )}
               {(((user.status === AccountStatus.VERIFIED) && (user.role === UserRole.COMPANY)) || (user.role === UserRole.SUPERADMIN)) && (
                 <Link
-                  href="/company"
+                  href="/enterprise"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
                 >
                   企業後台
