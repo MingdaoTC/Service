@@ -235,7 +235,11 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       />
       <form
         ref={formRef}
-        action={handleSubmit}
+        onSubmit={(e) => {
+          e.preventDefault(); // 防止默認的表單提交行為
+          const formData = new FormData(formRef.current as HTMLFormElement);
+          handleSubmit(formData);
+        }}
         className="flex flex-col gap-4 w-full"
       >
         {mode === "create" ? (
@@ -252,7 +256,11 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 bg-mingdao-blue text-white rounded border-mingdao-blue border hover:bg-transparent hover:text-mingdao-blue transition duration-300 ease-in-out"
+          className={`px-4 py-2 ${
+            isPending
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
+          } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
         >
           {isPending
             ? mode === "update"
