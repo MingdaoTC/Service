@@ -8,4 +8,4 @@ export interface R2PresignedUrlCacheDocument {
 
 export const R2_CACHE_COLLECTION_NAME = "R2PresignedUrlCache";
 
-export const R2_CACHE_TTL_SECONDS = 3600;
+export const R2_CACHE_TTL_SECONDS = 3 * 60;
