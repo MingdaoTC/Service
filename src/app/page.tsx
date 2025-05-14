@@ -10,7 +10,7 @@ export default async function Home() {
   const companies: TCompany[] = await getCompany();
 
   return (
-    <div className="min-h-[calc(100dvh-6rem)] flex flex-col">
+    <div className="flex flex-col">
       {/* Search hero section */}
       <div className="bg-mingdao-blue-light min-h-[10rem] md:h-60 p-3 md:p-6 flex justify-center items-start">
         <div className="w-full max-w-2xl">
