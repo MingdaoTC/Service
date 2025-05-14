@@ -9,6 +9,15 @@ export default async function ResumeList() {
 
   try {
     const resumes = await getResumeListByUserEmail(user?.email || "");
+
+    if (resumes.length === 0) {
+      return (
+        <div className="py-4">
+          <p className="text-center">您還沒有任何履歷，馬上建立履歷吧</p>
+        </div>
+      );
+    }
+
     return (
       <div className="py-4">
         {resumes.map((resume) => {
@@ -28,7 +37,7 @@ export default async function ResumeList() {
 
   return (
     <div className="py-4">
-      <p>No resumes found.</p>
+      <p className="text-center">您還沒有任何履歷，馬上建立履歷吧</p>
     </div>
   );
 }
