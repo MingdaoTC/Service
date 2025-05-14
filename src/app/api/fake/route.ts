@@ -1,13 +1,5 @@
-export default async function GET() {
-  return new Response(
-    JSON.stringify({
-      message: "Hello World",
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  return NextResponse.json({ message: "Fake Route" }, { status: 200 });
 }
