@@ -16,7 +16,7 @@ export default async function ResumeList() {
             <ResumeItem
               key={resume.id}
               resumeName={resume.name}
-              resumeUrl={resume.fileUrl}
+              resumeKey={resume.objectKey}
             />
           );
         })}
