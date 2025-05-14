@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // types
-import { AccountStatus, User, UserRole } from "@/prisma/client";
+import { AccountStatus, RegistrationStatus, User, UserRole } from "@/prisma/client";
 
 // libs
 import { auth } from "@/library/auth";
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       email: user.email,
     });
 
-    if (registration || registration2) {
+    if ((registration && registration.status !== RegistrationStatus.PENDING) || (registration2 && registration2.status !== RegistrationStatus.PENDING)) {
       return NextResponse.json(
         { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
         { status: 409 }
