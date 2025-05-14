@@ -19,7 +19,7 @@ export default async function ResumeList() {
     }
 
     return (
-      <div className="py-4">
+      <div className="py-4 flex flex-col gap-3">
         {resumes.map((resume) => {
           return (
             <ResumeItem
