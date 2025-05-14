@@ -90,7 +90,7 @@ model Company {
   email             String           @unique
   name              String
   logoUrl           String?
-  categoryId        String           @db.ObjectId
+  categoryId        String?          @db.ObjectId
   capital           Int?
   tags              String[]
   numberOfEmployees Int?
@@ -123,7 +123,7 @@ model Job {
   title             String
   companyId         String         @db.ObjectId
   description       String
-  categoryId        String         @db.ObjectId
+  categoryId        String?        @db.ObjectId
   salaryMin         Int            @default(0)
   salaryMax         Int            @default(0)
   negotiable        Boolean
@@ -142,7 +142,7 @@ model Job {
   others            String?
   benefits          String?
   company           Company        @relation(fields: [companyId], references: [id])
-  category          JobCategory    @relation(fields: [categoryId], references: [id])
+  category          JobCategory?   @relation(fields: [categoryId], references: [id])
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 }
