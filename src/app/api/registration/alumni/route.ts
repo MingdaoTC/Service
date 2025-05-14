@@ -2,7 +2,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // types
-import { AccountStatus, RegistrationStatus, User, UserRole } from "@/prisma/client";
+import {
+  AccountStatus,
+  RegistrationStatus,
+  User,
+  UserRole,
+} from "@/prisma/client";
 
 // libs
 import { auth } from "@/library/auth";
@@ -86,29 +91,33 @@ export async function POST(request: NextRequest) {
       email: user.email,
     });
 
-    if ((registration && registration.status !== RegistrationStatus.PENDING) || (registration2 && registration2.status !== RegistrationStatus.PENDING)) {
+    if (registration && registration.status === RegistrationStatus.PENDING) {
       return NextResponse.json(
         { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
         { status: 409 }
       );
-    } else {
-      //@ts-ignore
-      registration = await createAlumniRegistration({
-        email: user.email,
-        name: name,
-        phone: phone,
-        studentCardFront: studentCardFront,
-        studentCardBack: studentCardBack,
-        idDocumentFront: idDocumentFront,
-        idDocumentBack: idDocumentBack,
-        idDocumentPassport: idDocumentPassport,
-        notes: notes,
-      });
-      await updateUser(
-        { email: user.email },
-        { status: AccountStatus.PENDING }
+    }
+
+    if (registration2 && registration2.status === RegistrationStatus.PENDING) {
+      return NextResponse.json(
+        { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+        { status: 409 }
       );
     }
+
+    //@ts-ignore
+    registration = await createAlumniRegistration({
+      email: user.email,
+      name: name,
+      phone: phone,
+      studentCardFront: studentCardFront,
+      studentCardBack: studentCardBack,
+      idDocumentFront: idDocumentFront,
+      idDocumentBack: idDocumentBack,
+      idDocumentPassport: idDocumentPassport,
+      notes: notes,
+    });
+    await updateUser({ email: user.email }, { status: AccountStatus.PENDING });
 
     return NextResponse.json(
       { status: 201, data: registration },

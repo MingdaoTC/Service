@@ -2,7 +2,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // types
-import { AccountStatus, User, UserRole } from "@/prisma/client";
+import {
+  AccountStatus,
+  User,
+  UserRole,
+  RegistrationStatus,
+} from "@/prisma/client";
 
 // libs
 import { auth } from "@/library/auth";
@@ -70,29 +75,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let registration = await findUniqueCompanyRegistration({ email: user.email });
-    const registration2 = await findUniqueAlumniRegistration({ email: user.email });
+    let registration = await findUniqueCompanyRegistration({
+      email: user.email,
+    });
+    const registration2 = await findUniqueAlumniRegistration({
+      email: user.email,
+    });
 
-    if (registration || registration2) {
+    if (registration && registration.status === RegistrationStatus.PENDING) {
       return NextResponse.json(
         { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
         { status: 409 }
       );
-    } else {
-      //@ts-ignore
-      registration = await createCompanyRegistration({
-        email: user.email,
-        companyId: companyId,
-        companyName: companyName,
-        name: name,
-        phone: phone,
-        notes: notes,
-      });
-      await updateUser(
-        { email: user.email },
-        { status: AccountStatus.PENDING }
+    }
+
+    if (registration2 && registration2.status === RegistrationStatus.PENDING) {
+      return NextResponse.json(
+        { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+        { status: 409 }
       );
     }
+
+    //@ts-ignore
+    registration = await createCompanyRegistration({
+      email: user.email,
+      companyId: companyId,
+      companyName: companyName,
+      name: name,
+      phone: phone,
+      notes: notes,
+    });
+    await updateUser({ email: user.email }, { status: AccountStatus.PENDING });
 
     return NextResponse.json(
       { status: 201, data: registration },
