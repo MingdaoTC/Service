@@ -25,7 +25,7 @@ const testJobData = {
 
 export default function Home() {
   return (
-    <>
+    <div className="h-auto">
       {/* 縮小高度的 hero section */}
       <div className="bg-mingdao-blue-light min-h-[10rem] md:h-60 p-3 md:p-6 flex justify-center items-start">
         <div className="w-full max-w-2xl">
@@ -38,6 +38,6 @@ export default function Home() {
         <JobList data={new Array(6).fill(testJobData)} />
         <CompanyList data={new Array(6).fill(testCompanyData)} />
       </div>
-    </>
+    </div>
   );
 }

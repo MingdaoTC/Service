@@ -68,7 +68,7 @@ export async function handleAlumniRegister(formData: FormData) {
       if (isValidFile(file.file)) {
         try {
           const extension = file.file.name.split(".").pop() || "";
-          const filename = `${email}_${file.type}_${date}.${extension}`;
+          const filename = `register/${email}/${file.type}_${date}.${extension}`;
           const result = await upload(file.file, filename, file.file.type);
           fileResults.push({ type: file.type, result, filename });
         } catch (error) {

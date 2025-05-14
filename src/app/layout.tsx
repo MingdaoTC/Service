@@ -7,13 +7,10 @@ import type { Metadata } from "next";
 
 // Style
 import "@/styles/Global/globals.css";
-import { Noto_Sans_TC } from "next/font/google";
 
 import Footer from "@/components/Global/Footer";
 // Component
 import HeaderBar from "@/components/Global/Header/HeaderBar";
-
-const NotoSansTC = Noto_Sans_TC({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MDTC",
@@ -29,11 +26,11 @@ export default function RootLayout({
     <SessionProvider>
       <html lang="en">
         <body
-          className={`${NotoSansTC.className} [&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden`}
+          className={`[&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden`}
         >
           <HeaderBar />
-          <div className="h-[calc(100dvh-3rem)] overflow-auto">
-            <div className="h-[calc(100dvh-6rem)]">{children}</div>
+          <div className="h-[calc(100dvh-3rem)] flex flex-col overflow-auto">
+            {children}
             <Footer />
           </div>
         </body>
