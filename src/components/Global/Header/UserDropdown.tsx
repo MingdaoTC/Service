@@ -12,7 +12,6 @@ import { handleSignOut } from "@/library/auth/auth-actions";
 
 // Types
 import { AccountStatus, User, UserRole } from "@/prisma/client";
-import { User } from "lucide-react";
 
 function UserDropdown({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +140,7 @@ function UserDropdown({ user }: { user: User }) {
               )}
             <hr className="border-gray-300 my-2" />
             <div className="flex flex-col px-4 gap-1">
-              {(user.status === AccountStatus.UNVERIFIED || user.role === UserRole.SUPERADMIN) && (
+              {((user.status === AccountStatus.UNVERIFIED) || (user.role === UserRole.SUPERADMIN)) && (
                 <Link
                   href="/register"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
@@ -150,7 +149,7 @@ function UserDropdown({ user }: { user: User }) {
                 </Link>
               )}
 
-              {((user.status === AccountStatus.VERIFIED && user.role === UserRole.ALUMNI) || user.role === UserRole.SUPERADMIN) && (
+              {(((user.status === AccountStatus.VERIFIED) && (user.role === UserRole.ALUMNI)) || (user.role === UserRole.SUPERADMIN)) && (
                 <Link
                   href="/profile"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
@@ -158,7 +157,7 @@ function UserDropdown({ user }: { user: User }) {
                   我的檔案
                 </Link>
               )}
-              {user.role === UserRole.COMPANY && (
+              {(((user.status === AccountStatus.VERIFIED) && (user.role === UserRole.COMPANY)) || (user.role === UserRole.SUPERADMIN)) && (
                 <Link
                   href="/company"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
