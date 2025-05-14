@@ -1,7 +1,11 @@
+"use client";
+
 import type { Company as TCompany } from "@/prisma/client";
 import Link from "next/link";
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
+import { useState, useEffect } from "react";
+import { countJobs } from "@/components/Global/Object/_object/count";
 
 type Props = {
   data: TCompany;
@@ -9,9 +13,17 @@ type Props = {
 };
 
 export default function Company(props: Props) {
+  const [JobsNum, setJobsNum] = useState<number>(0);
+
+  useEffect(() => {
+    (async () => {
+      const jobs = await countJobs({ companyId: props.data.id });
+      setJobsNum(jobs);
+    })();
+  }, [props.data.id]);
   return (
     <div
-      className={`border bg-white rounded-lg border-1 border-black border-opacity-20 ${props.className}`}
+      className={`border bg-white rounded-lg border-1 border-black border-opacity-20 flex flex-col h-full ${props.className}`}
     >
       <div className="flex gap-2 items-center px-3 pt-3">
         <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1 flex-shrink-0 aspect-square">
@@ -29,7 +41,7 @@ export default function Company(props: Props) {
           {props.data.name}
         </h2>
       </div>
-      <div className="py-2 px-3">
+      <div className="py-2 px-3 flex-grow">
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiMap color="gray" size={"1em"} />
           <span className="truncate">{props.data.address}</span>
@@ -51,9 +63,9 @@ export default function Company(props: Props) {
           })}
         </div>
       </div>
-      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer">
-        <Link className="" href={`/company/${props.data.id}`}>
-          查看工作機會 (43)
+      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer mt-auto">
+        <Link className="block w-full h-full" href={`/company/${props.data.id}`}>
+          查看工作機會 ({JobsNum})
         </Link>
       </div>
     </div>
