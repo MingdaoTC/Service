@@ -45,8 +45,7 @@ export async function createNewResume(formData: FormData) {
     const _resume = await createResumeByUser(
       {
         name: title,
-        fileName: response.key as string,
-        fileUrl: response.url as string,
+        objectKey: response.key as string,
       },
       user.email,
     );
