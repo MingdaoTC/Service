@@ -9,50 +9,6 @@ export function Content({
   data: Company;
   className?: string;
 }) {
-  const detailColumn0: Detail = {
-    category: {
-      title: "產業類別",
-      content: data.categoryId,
-    },
-    description: {
-      title: "產業描述",
-      content: data.description || "暫不提供",
-    },
-    capital: {
-      title: "資本額",
-      content: data.capital ? String(data.capital) : "暫不提供",
-    },
-    employeeCount: {
-      title: "員工人數",
-      content: data.numberOfEmployees
-        ? String(data.numberOfEmployees)
-        : "暫不提供",
-    },
-    website: {
-      title: "公司網址",
-      content: data.website || "暫不提供",
-    },
-  };
-
-  const detailColumn1: Detail = {
-    contact: {
-      title: "聯絡人",
-      content: data.email || "暫不提供",
-    },
-    phone: {
-      title: "電話",
-      content: data.phone || "暫不提供",
-    },
-    fax: {
-      title: "傳真",
-      content: data.fax || "暫不提供",
-    },
-    address: {
-      title: "公司地址",
-      content: data.address || "暫不提供",
-    },
-  };
-
   return (
     <div
       className={joinClass(
@@ -63,22 +19,21 @@ export function Content({
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
         公司介紹
       </h1>
-
       <div className="block md:hidden">
         {/* 手機版垂直排列 */}
         <div className="space-y-3">
-          {Object.keys(detailColumn0).map((key, index) => (
+          {/* {Object.keys(data).map((key, index) => (
             <div key={index} className="border-b border-gray-100 pb-2">
               <div className="font-bold text-sm sm:text-base">
-                {detailColumn0[key].title}
+                {data[key].title}
               </div>
               <div className="text-sm sm:text-base text-gray-700">
-                {detailColumn0[key].content}
+                {data[key].content}
               </div>
             </div>
-          ))}
+          ))} */}
 
-          {Object.keys(detailColumn1).map((key, index) => (
+          {/* {Object.keys(detailColumn1).map((key, index) => (
             <div key={index} className="border-b border-gray-100 pb-2">
               <div className="font-bold text-sm sm:text-base">
                 {detailColumn1[key].title}
@@ -87,7 +42,7 @@ export function Content({
                 {detailColumn1[key].content}
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
 
@@ -95,8 +50,8 @@ export function Content({
         {/* 平板/桌面版表格排列 */}
         <table className="w-full border-separate border-spacing-x-4 border-spacing-y-1">
           <tbody>
-            {Object.keys(detailColumn0).map((key, index) => {
-              const column0 = detailColumn0[key];
+            {/* {Object.keys(data).map((key, index) => {
+              const column0 = data[key];
               const column1Key = Object.keys(detailColumn1)[index];
               const column1 = column1Key ? detailColumn1[column1Key] : null;
               return (
@@ -116,7 +71,7 @@ export function Content({
                   )}
                 </tr>
               );
-            })}
+            })} */}
           </tbody>
         </table>
       </div>
@@ -129,10 +84,3 @@ export function Content({
     </div>
   );
 }
-
-type Detail = {
-  [key: string]: {
-    title: string;
-    content: string;
-  };
-};
