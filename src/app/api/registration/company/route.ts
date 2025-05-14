@@ -7,14 +7,16 @@ import {
   User,
   UserRole,
   RegistrationStatus,
+  CompanyRegistration,
+  AlumniRegistration,
 } from "@/prisma/client";
 
 // libs
 import { auth } from "@/library/auth";
-import { findUniqueAlumniRegistration } from "@/library/prisma/registration/alumni/findUnique";
 import { createCompanyRegistration } from "@/library/prisma/registration/company/create";
-import { findUniqueCompanyRegistration } from "@/library/prisma/registration/company/findUnique";
 import { updateUser } from "@/library/prisma/user/update";
+import { findManyAlumniRegistration } from "@/library/prisma/registration/alumni/findMany";
+import { findManyCompanyRegistration } from "@/library/prisma/registration/company/findMany";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const registration = await findUniqueCompanyRegistration({
+    const registration = await findManyCompanyRegistration({
       email: email || user.email,
     });
     if (!registration) {
@@ -75,26 +77,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let registration = await findUniqueCompanyRegistration({
-      email: user.email,
-    });
-    const registration2 = await findUniqueAlumniRegistration({
+    let registration = await findManyAlumniRegistration({
       email: user.email,
     });
 
-    if (registration && registration.status === RegistrationStatus.PENDING) {
-      return NextResponse.json(
-        { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-        { status: 409 }
-      );
-    }
+    registration.forEach(async (registration: AlumniRegistration) => {
+      if (registration.status === RegistrationStatus.PENDING) {
+        return NextResponse.json(
+          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+          { status: 409 }
+        );
+      }
+      if (registration.status === RegistrationStatus.APPROVED) {
+        return NextResponse.json(
+          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+          { status: 409 }
+        );
+      }
+    });
 
-    if (registration2 && registration2.status === RegistrationStatus.PENDING) {
-      return NextResponse.json(
-        { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-        { status: 409 }
-      );
-    }
+    let registration2 = await findManyCompanyRegistration({
+      email: user.email,
+    });
+
+    registration2.forEach(async (registration: CompanyRegistration) => {
+      if (registration.status === RegistrationStatus.PENDING) {
+        return NextResponse.json(
+          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+          { status: 409 }
+        );
+      }
+      if (registration.status === RegistrationStatus.APPROVED) {
+        return NextResponse.json(
+          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+          { status: 409 }
+        );
+      }
+    });
 
     //@ts-ignore
     registration = await createCompanyRegistration({

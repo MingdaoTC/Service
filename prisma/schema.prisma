@@ -25,20 +25,20 @@ enum AccountStatus {
 }
 
 model User {
-  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
-  email               String               @unique
-  role                UserRole             @default(GUEST)
-  username            String               @unique
+  id                  String                @id @default(auto()) @map("_id") @db.ObjectId
+  email               String                @unique
+  role                UserRole              @default(GUEST)
+  username            String                @unique
   avatarUrl           String
   displayName         String?
-  status              AccountStatus        @default(UNVERIFIED)
+  status              AccountStatus         @default(UNVERIFIED)
   application         Application[]
   userProfile         UserProfile?
   resume              Resume[]
-  CompanyRegistration CompanyRegistration?
-  AlumniRegistration  AlumniRegistration?
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  CompanyRegistration CompanyRegistration[]
+  AlumniRegistration  AlumniRegistration[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
   Company             Company?
 }
 
@@ -178,7 +178,7 @@ enum RegistrationStatus {
 
 model AlumniRegistration {
   id                 String             @id @default(auto()) @map("_id") @db.ObjectId
-  email              String             @unique
+  email              String
   name               String
   phone              String
   notes              String?
@@ -199,7 +199,7 @@ model AlumniRegistration {
 
 model CompanyRegistration {
   id           String             @id @default(auto()) @map("_id") @db.ObjectId
-  email        String             @unique
+  email        String
   companyId    String
   companyName  String
   name         String

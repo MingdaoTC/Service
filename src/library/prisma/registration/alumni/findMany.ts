@@ -1,16 +1,16 @@
 import { prisma } from "@/library/prisma";
 import { AlumniRegistration } from "@/prisma/client";
 
-export async function findUniqueAlumniRegistration(
+export async function findManyAlumniRegistration(
   param: Partial<AlumniRegistration>
 ) {
-  if (!param.id) {
+  if (!param.email) {
     throw new Error("At least one parameter should be provided.");
   }
 
-  return await prisma.alumniRegistration.findUnique({
+  return await prisma.alumniRegistration.findMany({
     where: {
-      id: param.id,
+      email: param.email,
     },
   });
 }

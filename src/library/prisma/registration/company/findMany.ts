@@ -1,16 +1,16 @@
 import { prisma } from "@/library/prisma";
 import { CompanyRegistration } from "@/prisma/client";
 
-export async function findUniqueCompanyRegistration(
+export async function findManyCompanyRegistration(
   param: Partial<CompanyRegistration>
 ) {
-  if (!param.id) {
+  if (!param.email) {
     throw new Error("At least one parameter should be provided.");
   }
 
-  return await prisma.companyRegistration.findUnique({
+  return await prisma.companyRegistration.findMany({
     where: {
-      id: param.id,
+      email: param.email,
     },
   });
 }
