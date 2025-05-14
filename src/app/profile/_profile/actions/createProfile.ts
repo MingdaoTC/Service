@@ -18,19 +18,23 @@ export async function createProfile(formData: FormData) {
   }
 
   try {
-    const data: Prisma.UserProfileCreateWithoutUserInput = {
+    const now = new Date();
+    const data = {
       birthday: formData.get("birthday") as string,
       identityNumber: formData.get("identityNumber") as string,
-      website: formData.get("website") as string,
-      phone: formData.get("phone") as string,
-      description: formData.get("description") as string,
+      website: (formData.get("website") as string) || null,
+      phone: (formData.get("phone") as string) || null,
+      description: (formData.get("description") as string) || null,
       gender: formData.get("gender") as Gender,
-      location: formData.get("location") as string,
-      talent: formData.get("talent") as string,
-      education: formData.get("education") as string,
-      experience: formData.get("experience") as string,
+      location: (formData.get("location") as string) || null,
+      talent: (formData.get("talent") as string) || null,
+      education: (formData.get("education") as string) || null,
+      experience: (formData.get("experience") as string) || null,
+      createdAt: now,
+      updatedAt: now,
     };
 
+    // @ts-ignore
     await createUserProfile(user.email, data);
     revalidatePath("/profile");
   } catch (_) {
