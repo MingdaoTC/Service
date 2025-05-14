@@ -1,42 +1,27 @@
 import SimpleSearch from "@/components/Global/Search/SimpleSearch";
 import CompanyList from "@/components/Home/CompanyList";
-// Components
 import JobList from "@/components/Home/JobList";
 
-const testCompanyData = {
-  id: "1",
-  name: "英屬維京群島商太古可口可樂(股)公司台灣分公司",
-  address: "桃園市桃園區",
-  categoryId: "飲料製造業",
-  tags: ["其他客服人員", "國內業務", "國外業務"],
-  logoUrl: "https://cdn.lazco.dev/cocacola.png",
-};
+import { Company as TCompany, Job as TJob } from "@/prisma/client";
+import { getJob, getCompany } from "@/app/_home/action/fetch";
 
-const testJobData = {
-  id: "1",
-  title: "硬體研發工程師(伺服器及工作站)",
-  company: "華碩電腦股份有限公司",
-  location: "台北市北投區",
-  experience: "兩年以上",
-  education: "大學",
-  salaryMin: "60000",
-  salaryMax: "999999",
-};
+export default async function Home() {
+  const jobs: TJob[] = await getJob();
+  const companies: TCompany[] = await getCompany();
 
-export default function Home() {
   return (
-    <div className="h-auto">
-      {/* 縮小高度的 hero section */}
+    <div className="min-h-[calc(100dvh-6rem)] flex flex-col">
+      {/* Search hero section */}
       <div className="bg-mingdao-blue-light min-h-[10rem] md:h-60 p-3 md:p-6 flex justify-center items-start">
         <div className="w-full max-w-2xl">
           <SimpleSearch />
         </div>
       </div>
 
-      {/* 縮小間距並調整響應式位置 */}
+      {/* Content section */}
       <div className="flex flex-col gap-3 sm:gap-4 w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4 relative -top-20 sm:-top-14 md:-top-32">
-        <JobList data={new Array(6).fill(testJobData)} />
-        <CompanyList data={new Array(6).fill(testCompanyData)} />
+        <JobList data={jobs} />
+        <CompanyList data={companies} />
       </div>
     </div>
   );
