@@ -30,7 +30,7 @@ export default function Company(props: Props) {
           <div
             className="w-full h-full"
             style={{
-              backgroundImage: `url(${props.data.logoUrl})`,
+              backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL! + props.data.logoUrl})`,
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",

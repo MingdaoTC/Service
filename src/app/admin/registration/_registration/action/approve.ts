@@ -19,6 +19,7 @@ import { findUniqueUser } from "@/library/prisma/user/findUnique";
 
 // 輔助函數
 import { revalidatePath } from "next/cache";
+import { createCompany } from "@/library/prisma/company/create";
 
 /**
  * 審核通過申請的 Server Action
@@ -91,6 +92,15 @@ export async function approveRegistration(formData: FormData) {
           { status: AccountStatus.VERIFIED, role: UserRole.COMPANY }
         );
       }
+
+      // @ts-ignore
+      await createCompany({
+        name: updatedRegistration.companyName,
+        email: updatedRegistration.email,
+        unifiedNumber: updatedRegistration.companyId,
+        published: false,
+        tags: [],
+      });
 
       // 重新驗證路徑，使畫面刷新
       revalidatePath("/admin/registration");

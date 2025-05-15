@@ -138,7 +138,9 @@ function UserDropdown({ user }: { user: User }) {
                   </div>
                 </>
               )}
-            <hr className="border-gray-300 my-2" />
+            {((user.role === UserRole.SUPERADMIN) || (user.status !== AccountStatus.PENDING)) && (
+              <hr className="border-gray-300 my-2" />
+            )}
             <div className="flex flex-col px-4 gap-1">
               {((user.status === AccountStatus.UNVERIFIED) || (user.role === UserRole.SUPERADMIN)) && (
                 <Link

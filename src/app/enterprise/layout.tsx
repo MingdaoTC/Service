@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 // Icons
-import { Activity, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
+import { SquarePen, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -21,37 +21,13 @@ type MenuItem = {
 // 集中管理的菜單配置
 const menuItems: MenuItem[] = [
   {
-    id: "dashboard",
-    label: "網站狀態",
-    icon: Activity,
-    path: "/admin",
-    beta: true,
-    disabled: false
-  },
-  {
-    id: "registration",
-    label: "申請驗證審核",
-    icon: BadgeCheck,
-    path: "/admin/registration",
+    id: "information",
+    label: "公司資料管理",
+    icon: SquarePen,
+    path: "/enterprise",
     beta: false,
     disabled: false
   },
-  {
-    id: "users",
-    label: "使用者管理",
-    icon: User,
-    path: "/admin/users",
-    beta: true,
-    disabled: false
-  },
-  {
-    id: "admins",
-    label: "管理員設定",
-    icon: ShieldUser,
-    path: "/admin/admins",
-    beta: true,
-    disabled: false
-  }
   // {
   //   id: "help",
   //   label: "幫助中心",

@@ -34,12 +34,12 @@ model User {
   status              AccountStatus         @default(UNVERIFIED)
   application         Application[]
   userProfile         UserProfile?
+  Company             Company?
   resume              Resume[]
   CompanyRegistration CompanyRegistration[]
   AlumniRegistration  AlumniRegistration[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
-  Company             Company?
 }
 
 enum Gender {
@@ -88,6 +88,7 @@ model Application {
 model Company {
   id                String           @id @default(auto()) @map("_id") @db.ObjectId
   email             String           @unique
+  unifiedNumber     String           @unique
   name              String
   logoUrl           String?
   categoryId        String?          @db.ObjectId
@@ -99,6 +100,7 @@ model Company {
   fax               String?
   address           String?
   description       String?
+  published         Boolean          @default(false)
   jobs              Job[]
   CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
   user              User             @relation(fields: [email], references: [email])
