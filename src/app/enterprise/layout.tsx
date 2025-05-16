@@ -28,6 +28,14 @@ const menuItems: MenuItem[] = [
     beta: false,
     disabled: false
   },
+  {
+    id: "jobs",
+    label: "工作職缺管理",
+    icon: User,
+    path: "/enterprise/jobs",
+    beta: false,
+    disabled: false
+  }
   // {
   //   id: "help",
   //   label: "幫助中心",
@@ -36,7 +44,7 @@ const menuItems: MenuItem[] = [
   // }
 ];
 
-export default function AdminLayout({
+export default function EnterpriseLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
