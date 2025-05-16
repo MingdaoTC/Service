@@ -58,7 +58,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     if (
       formData.get("birthday") &&
       new Date(formData.get("birthday")?.toString() as string).toString() ===
-        "Invalid Date"
+      "Invalid Date"
     ) {
       setError("生日格式不正確");
       setDialogMessage("生日格式不正確");
@@ -103,7 +103,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     {
       name: "birthday",
       type: "text",
-      placeholder: "Birthday",
+      placeholder: "2000/01/01",
       title:
         mode === "update" ? "生日" : "生日 (YYYY/MM/DD 格式，如 2000/01/01)",
       disabled: mode === "update",
@@ -113,7 +113,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     {
       name: "identityNumber",
       type: "text",
-      placeholder: "Identity Number",
+      placeholder: "A123456789",
       title: "身分證號碼",
       disabled: mode === "update",
       pattern: /^[A-Z][12]\d{8}$/gm,
@@ -122,33 +122,33 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     {
       name: "website",
       type: "text",
-      placeholder: "Website",
+      placeholder: "https://example.com",
       title: "個人網站",
     },
-    { name: "phone", type: "text", placeholder: "Phone", title: "聯絡電話" },
+    { name: "phone", type: "text", placeholder: "0912345678", title: "聯絡電話" },
     {
       name: "description",
       type: "textarea",
-      placeholder: "Description",
+      placeholder: "我畢業於台灣科技大學資訊工程學系，在校期間就對軟體開發產生濃厚興趣，並積極參與各種相關專案。畢業後，我在一家中型科技公司擔任後端工程師三年，主要負責API開發和數據庫優化，成功將系統響應時間縮短了40%。",
       title: "自我介紹",
     },
     {
       name: "location",
       type: "text",
-      placeholder: "Location",
+      placeholder: "臺中市烏日區",
       title: "居住地",
     },
-    { name: "talent", type: "text", placeholder: "Talent", title: "專長" },
+    { name: "talent", type: "text", placeholder: "前端/後端", title: "專長" },
     {
       name: "education",
       type: "text",
-      placeholder: "Education",
+      placeholder: "大學畢業",
       title: "學歷",
     },
     {
       name: "experience",
       type: "text",
-      placeholder: "Experience",
+      placeholder: "3年前端工程師",
       title: "工作經歷",
     },
     {
@@ -156,9 +156,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       type: "select",
       title: "性別",
       options: [
-        { value: "UNSPECIFIED", label: "Other" },
-        { value: "MALE", label: "Male" },
-        { value: "FEMALE", label: "Female" },
+        { value: "UNSPECIFIED", label: "其他" },
+        { value: "MALE", label: "男" },
+        { value: "FEMALE", label: "女" },
       ],
     },
   ];
@@ -176,9 +176,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 h-24 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
             />
           </Fragment>
@@ -191,9 +190,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               key={field.name}
               name={field.name}
               defaultValue={field.options[0].value}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
             >
               {field.options.map((option) => (
@@ -214,9 +212,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
               pattern={field.pattern?.source}
               required={field.required}
@@ -256,19 +253,18 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className={`px-4 py-2 ${
-            isPending
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
-          } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
+          className={`px-4 py-2 ${isPending
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
+            } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
         >
           {isPending
             ? mode === "update"
-              ? "Updating..."
-              : "Creating..."
+              ? "更新中..."
+              : "建立中..."
             : mode === "update"
-            ? "Update"
-            : "Create"}
+              ? "更新"
+              : "建立"}
         </button>
       </form>
     </>
