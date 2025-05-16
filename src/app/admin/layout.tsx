@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 // Icons
-import { Activity, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
+import { Store, Activity, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -34,6 +34,14 @@ const menuItems: MenuItem[] = [
     icon: BadgeCheck,
     path: "/admin/registration",
     beta: false,
+    disabled: false
+  },
+  {
+    id: "companie",
+    label: "企業管理",
+    icon: Store,
+    path: "/admin/admins",
+    beta: true,
     disabled: false
   },
   {
