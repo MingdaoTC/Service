@@ -19,7 +19,7 @@ export default async function Info({
         className
       )}
     >
-      <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
+      <div className="w-[90%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
         <div className="flex items-center gap-3 sm:gap-4">
           {data.logoUrl && (
             <div className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 w-12 h-12 sm:w-14 sm:h-14 rounded-md border p-1 flex-shrink-0 aspect-square overflow-hidden">
