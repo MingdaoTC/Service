@@ -18,9 +18,6 @@ import { getCompanyData, getCompanyCategoryData } from "@/app/enterprise/_enterp
 import { handleUpdate } from "@/app/enterprise/_enterprise/action/handleUpdate";
 import { getAllCities, getDistrictsByCity } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 
-// Components
-import Button from "@/components/Global/Button/Button";
-
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
@@ -43,12 +40,6 @@ export default function CompanyProfilePage() {
   const [districtChoose, setDistrictChoose] = useState("");
   const [taiwanDistrictList, setTaiwanDistrictList] = useState<[]>([]);
   const [defaultTaiwanDistrictList, setDefaultTaiwanDistrictList] = useState<[]>([]);
-  const router = useRouter();
-
-  const { data: session } = useSession();
-  const user = session?.user as User;
-  const isSuperAdmin = user?.role === UserRole.SUPERADMIN;
-
   const taiwanCityList = getAllCities();
 
   useEffect(() => {
@@ -85,10 +76,6 @@ export default function CompanyProfilePage() {
       setIsLoading(false);
     })();
   }, []);
-
-  const handleGoAdminPage = () => {
-    router.push("/admin");
-  };
 
   // 處理表單變更
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -261,59 +248,7 @@ export default function CompanyProfilePage() {
     return new Intl.NumberFormat('zh-TW').format(capital);
   };
 
-  if (isLoading) return (<></>);
-
-  if (isSuperAdmin && !companyData) return (
-    <div className="relative w-full h-[calc(100vh-6rem)] flex items-center justify-center">
-      <div className="fixed top-0 left-0 w-full h-full bg-white/70 backdrop-blur-sm flex items-center justify-center z-[1000] overflow-hidden mt-12">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-[90%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <h2 className="text-xl font-bold mb-2">管理員通知</h2>
-          <p>
-            目前無法獲取公司資料
-            <br />
-            請稍後再試或聯繫客服人員
-            <br />
-            如果您是管理員且無管理中的公司行號
-            <br />
-            請忽略此通知
-          </p>
-          <div className="flex gap-5 justify-center mt-5 w-full">
-            <Button
-              onClick={handleGoAdminPage}
-              className="py-3 px-0 rounded text-base font-semibold cursor-pointer transition-all duration-300 flex-1 min-w-[120px] text-center bg-[var(--primary-color)] text-white border-none hover:bg-[var(--secondary-color)]"
-              type="danger"
-            >
-              前往管理員後台
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  if ((!companyData || !newCompanyData)) return (
-    <div className="relative w-full h-[calc(100vh-6rem)] flex items-center justify-center">
-      <div className="fixed top-0 left-0 w-full h-full bg-white/70 backdrop-blur-sm flex items-center justify-center z-[1000] overflow-hidden mt-12">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-[90%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <h2 className="text-xl font-bold mb-2">無公司資料</h2>
-          <p>
-            目前無法獲取公司資料，請稍後再試或聯繫客服人員
-            <br />
-            如果您是超級管理員，請忽略此通知
-          </p>
-          <div className="flex gap-5 justify-center mt-5 w-full">
-            <Button
-              onClick={handleGoAdminPage}
-              className="py-3 px-0 rounded text-base font-semibold cursor-pointer transition-all duration-300 flex-1 min-w-[120px] text-center bg-[var(--primary-color)] text-white border-none hover:bg-[var(--secondary-color)]"
-              type="danger"
-            >
-              前往管理員後台
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  if (isLoading || !companyData || !newCompanyData) return (<></>);
 
   return (
     <>

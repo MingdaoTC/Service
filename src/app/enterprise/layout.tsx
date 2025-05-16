@@ -1,11 +1,20 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 // Module
 import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 // Icons
 import { SquarePen, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
+
+// Types
+import { Company, User as TUser, UserRole } from "@/prisma/client";
+
+import { getCompanyData } from "@/app/enterprise/_enterprise/action/fetch";
+
+// Components
+import Button from "@/components/Global/Button/Button";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -36,12 +45,6 @@ const menuItems: MenuItem[] = [
     beta: false,
     disabled: false
   }
-  // {
-  //   id: "help",
-  //   label: "幫助中心",
-  //   icon: HelpCircle,
-  //   onClick: () => window.open('https://help.example.com', '_blank')
-  // }
 ];
 
 export default function EnterpriseLayout({
@@ -53,6 +56,11 @@ export default function EnterpriseLayout({
   const router = useRouter();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [company, setCompany] = useState<Company>();
+
+  const { data: session } = useSession();
+  const user = session?.user as TUser;
+  const isSuperAdmin = user?.role === UserRole.SUPERADMIN;
 
   // 確定當前活動頁籤的函數
   const getActiveTabFromPath = (path: string) => {
@@ -80,6 +88,15 @@ export default function EnterpriseLayout({
     // 默認返回 dashboard
     return "dashboard";
   };
+
+  useEffect(() => {
+    (async () => {
+      const company = await getCompanyData()
+      if (company) {
+        setCompany(company);
+      }
+    })();
+  }, []);
 
   // 監聽窗口大小變化
   useEffect(() => {
@@ -130,6 +147,40 @@ export default function EnterpriseLayout({
   const toggleMobileMenu = () => {
     setShowMobileMenu(!showMobileMenu);
   };
+
+  const handleGoAdminPage = () => {
+    router.push("/admin");
+  };
+
+  if (isSuperAdmin && !company) {
+    return (
+      <div className="relative w-full h-[calc(100vh-6rem)] flex items-center justify-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-white/70 backdrop-blur-sm flex items-center justify-center z-[1000] overflow-hidden mt-12">
+          <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-[90%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <h2 className="text-xl font-bold mb-2">管理員通知</h2>
+            <p>
+              目前無法獲取公司資料
+              <br />
+              請稍後再試或聯繫客服人員
+              <br />
+              如果您是管理員且無管理中的公司行號
+              <br />
+              請忽略此通知
+            </p>
+            <div className="flex gap-5 justify-center mt-5 w-full">
+              <Button
+                onClick={handleGoAdminPage}
+                className="py-3 px-0 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 flex-1 min-w-[120px] text-center bg-[var(--primary-color)] text-white border-none hover:rounded-none"
+                type="primary"
+              >
+                前往管理員後台
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // 渲染菜單項
   const renderMenuItem = (item: MenuItem, index: number) => {

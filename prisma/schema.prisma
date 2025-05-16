@@ -143,6 +143,7 @@ model Job {
   skills            String?
   others            String?
   benefits          String?
+  published         Boolean        @default(false)
   company           Company        @relation(fields: [companyId], references: [id])
   category          JobCategory?   @relation(fields: [categoryId], references: [id])
   createdAt         DateTime       @default(now())

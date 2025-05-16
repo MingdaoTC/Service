@@ -9,5 +9,12 @@ export async function findManyCompanyWithPublished() {
     where: {
       published: true,
     },
+    include: {
+      jobs: {
+        where: {
+          published: true,
+        },
+      },
+    },
   });
 }
