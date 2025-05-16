@@ -5,7 +5,7 @@ import { useState, useRef, Fragment } from "react";
 import { updateProfile } from "../actions/updateProfile";
 import { createProfile } from "../actions/createProfile";
 import OperationInfoDialog from "@/components/Global/OperationInfoDialog";
-import { UserProfile } from "@/prisma/client";
+import { Gender, UserProfile } from "@/prisma/client";
 
 import { validateTaiwanId } from "@/library/validators/taiwanId";
 
@@ -156,9 +156,10 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       type: "select",
       title: "性別",
       options: [
-        { value: "UNSPECIFIED", label: "其他" },
-        { value: "MALE", label: "男" },
-        { value: "FEMALE", label: "女" },
+
+        { value: Gender.MALE, label: "男" },
+        { value: Gender.FEMALE, label: "女" },
+        { value: Gender.UNSPECIFIED, label: "其他" },
       ],
     },
   ];
