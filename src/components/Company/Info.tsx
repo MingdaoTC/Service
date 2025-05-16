@@ -3,8 +3,9 @@ import { BiBookmark } from "react-icons/bi";
 import { joinClass } from "@/library/joinClass";
 import type { Company } from "@/prisma/client";
 import Button from "../Global/Button/Button";
+import { getDownloadPresignedUrl } from "@/library/r2UrlCache/presign";
 
-export default function Info({
+export default async function Info({
   data,
   className,
 }: {
@@ -25,7 +26,9 @@ export default function Info({
               <div
                 className="w-full h-full bg-contain bg-no-repeat bg-center"
                 style={{
-                  backgroundImage: `url(${data.logoUrl})`,
+                  backgroundImage: `url(${await getDownloadPresignedUrl(
+                    data.logoUrl
+                  )})`,
                 }}
               />
             </div>
