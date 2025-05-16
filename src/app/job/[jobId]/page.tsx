@@ -81,7 +81,7 @@ export default async function JobPage() {
             <Content data={testJobData.detail} className="w-full" />
             <Requirement data={testJobData.requirement} className="w-full" />
           </div>
-          <div className="w-full lg:w-1/4">
+          {/* <div className="w-full lg:w-1/4">
             <Other<Job>
               title="適合你的其他職缺"
               data={[
@@ -92,7 +92,7 @@ export default async function JobPage() {
               contentKey={{ title: "title", content0: "company" }}
               className="h-full"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
