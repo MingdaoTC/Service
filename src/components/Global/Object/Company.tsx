@@ -1,28 +1,21 @@
 "use client";
 
-import type { Company as TCompany } from "@/prisma/client";
+import type { CompanyCategory, Company as TCompany } from "@/prisma/client";
 import Link from "next/link";
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { countJobs } from "@/components/Global/Object/_object/count";
-import { fetchCategory } from "@/components/Global/Object/_object/fetch";
 
 type Props = {
   data: TCompany;
   className?: string;
+  category: string;
 };
 
 export default function Company(props: Props) {
-  const [JobsNum, setJobsNum] = useState<number>(0);
-  const [category, setCategory] = useState<any>(null);
-
-  useEffect(() => {
-    (async () => {
-      const categories = await fetchCategory();
-      setCategory(categories);
-    })();
-  }, []);
+  const [jobsNum, setJobsNum] = useState<number>(0);
+  const [category, setCategory] = useState<CompanyCategory | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -58,10 +51,8 @@ export default function Company(props: Props) {
         </div>
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiBuildings color="gray" size={"1em"} />
-
           <span className="truncate">
-            {category?.find((item: any) => item.id === props.data.categoryId)
-              ?.name || "未知類別"}
+            {props.category}
           </span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">
@@ -79,7 +70,7 @@ export default function Company(props: Props) {
       </div>
       <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer mt-auto">
         <Link className="block w-full h-full" href={`/company/${props.data.id}`}>
-          查看工作機會 ({JobsNum})
+          查看工作機會 ({jobsNum})
         </Link>
       </div>
     </div>
