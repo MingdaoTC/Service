@@ -649,7 +649,7 @@ export default function CompanyProfilePage() {
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
                       >
-                        <option value="">請選擇縣市</option>
+                        <option value="">請選擇地區</option>
                         {taiwanDistrictList.map((district: any) => (
                           <option key={district.name} value={district.name}>
                             {district.name}
