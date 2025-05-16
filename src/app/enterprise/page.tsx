@@ -37,9 +37,12 @@ export default function CompanyProfilePage() {
   const [companyData, setCompanyData] = useState<Company>();
   const [newCompanyData, setNewCompanyData] = useState<Company>();
   const [tagInput, setTagInput] = useState("");
+  const [defaultCityChoose, setDefaultCityChoose] = useState("");
+  const [defaultDistrictChoose, setDefaultDistrictChoose] = useState("");
   const [cityChoose, setCityChoose] = useState("");
   const [districtChoose, setDistrictChoose] = useState("");
   const [taiwanDistrictList, setTaiwanDistrictList] = useState<[]>([]);
+  const [defaultTaiwanDistrictList, setDefaultTaiwanDistrictList] = useState<[]>([]);
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -62,11 +65,15 @@ export default function CompanyProfilePage() {
           setNewCompanyData(company);
           const city = company.address?.split(" ")[0] || "";
           setCityChoose(city);
+          setDefaultCityChoose(city);
           const district = company.address?.split(" ")[1] || "";
           setDistrictChoose(district);
+          setDefaultDistrictChoose(district);
+
 
           const districts: any = getDistrictsByCity(city);
           setTaiwanDistrictList(districts);
+          setDefaultTaiwanDistrictList(districts);
         }
       } catch (error) {
         console.error("獲取公司資料失敗:", error);
@@ -694,6 +701,9 @@ export default function CompanyProfilePage() {
                 onClick={() => {
                   setNewCompanyData(companyData);
                   setTagInput(companyData.tags.join(", "));
+                  setCityChoose(defaultCityChoose);
+                  setDistrictChoose(defaultDistrictChoose);
+                  setTaiwanDistrictList(defaultTaiwanDistrictList);
                 }}
                 type="button"
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors flex items-center"
