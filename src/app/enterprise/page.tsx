@@ -16,6 +16,7 @@ import {
 // Server Actions
 import { getCompanyData, getCompanyCategoryData } from "@/app/enterprise/_enterprise/action/fetch";
 import { handleUpdate } from "@/app/enterprise/_enterprise/action/handleUpdate";
+import { getAllCities, getDistrictsByCity } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 
 // Components
 import Button from "@/components/Global/Button/Button";
@@ -36,12 +37,16 @@ export default function CompanyProfilePage() {
   const [companyData, setCompanyData] = useState<Company>();
   const [newCompanyData, setNewCompanyData] = useState<Company>();
   const [tagInput, setTagInput] = useState("");
+  const [cityChoose, setCityChoose] = useState("");
+  const [districtChoose, setDistrictChoose] = useState("");
+  const [taiwanDistrictList, setTaiwanDistrictList] = useState<[]>([]);
   const router = useRouter();
 
   const { data: session } = useSession();
   const user = session?.user as User;
   const isSuperAdmin = user?.role === UserRole.SUPERADMIN;
 
+  const taiwanCityList = getAllCities();
 
   useEffect(() => {
     (async () => {
@@ -55,6 +60,13 @@ export default function CompanyProfilePage() {
         if (company) {
           setCompanyData(company);
           setNewCompanyData(company);
+          const city = company.address?.split(" ")[0] || "";
+          setCityChoose(city);
+          const district = company.address?.split(" ")[1] || "";
+          setDistrictChoose(district);
+
+          const districts: any = getDistrictsByCity(city);
+          setTaiwanDistrictList(districts);
         }
       } catch (error) {
         console.error("獲取公司資料失敗:", error);
@@ -84,6 +96,27 @@ export default function CompanyProfilePage() {
       }
       return;
     }
+
+    if (name === "city") {
+      const selectedCity: any = e.target.value;
+      const districts: any = getDistrictsByCity(selectedCity);
+      setTaiwanDistrictList(districts);
+      setCityChoose(selectedCity);
+      setDistrictChoose("");
+      return;
+    }
+
+    if (name === "district") {
+      const selectedDistrict: any = e.target.value;
+      setDistrictChoose(selectedDistrict);
+      setNewCompanyData({
+        ...newCompanyData,
+        "address": cityChoose + " " + selectedDistrict
+      });
+      return;
+    }
+
+
     setNewCompanyData({
       ...newCompanyData,
       [name]: value
@@ -197,7 +230,6 @@ export default function CompanyProfilePage() {
       try {
         if (newCompanyData === undefined) return;
         const result = await handleUpdate(newCompanyData);
-
         if (result === "OK") {
           setCompanyData(newCompanyData);
           setStatusMessage({
@@ -588,18 +620,44 @@ export default function CompanyProfilePage() {
 
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                    公司地址 <span className="text-red-500">*</span>
+                    公司位置 <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    required
-                    value={newCompanyData.address || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
-                    placeholder="請輸入公司地址"
-                  />
+                  <div className="flex w-full gap-2 mb-2">
+                    <div className="flex-1">
+                      <select
+                        id="city"
+                        name="city"
+                        required
+                        value={cityChoose}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                      >
+                        <option value="">請選擇縣市</option>
+                        {taiwanCityList.map((city: string) => (
+                          <option key={city} value={city}>
+                            {city}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-1">
+                      <select
+                        id="district"
+                        name="district"
+                        required
+                        value={districtChoose}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                      >
+                        <option value="">請選擇縣市</option>
+                        {taiwanDistrictList.map((district: any) => (
+                          <option key={district.name} value={district.name}>
+                            {district.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
