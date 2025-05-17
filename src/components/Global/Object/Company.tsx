@@ -24,7 +24,7 @@ export default function Company(props: Props) {
 
   return (
     <div
-      className={`border bg-white rounded-lg border-1 border-black border-opacity-20 flex flex-col h-full ${props.className}`}
+      className={`border bg-white rounded-lg border-1 border-black border-opacity-10 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${props.className}`}
     >
       <div className="flex gap-2 items-center px-3 pt-3">
         <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 w-14 h-14 sm:w-16 sm:h-16 rounded-md border p-1 flex-shrink-0 aspect-square">
@@ -66,7 +66,7 @@ export default function Company(props: Props) {
           })}
         </div>
       </div>
-      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer mt-auto">
+      <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer mt-auto transition-all duration-300 hover:bg-mingdao-blue-dark/90">
         <Link className="block w-full h-full" href={`/company/${props.data.id}`}>
           查看工作機會 ({jobsNum})
         </Link>

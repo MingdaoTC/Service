@@ -1,9 +1,8 @@
 import Button from "@/components/Global/Button/Button";
 import { joinClass } from "@/library/joinClass";
-import { Company, Location, Job as TJob } from "@/prisma/client";
+import { Company, Job as TJob } from "@/prisma/client";
 import Link from "next/link";
 import { AiOutlineMail } from "react-icons/ai";
-import { BiBookmark } from "react-icons/bi";
 
 export default function Job({
   data,
@@ -19,7 +18,7 @@ export default function Job({
       return (
         <div
           className={joinClass(
-            "px-5 py-4 border bg-white rounded-lg flex border-1 border-black border-opacity-20",
+            "px-5 py-4 border bg-white rounded-lg flex border-1 border-black border-opacity-20 transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md",
             className,
           )}
         >
@@ -68,7 +67,7 @@ export default function Job({
 
     case "sm":
       return (
-        <div className={`px-4 py-3 border bg-white rounded-lg ${className}`}>
+        <div className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}>
           <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}
@@ -98,7 +97,7 @@ export default function Job({
       );
     default:
       return (
-        <div className={`px-4 py-3 border bg-white rounded-lg ${className}`}>
+        <div className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}>
           <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}

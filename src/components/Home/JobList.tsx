@@ -1,5 +1,5 @@
-import { Company, JobCategory, Job as TJob } from "@/prisma/client";
-import { BiBriefcase } from "react-icons/bi";
+import { Company, Job as TJob } from "@/prisma/client";
+import { FaBriefcase } from "react-icons/fa";
 import Job from "../Global/Object/Job";
 
 type Props = {
@@ -10,16 +10,11 @@ type Props = {
 export default function JobList(props: Props) {
   return (
     <div
-      className={`border p-3 md:p-5 shadow-md bg-white rounded-lg ${props.className}`}
+      className={`p-3 md:p-5 shadow-md bg-white rounded-lg ${props.className}`}
     >
-      <h1 className="text-lg mb-2 md:mb-3 flex gap-1.5 items-center text-black font-bold">
-        <BiBriefcase
-          color="#00A3FF"
-          size={"1.2em"}
-          className="translate-y-[0.05em]"
-        />
-        推薦職缺
-      </h1>
+      <h2 className="text-2xl font-bold text-mingdao-blue-dark flex items-center mb-4">
+        <FaBriefcase className="mr-2" /> 推薦職缺
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
         {props.data.map((jobData: TJob & { company: Company }, index) => (
           <Job key={index} data={jobData} size="sm" />

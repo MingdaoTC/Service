@@ -30,7 +30,9 @@ export default function RootLayout({
         >
           <HeaderBar />
           <div className="h-[calc(100dvh-3rem)] flex flex-col overflow-auto">
-            <div className="flex-1 overflow-auto min-h-[calc(100dvh-6rem)]">{children}</div>
+            <div className="flex-none min-h-[calc(100dvh-7rem)]">
+              {children}
+            </div>
             <Footer />
           </div>
         </body>

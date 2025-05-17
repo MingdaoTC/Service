@@ -1,7 +1,7 @@
 "use client";
 
 import { CompanyCategory, Company as TCompany } from "@/prisma/client";
-import { BiBuildings } from "react-icons/bi";
+import { FaBuilding } from "react-icons/fa";
 import Company from "../Global/Object/Company";
 
 type Props = {
@@ -12,16 +12,11 @@ type Props = {
 export default function CompanyList(props: Props) {
   return (
     <div
-      className={`border p-3 md:p-5 shadow-md bg-white rounded-lg ${props.className}`}
+      className={`p-3 md:p-5 shadow-md bg-white rounded-lg ${props.className}`}
     >
-      <h1 className="text-lg mb-2 md:mb-3 flex gap-1.5 items-center text-black font-bold">
-        <BiBuildings
-          color="#00A3FF"
-          size={"1.2em"}
-          className="translate-y-[0.05em]"
-        />
-        推薦公司
-      </h1>
+      <h2 className="text-2xl font-bold text-mingdao-blue-dark flex items-center mb-4">
+        <FaBuilding className="mr-2" /> 推薦企業
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
         {props.data.map((companyData: TCompany & { category: CompanyCategory | null }, index) => (
           <Company key={index} data={companyData} />

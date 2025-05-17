@@ -1,7 +1,11 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 py-4 text-center font-sans text-sm text-gray-600 border-t border-gray-300 h-[3rem] flex-none">
-      <p>版權所有 &copy; {new Date().getFullYear()} 臺中市私立明道高級中學</p>
-    </footer>
+    <div className="bg-mingdao-blue bg-opacity-75 text-white h-[4rem] flex-1 py-4 flex items-center justify-center">
+      <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto text-center my-auto">
+        <p>© {new Date().getFullYear()} 明道人才雲 - 打造理想職涯</p>
+      </div>
+    </div>
   );
 }

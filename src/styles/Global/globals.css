@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+
   /* Set after:bg-[color] to specify the color of the underline */
   .animated-underline-left {
     position: relative;
@@ -80,31 +81,92 @@
   --border-color: #ddd;
 }
 
-/* Webkit browsers (Chrome, Safari, newer versions of Opera) */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
+  /* 垂直滾動條寬度 */
+  height: 10px;
+  /* 水平滾動條高度 */
 }
 
+/* 滾動條軌道 */
 ::-webkit-scrollbar-track {
-  background: #f0f7fc;
-  /* Light blue background matching site theme */
+  background: #f1f5f9;
+  /* 使用淡藍灰色背景，柔和且符合網站風格 */
   border-radius: 10px;
+  /* 圓角效果 */
 }
 
+/* 滾動條滑塊 */
 ::-webkit-scrollbar-thumb {
-  background: #4a9fe9;
-  /* Blue color from the site's header */
+  background: rgba(35, 97, 174, 0.6);
+  /* 半透明的 mingdao-blue 色調 */
   border-radius: 10px;
-  border: 2px solid #f0f7fc;
+  /* 圓角效果 */
+  border: 2px solid #f1f5f9;
+  /* 邊框效果，創造間隔感 */
+  transition: background 0.2s ease;
+  /* 平滑過渡效果 */
 }
 
+/* 滑塊懸停效果 */
 ::-webkit-scrollbar-thumb:hover {
-  background: #3182ce;
-  /* Darker blue on hover */
+  background: rgba(35, 97, 174, 0.8);
+  /* 懸停時顏色加深 */
 }
 
-/* Firefox */
+/* 滑塊點擊效果 */
+::-webkit-scrollbar-thumb:active {
+  background: rgba(35, 97, 174, 1);
+  /* 點擊時使用實心顏色 */
+}
+
+/* 滾動條角落 */
+::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+  /* 與軌道顏色相同 */
+}
+
+/* Firefox 滾動條樣式 */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4a9fe9 #f0f7fc;
+  /* 滾動條寬度 */
+  scrollbar-color: rgba(35, 97, 174, 0.6) #f1f5f9;
+  /* 滑塊和軌道顏色 */
+}
+
+/* 針對特定容器的滾動條樣式變化 */
+.scrollbar-light::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  /* 更淺的背景，適用於深色背景上的容器 */
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  /* 半透明白色滑塊 */
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  /* 邊框 */
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+  /* 懸停效果 */
+}
+
+/* 可以針對特定頁面或元素使用此類別以改變滾動條顏色 */
+.scrollbar-light {
+  scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1);
+  /* Firefox 支持 */
+}
+
+/* 當需要隱藏滾動條但保留功能時使用 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE 和 Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari 和 Opera */
 }
