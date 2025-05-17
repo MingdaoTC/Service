@@ -125,7 +125,7 @@ model Job {
   title             String
   companyId         String         @db.ObjectId
   description       String
-  categoryId        String?        @db.ObjectId
+  categoryId        String         @db.ObjectId
   salaryMin         Int            @default(0)
   salaryMax         Int            @default(0)
   negotiable        Boolean
@@ -136,8 +136,8 @@ model Job {
   workingHours      String?
   startDate         String?
   numberOfPositions Int?
-  experience        String?
-  education         String?
+  experience        String
+  education         String
   major             String?
   language          String?
   skills            String?
@@ -145,7 +145,7 @@ model Job {
   benefits          String?
   published         Boolean        @default(false)
   company           Company        @relation(fields: [companyId], references: [id])
-  category          JobCategory?   @relation(fields: [categoryId], references: [id])
+  category          JobCategory    @relation(fields: [categoryId], references: [id])
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 }

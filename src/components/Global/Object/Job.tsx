@@ -48,14 +48,14 @@ export default function Job({
             </p>
           </div>
           <div className="flex flex-col gap-2">
-            <Button
+            {/* <Button
               type="secondary"
               className="flex items-center gap-1 text-sm py-1 px-3"
             >
               <BiBookmark className="translate-y-[1px]" />
               儲存
-            </Button>
-            <Button className="flex items-center gap-1 text-sm py-1 px-3">
+            </Button> */}
+            <Button className="flex items-center gap-1 text-sm py-1 px-3" disabled>
               <AiOutlineMail className="translate-y-[0.5px]" />
               應徵
             </Button>

@@ -73,7 +73,7 @@ export default async function JobPage() {
   const user: User | null = session?.user || null;
 
   return (
-    <>
+    <div className="">
       <Info isLogin={!!user} data={testRecommendedJobData} />
       <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
         <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
@@ -95,6 +95,6 @@ export default async function JobPage() {
           </div> */}
         </div>
       </div>
-    </>
+    </div>
   );
 }

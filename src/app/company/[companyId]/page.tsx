@@ -18,21 +18,21 @@ export default async function companyID({
   }
 
   return (
-    <>
+    <div className="min-h-[calc(100vh-6rem)]">
       <Info data={companyData} />
       <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
         <div className="flex flex-col lg:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
-          <div className="w-full lg:w-3/4">
+          <div className="w-full">
             <Content data={companyData} className="w-full" />
           </div>
-          <div className="w-full lg:w-1/4">
+          {/* <div className="w-full lg:w-1/4">
             <Other<Company>
               title="適合你的其他公司"
               data={[companyData, companyData, companyData]}
               contentKey={{ title: "name", content0: "address" }}
               className="h-full"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col gap-2 sm:gap-3">
@@ -41,6 +41,6 @@ export default async function companyID({
           </h2>
         </div>
       </div>
-    </>
+    </div>
   );
 }

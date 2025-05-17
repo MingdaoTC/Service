@@ -37,7 +37,7 @@ export default async function Info({
             {data.name}
           </h1>
         </div>
-        <div className="flex h-fit w-full sm:w-auto justify-end">
+        {/* <div className="flex h-fit w-full sm:w-auto justify-end">
           <Button
             type="secondary"
             className="flex items-center gap-1 sm:gap-2 text-sm md:text-base px-3 py-2 sm:px-4"
@@ -45,7 +45,7 @@ export default async function Info({
             <BiBookmark className="translate-y-[1px]" />
             儲存
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

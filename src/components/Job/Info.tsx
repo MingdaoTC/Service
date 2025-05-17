@@ -58,26 +58,27 @@ export default function Info({
               {data.title}
             </h1>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 pt-2 sm:pt-3">
-              <p className="text-mingdao-blue text-sm sm:text-base">
+              <a className="text-mingdao-blue text-sm sm:text-base">
                 {data.company}
-              </p>
-              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-              <a href={"#"} className="text-mingdao-blue text-sm sm:text-base">
-                本公司其他工作
               </a>
+              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+              {/* <a href={"#"} className="text-mingdao-blue text-sm sm:text-base">
+                本公司其他工作
+              </a> */}
             </div>
           </div>
           <div className="flex h-fit gap-3 sm:gap-4 md:gap-5 w-full sm:w-auto justify-end">
-            <Button
+            {/* <Button
               type="secondary"
               className="flex items-center gap-1 sm:gap-2 text-sm md:text-base px-3 py-2 sm:px-4"
             >
               <BiBookmark className="translate-y-[1px]" />
               儲存
-            </Button>
+            </Button> */}
             <Button
               className="flex items-center gap-1 sm:gap-2 text-sm md:text-base px-3 py-2 sm:px-4 bg-mingdao-blue"
               onClick={() => setIsDialogOpen(true)}
+              disabled
             >
               <AiOutlineMail className="translate-y-[0.5px]" />
               應徵
