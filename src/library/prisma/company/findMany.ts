@@ -10,6 +10,18 @@ export async function findManyCompanyWithPublished() {
       published: true,
     },
     include: {
+      category: true,
+    },
+  });
+}
+
+export async function findManyCompanyWithPublishedWithJobs() {
+  return await prisma.company.findMany({
+    where: {
+      published: true,
+    },
+    include: {
+      category: true,
       jobs: {
         where: {
           published: true,

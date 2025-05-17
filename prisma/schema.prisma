@@ -102,7 +102,7 @@ model Company {
   description       String?
   published         Boolean          @default(false)
   jobs              Job[]
-  CompanyCategory   CompanyCategory? @relation(fields: [categoryId], references: [id])
+  category          CompanyCategory? @relation(fields: [categoryId], references: [id])
   user              User             @relation(fields: [email], references: [email])
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt

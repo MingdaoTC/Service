@@ -5,13 +5,11 @@ import { BiBuildings } from "react-icons/bi";
 import Company from "../Global/Object/Company";
 
 type Props = {
-  data: TCompany[];
+  data: (TCompany & { category: CompanyCategory | null })[];
   className?: string;
-  categories: CompanyCategory[];
 };
 
 export default function CompanyList(props: Props) {
-  const category = props.categories.find(item => item.id === props.data[0].categoryId)?.name;
   return (
     <div
       className={`border p-3 md:p-5 shadow-md bg-white rounded-lg ${props.className}`}
@@ -25,8 +23,8 @@ export default function CompanyList(props: Props) {
         推薦公司
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-        {props.data.map((companyData, index) => (
-          <Company key={index} data={companyData} category={category || ""} />
+        {props.data.map((companyData: TCompany & { category: CompanyCategory | null }, index) => (
+          <Company key={index} data={companyData} />
         ))}
       </div>
     </div>

@@ -8,14 +8,12 @@ import { useState, useEffect } from "react";
 import { countJobs } from "@/components/Global/Object/_object/count";
 
 type Props = {
-  data: TCompany;
+  data: TCompany & { category: CompanyCategory | null };
   className?: string;
-  category: string;
 };
 
 export default function Company(props: Props) {
   const [jobsNum, setJobsNum] = useState<number>(0);
-  const [category, setCategory] = useState<CompanyCategory | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -52,7 +50,7 @@ export default function Company(props: Props) {
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiBuildings color="gray" size={"1em"} />
           <span className="truncate">
-            {props.category}
+            {props.data.category?.name}
           </span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">

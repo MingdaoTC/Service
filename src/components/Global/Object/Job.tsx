@@ -1,6 +1,6 @@
 import Button from "@/components/Global/Button/Button";
 import { joinClass } from "@/library/joinClass";
-import { Job as TJob } from "@/prisma/client";
+import { Company, Location, Job as TJob } from "@/prisma/client";
 import Link from "next/link";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
@@ -10,7 +10,7 @@ export default function Job({
   className,
   size = "sm",
 }: {
-  data: TJob;
+  data: TJob & { company: Company };
   className?: string;
   size?: "sm" | "lg";
 }) {
@@ -30,12 +30,15 @@ export default function Job({
               </h2>
             </Link>
             <div className="py-2">
-              <p className="text-mingdao-blue-dark font-bold text-sm">
-                {data.companyId}
-              </p>
+              <Link
+                className="text-mingdao-blue-dark font-bold text-sm"
+                href={`/company/${data.company?.id}`}
+              >
+                {data.company.name}
+              </Link>
               <div className="flex flex-wrap text-sm">
                 <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                  {data.location}
+                  {data.company.address}
                 </p>
                 <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                   {data.experience}
@@ -72,12 +75,15 @@ export default function Job({
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">
-              {data.companyId}
-            </p>
+            <Link
+              className="text-mingdao-blue-dark font-bold text-sm"
+              href={`/company/${data.company.id}`}
+            >
+              {data.company.name}
+            </Link>
             <div className="flex flex-wrap text-xs">
               <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.location}
+                {data.company.address}
               </p>
               <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.experience}
@@ -100,12 +106,15 @@ export default function Job({
           </Link>
           <div className="py-2">
             <p className="text-mingdao-blue-dark font-bold text-sm">
-              {data.companyId}
+              {data.company.name}
             </p>
             <div className="flex flex-wrap text-xs">
-              <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.location}
-              </p>
+              <Link
+                className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light"
+                href={`/company/${data.company.id}`}
+              >
+                {data.company.address}
+              </Link>
               <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                 {data.experience}
               </p>
