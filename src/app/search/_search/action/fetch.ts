@@ -6,21 +6,24 @@ import { prisma } from "@/library/prisma";
  * 強化版的搜尋結果查詢函數
  * 支持關鍵字、職業類別、地區和工作類型等多維度篩選
  */
+// 在 fetch.ts 中修改 fetchSearchResults 函數
+
 export async function fetchSearchResults(params: {
-  query?: string; // 關鍵字搜尋
-  category?: string; // 職業類別 ID
-  location?: string; // 地區
-  employmentType?: string; // 工作類型 (FULL_TIME, PART_TIME 等)
-  salaryMin?: number; // 最低薪資
-  salaryMax?: number; // 最高薪資
-  negotiable?: boolean; // 薪資可議
-  experience?: string; // 經驗要求
-  education?: string; // 教育要求
-  skills?: string; // 技能要求
-  remote?: boolean; // 遠端工作選項
-  page?: number; // 頁碼
-  limit?: number; // 每頁筆數
-  city?: string; // 城市
+  query?: string;
+  category?: string;
+  location?: string;
+  employmentType?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  negotiable?: boolean;
+  experience?: string;
+  education?: string;
+  skills?: string;
+  remote?: boolean;
+  page?: number;
+  limit?: number;
+  city?: string;
+  district?: string; // 新增 district 參數
 }) {
   try {
     // 解構參數，設定默認值
@@ -39,6 +42,7 @@ export async function fetchSearchResults(params: {
       page = 1,
       limit = 20,
       city = "",
+      district = "", // 新增 district 參數的默認值
     } = params;
 
     // 跳過的記錄數量 (用於分頁)
@@ -68,7 +72,6 @@ export async function fetchSearchResults(params: {
         {
           tags: { hasSome: [query] }, // 使用標籤進行匹配
         },
-        { address: { contains: city, mode: "insensitive" } },
       ];
     }
 
@@ -80,6 +83,23 @@ export async function fetchSearchResults(params: {
     // 地區篩選 (當不是篩選遠端工作時)
     if (location && !remote) {
       jobWhere.address = { contains: location, mode: "insensitive" };
+    }
+
+    // 城市和地區篩選
+    if (city || district) {
+      jobWhere.AND = jobWhere.AND || [];
+
+      // 如果有指定城市
+      if (city) {
+        jobWhere.AND.push({ address: { contains: city, mode: "insensitive" } });
+      }
+
+      // 如果有指定地區
+      if (district) {
+        jobWhere.AND.push({
+          address: { contains: district, mode: "insensitive" },
+        });
+      }
     }
 
     // 工作類型篩選
@@ -98,10 +118,6 @@ export async function fetchSearchResults(params: {
       if (salaryMax) {
         jobWhere.AND.push({ salaryMax: { lte: salaryMax } });
       }
-    }
-
-    if (city) {
-      jobWhere.AND.push({ address: { contains: city, mode: "insensitive" } });
     }
 
     // 薪資可議篩選
@@ -174,6 +190,25 @@ export async function fetchSearchResults(params: {
       companyWhere.address = { contains: location, mode: "insensitive" };
     }
 
+    // 城市和地區篩選
+    if (city || district) {
+      companyWhere.AND = companyWhere.AND || [];
+
+      // 如果有指定城市
+      if (city) {
+        companyWhere.AND.push({
+          address: { contains: city, mode: "insensitive" },
+        });
+      }
+
+      // 如果有指定地區
+      if (district) {
+        companyWhere.AND.push({
+          address: { contains: district, mode: "insensitive" },
+        });
+      }
+    }
+
     // 職業類別篩選 (通過該公司有該類別的職位來間接篩選)
     if (category) {
       companyWhere.jobs = {
@@ -243,6 +278,8 @@ export async function fetchSearchResults(params: {
         education,
         skills,
         remote,
+        city,
+        district, // 加入到過濾條件
       },
     };
   } catch (error) {

@@ -74,7 +74,7 @@ export default function EnhancedSearch(props: TProps) {
           }
 
           // 如果有任何高級搜尋參數，展開高級搜尋
-          if (categoryParam || cityParam) {
+          if (categoryParam || cityParam || districtParam) {
             setIsExpanded(true);
           }
         }

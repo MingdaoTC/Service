@@ -15,25 +15,25 @@ type HomePageProps = {
 export default function HomePage({ jobs, companies }: HomePageProps) {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
-  // 熱門職業類別
-  const popularCategories = [
-    { id: "software", name: "軟體工程師", icon: <FaLightbulb />, color: "blue" },
-    { id: "marketing", name: "行銷專員", icon: <FaBullhorn />, color: "purple" },
-    { id: "design", name: "設計師", icon: <FaLightbulb />, color: "pink" },
-    { id: "sales", name: "業務銷售", icon: <FaBriefcase />, color: "orange" },
-    { id: "finance", name: "財務會計", icon: <FaChartLine />, color: "green" },
-  ];
+  // // 熱門職業類別
+  // const popularCategories = [
+  //   { id: "software", name: "軟體工程師", icon: <FaLightbulb />, color: "blue" },
+  //   { id: "marketing", name: "行銷專員", icon: <FaBullhorn />, color: "purple" },
+  //   { id: "design", name: "設計師", icon: <FaLightbulb />, color: "pink" },
+  //   { id: "sales", name: "業務銷售", icon: <FaBriefcase />, color: "orange" },
+  //   { id: "finance", name: "財務會計", icon: <FaChartLine />, color: "green" },
+  // ];
 
-  // 熱門地區
-  const popularLocations = [
-    { city: "臺中市", name: "臺中市", icon: <FaMapMarkerAlt /> },
-    { city: "臺北市", name: "臺北市", icon: <FaMapMarkerAlt /> },
-    { city: "新北市", name: "新北市", icon: <FaMapMarkerAlt /> },
-    { city: "桃園市", name: "桃園市", icon: <FaMapMarkerAlt /> },
-  ];
+  // // 熱門地區
+  // const popularLocations = [
+  //   { city: "臺中市", name: "臺中市", icon: <FaMapMarkerAlt /> },
+  //   { city: "臺北市", name: "臺北市", icon: <FaMapMarkerAlt /> },
+  //   { city: "新北市", name: "新北市", icon: <FaMapMarkerAlt /> },
+  //   { city: "桃園市", name: "桃園市", icon: <FaMapMarkerAlt /> },
+  // ];
 
   // 熱門搜尋詞
-  const trendingSearches = ["遠端工作", "實習生", "前端工程師", "產品經理", "資料分析師"];
+  const trendingSearches = ["前端", "工程師", "UI/UX"];
 
   return (
     <div className="min-h-[calc(100vh-6rem)]">
@@ -68,7 +68,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
               />
 
               {/* 熱門搜尋詞 */}
-              {/* <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
+              <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
                 <span className="text-xs text-gray-500 flex items-center">
                   <FaSearch className="mr-1" size={10} />
                   熱搜:
@@ -82,19 +82,18 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     {term}
                   </Link>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* 快捷搜尋區塊 */}
-      <div className="w-full bg-white">
+      {/* <div className="w-full bg-white">
         <div className="w-full max-w-6xl mx-auto mt-10 px-4">
           <div className="bg-white rounded-xl shadow-lg py-6 px-2 md:px-8 border-black border border-opacity-10">
             <div className="grid grid-cols-2 gap-4">
-              {/* 職業類別快捷搜尋 */}
-              {/* <div className="col-span-2 md:col-span-1 p-3">
+              <div className="col-span-2 md:col-span-1 p-3">
                 <h3 className="text-lg font-semibold text-mingdao-blue-dark mb-4 flex items-center">
                   <FaBriefcase className="mr-2" />
                   熱門職業類別
@@ -126,9 +125,8 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     全部類別
                   </Link>
                 </div>
-              </div> */}
+              </div>
 
-              {/* 地區快捷搜尋 */}
               <div className="col-span-2 md:col-span-1 p-3">
                 <h3 className="text-lg font-semibold text-mingdao-blue-dark mb-4 flex items-center">
                   <FaMapMarkerAlt className="mr-2" />
@@ -147,7 +145,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                   ))}
                 </div>
 
-                {/* <div className="mt-4 bg-mingdao-blue bg-opacity-20 rounded-lg p-3">
+                <div className="mt-4 bg-mingdao-blue bg-opacity-20 rounded-lg p-3">
                   <Link
                     href="/search?remote=true"
                     className="flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium bg-white text-mingdao-blue hover:bg-mingdao-blue hover:text-white transition-colors shadow-sm"
@@ -157,12 +155,12 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     </svg>
                     遠端工作機會
                   </Link>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="w-full max-w-6xl mx-auto px-4 pt-12 pb-16">
         <div className="mb-12">

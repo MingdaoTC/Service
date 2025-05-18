@@ -57,6 +57,8 @@ export default function SearchPage() {
 
   // 載入搜尋結果
   useEffect(() => {
+    // 修改 SearchPage 組件中 fetchResults 函數的參數部分
+
     const fetchResults = async () => {
       setLoading(true);
 
@@ -73,6 +75,7 @@ export default function SearchPage() {
         skills: searchParams.get("skills") || "",
         page: searchParams.get("page") ? parseInt(searchParams.get("page") || "1") : 1,
         city: searchParams.get("city") || "",
+        district: searchParams.get("district") || "", // 新增地區參數
       };
 
       try {
@@ -91,6 +94,7 @@ export default function SearchPage() {
         if (params.education) filters.push('education');
         if (params.skills) filters.push('skills');
         if (params.city) filters.push('city');
+        if (params.district) filters.push('district'); // 新增地區篩選器
 
         setActiveFilters(filters);
       } catch (error) {
@@ -107,13 +111,17 @@ export default function SearchPage() {
 
   // 格式化工作類型顯示
   const formatLocation = () => {
-    const location = searchParams.get("location");
-    if (!location) return "所有地區";
+    const city = searchParams.get("city");
+    const district = searchParams.get("district");
 
-    const city = categories.find(c => c.name === location);
-    return city ? city.name : "所有地區";
-  }
+    if (!city) return "所有地區";
 
+    if (district) {
+      return `${city} ${district}`;
+    }
+
+    return city;
+  };
   const formatEmploymentType = () => {
     const type = searchParams.get("employmentType");
     if (!type) return "所有工作類型";
@@ -205,6 +213,13 @@ export default function SearchPage() {
       case 'location':
         updates.location = null;
         break;
+      case 'city':
+        updates.city = null;
+        updates.district = null; // 清除城市時也清除地區
+        break;
+      case 'district':
+        updates.district = null;
+        break;
       case 'employmentType':
         updates.employmentType = null;
         break;
@@ -264,7 +279,7 @@ export default function SearchPage() {
       {/* 主內容區域 */}
       <div className="w-full max-w-6xl mx-auto px-4 py-6">
         {/* 搜尋結果摘要 */}
-        <div className="bg-white rounded-lg shadow mb-6 p-4 border border-black border-opacity-10 rounded-lg">
+        <div className="bg-white shadow mb-6 p-4 border border-black border-opacity-10 rounded-lg">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <h1 className="text-xl font-bold text-mingdao-blue-dark mb-2 sm:mb-0">
               搜尋結果 <span className="text-gray-500 text-base font-normal">({results.pagination?.total || 0} 個職位)</span>
@@ -333,6 +348,18 @@ export default function SearchPage() {
                 </div>
               )}
 
+              {activeFilters.includes('city') && (
+                <div className="flex items-center bg-purple-50 text-purple-700 rounded-full px-3 py-1 text-sm">
+                  <span>地區: {formatLocation()}</span>
+                  <button
+                    onClick={() => clearFilter('city')}
+                    className="ml-2 text-purple-400 hover:text-purple-600"
+                  >
+                    <FaTimes size={12} />
+                  </button>
+                </div>
+              )}
+
               {activeFilters.includes('remote') && (
                 <div className="flex items-center bg-indigo-50 text-indigo-700 rounded-full px-3 py-1 text-sm">
                   <span>遠端工作</span>
@@ -374,7 +401,7 @@ export default function SearchPage() {
 
         {/* 篩選面板 */}
         {isFilterOpen && (
-          <div className="bg-white rounded-lg shadow mb-6 p-4 transition-all duration-300">
+          <div className="bg-white rounded-lg shadow mb-6 p-4 transition-all duration-300 border border-black border-opacity-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* 薪資範圍篩選 */}
               {/* 薪資範圍篩選 */}
