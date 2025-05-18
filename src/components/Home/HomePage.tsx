@@ -26,10 +26,10 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
 
   // 熱門地區
   const popularLocations = [
-    { city: "taipei", name: "台北市", icon: <FaMapMarkerAlt /> },
-    { city: "newTaipei", name: "新北市", icon: <FaMapMarkerAlt /> },
-    { city: "taichung", name: "台中市", icon: <FaMapMarkerAlt /> },
-    { city: "kaohsiung", name: "高雄市", icon: <FaMapMarkerAlt /> },
+    { city: "臺中市", name: "臺中市", icon: <FaMapMarkerAlt /> },
+    { city: "臺北市", name: "臺北市", icon: <FaMapMarkerAlt /> },
+    { city: "新北市", name: "新北市", icon: <FaMapMarkerAlt /> },
+    { city: "桃園市", name: "桃園市", icon: <FaMapMarkerAlt /> },
   ];
 
   // 熱門搜尋詞
@@ -68,7 +68,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
               />
 
               {/* 熱門搜尋詞 */}
-              <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
+              {/* <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
                 <span className="text-xs text-gray-500 flex items-center">
                   <FaSearch className="mr-1" size={10} />
                   熱搜:
@@ -82,7 +82,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     {term}
                   </Link>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
           <div className="bg-white rounded-xl shadow-lg py-6 px-2 md:px-8 border-black border border-opacity-10">
             <div className="grid grid-cols-2 gap-4">
               {/* 職業類別快捷搜尋 */}
-              <div className="col-span-2 md:col-span-1 p-3">
+              {/* <div className="col-span-2 md:col-span-1 p-3">
                 <h3 className="text-lg font-semibold text-mingdao-blue-dark mb-4 flex items-center">
                   <FaBriefcase className="mr-2" />
                   熱門職業類別
@@ -126,7 +126,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     全部類別
                   </Link>
                 </div>
-              </div>
+              </div> */}
 
               {/* 地區快捷搜尋 */}
               <div className="col-span-2 md:col-span-1 p-3">
@@ -147,7 +147,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                   ))}
                 </div>
 
-                <div className="mt-4 bg-mingdao-blue bg-opacity-20 rounded-lg p-3">
+                {/* <div className="mt-4 bg-mingdao-blue bg-opacity-20 rounded-lg p-3">
                   <Link
                     href="/search?remote=true"
                     className="flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium bg-white text-mingdao-blue hover:bg-mingdao-blue hover:text-white transition-colors shadow-sm"
@@ -157,7 +157,7 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                     </svg>
                     遠端工作機會
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

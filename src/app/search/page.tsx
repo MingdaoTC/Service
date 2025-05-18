@@ -4,15 +4,19 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
-import { fetchSearchResults, getJobCategories, getSalaryRanges, getExperienceLevels } from "@/app/search/_search/action/fetch";
-import { FaBriefcase, FaBuilding, FaFilter, FaTimes, FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaStar } from "react-icons/fa";
-// import ScrollProgressIndicator from "@/components/UI/ScrollProgressIndicator";
+import {
+  fetchSearchResults,
+  getJobCategories,
+  getSalaryRanges,
+  getExperienceLevels,
+  getEducationLevels,
+  getEmploymentTypes
+} from "@/app/search/_search/action/fetch";
+import { FaBriefcase, FaBuilding, FaFilter, FaTimes, FaChevronDown, FaChevronUp, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [salaryRanges, setSalaryRanges] = useState<any[]>([]);
-  const [experienceLevels, setExperienceLevels] = useState<any[]>([]);
   const [results, setResults] = useState<any>({ jobs: [], companies: [], categories: [], pagination: {}, filters: {} });
   const [loading, setLoading] = useState(true);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
@@ -20,17 +24,28 @@ export default function SearchPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
+  // 篩選選項狀態
+  const [salaryRanges, setSalaryRanges] = useState<any[]>([]);
+  const [experienceLevels, setExperienceLevels] = useState<any[]>([]);
+  const [educationLevels, setEducationLevels] = useState<any[]>([]);
+  const [employmentTypes, setEmploymentTypes] = useState<any[]>([]);
+
+  // 載入輔助數據
   useEffect(() => {
     const loadSupportData = async () => {
       try {
-        const [salaryData, experienceData, categoriesData] = await Promise.all([
+        const [salaryData, experienceData, educationData, employmentData, categoriesData] = await Promise.all([
           getSalaryRanges(),
           getExperienceLevels(),
+          getEducationLevels(),
+          getEmploymentTypes(),
           getJobCategories()
         ]);
 
         setSalaryRanges(salaryData);
         setExperienceLevels(experienceData);
+        setEducationLevels(educationData);
+        setEmploymentTypes(employmentData);
         setCategories(categoriesData);
       } catch (error) {
         console.error("載入支援數據失敗:", error);
@@ -40,15 +55,7 @@ export default function SearchPage() {
     loadSupportData();
   }, []);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      const cats = await getJobCategories();
-      setCategories(cats);
-    };
-
-    loadCategories();
-  }, []);
-
+  // 載入搜尋結果
   useEffect(() => {
     const fetchResults = async () => {
       setLoading(true);
@@ -56,13 +63,16 @@ export default function SearchPage() {
       const params = {
         query: searchParams.get("q") || "",
         category: searchParams.get("category") || "",
-        city: searchParams.get("city") || "",
-        district: searchParams.get("district") || "",
-        remote: searchParams.get("remote") === "true",
+        location: searchParams.get("location") || "",
+        employmentType: searchParams.get("employmentType") || "",
         salaryMin: searchParams.get("salaryMin") ? parseInt(searchParams.get("salaryMin") || "0") : undefined,
         salaryMax: searchParams.get("salaryMax") ? parseInt(searchParams.get("salaryMax") || "0") : undefined,
+        negotiable: searchParams.get("negotiable") === "true" ? true : undefined,
         experience: searchParams.get("experience") || "",
+        education: searchParams.get("education") || "",
+        skills: searchParams.get("skills") || "",
         page: searchParams.get("page") ? parseInt(searchParams.get("page") || "1") : 1,
+        city: searchParams.get("city") || "",
       };
 
       try {
@@ -73,10 +83,14 @@ export default function SearchPage() {
         const filters = [];
         if (params.query) filters.push('query');
         if (params.category) filters.push('category');
-        if (params.city) filters.push('location');
-        if (params.remote) filters.push('remote');
+        if (params.location) filters.push('location');
+        if (params.employmentType) filters.push('employmentType');
         if (params.salaryMin || params.salaryMax) filters.push('salary');
+        if (params.negotiable) filters.push('negotiable');
         if (params.experience) filters.push('experience');
+        if (params.education) filters.push('education');
+        if (params.skills) filters.push('skills');
+        if (params.city) filters.push('city');
 
         setActiveFilters(filters);
       } catch (error) {
@@ -91,17 +105,21 @@ export default function SearchPage() {
     fetchResults();
   }, [searchParams]);
 
-  // 格式化地區顯示
+  // 格式化工作類型顯示
   const formatLocation = () => {
-    const city = searchParams.get("city");
-    const district = searchParams.get("district");
+    const location = searchParams.get("location");
+    if (!location) return "所有地區";
 
-    if (city && district) {
-      return `${city} ${district}`;
-    } else if (city) {
-      return city;
-    }
-    return "所有地區";
+    const city = categories.find(c => c.name === location);
+    return city ? city.name : "所有地區";
+  }
+
+  const formatEmploymentType = () => {
+    const type = searchParams.get("employmentType");
+    if (!type) return "所有工作類型";
+
+    const empType = employmentTypes.find(t => t.value === type);
+    return empType ? empType.label : "所有工作類型";
   };
 
   // 獲取職業類別名稱
@@ -128,6 +146,7 @@ export default function SearchPage() {
 
     return "所有薪資範圍";
   };
+
   // 格式化經驗要求顯示
   const formatExperience = () => {
     const exp = searchParams.get("experience");
@@ -135,6 +154,15 @@ export default function SearchPage() {
 
     const expLevel = experienceLevels.find(e => e.value === exp);
     return expLevel ? expLevel.label : "所有經驗";
+  };
+
+  // 格式化教育程度顯示
+  const formatEducation = () => {
+    const edu = searchParams.get("education");
+    if (!edu) return "所有學歷";
+
+    const eduLevel = educationLevels.find(e => e.value === edu);
+    return eduLevel ? eduLevel.label : "所有學歷";
   };
 
   // 建立新的搜尋參數
@@ -175,18 +203,26 @@ export default function SearchPage() {
         updates.category = null;
         break;
       case 'location':
-        updates.city = null;
-        updates.district = null;
+        updates.location = null;
         break;
-      case 'remote':
-        updates.remote = null;
+      case 'employmentType':
+        updates.employmentType = null;
         break;
       case 'salary':
         updates.salaryMin = null;
         updates.salaryMax = null;
         break;
+      case 'negotiable':
+        updates.negotiable = null;
+        break;
       case 'experience':
         updates.experience = null;
+        break;
+      case 'education':
+        updates.education = null;
+        break;
+      case 'skills':
+        updates.skills = null;
         break;
     }
 
@@ -198,7 +234,8 @@ export default function SearchPage() {
     updateSearchParams({ page: page.toString() });
   };
 
-  if (!salaryRanges.length || !experienceLevels.length) {
+  // 在數據載入前顯示載入狀態
+  if (!salaryRanges.length || !experienceLevels.length || !educationLevels.length || !employmentTypes.length) {
     return (
       <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center">
         <div className="animate-spin h-10 w-10 border-b-2 border-mingdao-blue rounded-full"></div>
@@ -207,11 +244,11 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-6rem)]">
+    <div className="min-h-[calc(100vh-7rem)]">
       {/* <ScrollProgressIndicator /> */}
 
       {/* 搜尋區域 */}
-      <div className={`bg-gradient-to-r from-mingdao-blue to-mingdao-blue-dark relative p-3 md:p-6 flex justify-center items-start transition-all duration-300 ${isSearchExpanded ? 'min-h-[18rem]' : 'min-h-[14rem]'}`}>
+      <div className={`bg-gradient-to-r from-mingdao-blue to-mingdao-blue-dark relative p-3 md:p-6 flex justify-center items-start transition-all duration-300 ${isSearchExpanded ? 'min-h-[12rem]' : 'min-h-[8rem]'}`}>
         <div className="absolute top-0 right-0 w-1/3 h-full opacity-10">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
             <path fill="#FFFFFF" d="M40.5,-64.1C55.1,-55.1,71.1,-47.6,78.2,-35.2C85.3,-22.8,83.6,-5.6,78.9,9.3C74.2,24.2,66.5,36.8,56.1,46.4C45.7,56,32.6,62.7,18.8,67.5C4.9,72.2,-9.7,75,-23.9,72.3C-38.1,69.7,-52,61.6,-62.5,49.6C-73,37.5,-80.2,21.6,-82.9,4.5C-85.5,-12.7,-83.7,-31.1,-73.2,-42.4C-62.8,-53.7,-43.7,-57.9,-28.3,-66.5C-12.9,-75,2.8,-87.8,16.5,-87.5C30.3,-87.1,42.1,-73.7,40.5,-64.1Z" transform="translate(100 100)" />
@@ -346,6 +383,7 @@ export default function SearchPage() {
           <div className="bg-white rounded-lg shadow mb-6 p-4 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* 薪資範圍篩選 */}
+              {/* 薪資範圍篩選 */}
               <div className="p-2">
                 <h3 className="font-medium mb-2">薪資範圍</h3>
                 <div className="space-y-2">
@@ -368,6 +406,60 @@ export default function SearchPage() {
                       />
                       <label htmlFor={`salary-${index}`} className="ml-2 text-sm text-gray-700">
                         {range.label}
+                      </label>
+                    </div>
+                  ))}
+                  <div className="flex items-center mt-3">
+                    <input
+                      type="checkbox"
+                      id="negotiable-option"
+                      className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue rounded"
+                      checked={searchParams.get("negotiable") === "true"}
+                      onChange={(e) => {
+                        updateSearchParams({ negotiable: e.target.checked ? "true" : null });
+                      }}
+                    />
+                    <label htmlFor="negotiable-option" className="ml-2 text-sm text-gray-700">
+                      僅顯示薪資可議職位
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* 工作類型篩選 */}
+              <div className="p-2">
+                <h3 className="font-medium mb-2">工作類型</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="emp-all"
+                      name="employmentType"
+                      className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue"
+                      checked={!searchParams.get("employmentType")}
+                      onChange={() => {
+                        updateSearchParams({ employmentType: null });
+                      }}
+                    />
+                    <label htmlFor="emp-all" className="ml-2 text-sm text-gray-700">
+                      所有工作類型
+                    </label>
+                  </div>
+
+                  {employmentTypes.map((type) => (
+                    <div key={type.value} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`emp-${type.value}`}
+                        name="employmentType"
+                        className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue"
+                        checked={searchParams.get("employmentType") === type.value}
+                        onChange={() => {
+                          updateSearchParams({ employmentType: type.value });
+                        }}
+                      />
+                      <label htmlFor={`emp-${type.value}`} className="ml-2 text-sm text-gray-700">
+                        {type.label}
                       </label>
                     </div>
                   ))}
@@ -414,27 +506,71 @@ export default function SearchPage() {
                 </div>
               </div>
 
-              {/* 遠端工作選項 */}
+              {/* 教育要求篩選 */}
               <div className="p-2">
-                <h3 className="font-medium mb-2">工作型態</h3>
-                <div className="flex items-center mb-3">
-                  <input
-                    type="checkbox"
-                    id="remote-option"
-                    className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue rounded"
-                    checked={searchParams.get("remote") === "true"}
-                    onChange={(e) => {
-                      updateSearchParams({ remote: e.target.checked ? "true" : null });
-                    }}
-                  />
-                  <label htmlFor="remote-option" className="ml-2 text-sm text-gray-700">
-                    只顯示遠端工作
-                  </label>
+                <h3 className="font-medium mb-2">學歷要求</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="edu-all"
+                      name="education"
+                      className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue"
+                      checked={!searchParams.get("education")}
+                      onChange={() => {
+                        updateSearchParams({ education: null });
+                      }}
+                    />
+                    <label htmlFor="edu-all" className="ml-2 text-sm text-gray-700">
+                      所有學歷
+                    </label>
+                  </div>
+
+                  {educationLevels.map((edu) => (
+                    <div key={edu.value} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`edu-${edu.value}`}
+                        name="education"
+                        className="h-4 w-4 text-mingdao-blue focus:ring-mingdao-blue"
+                        checked={searchParams.get("education") === edu.value}
+                        onChange={() => {
+                          updateSearchParams({ education: edu.value });
+                        }}
+                      />
+                      <label htmlFor={`edu-${edu.value}`} className="ml-2 text-sm text-gray-700">
+                        {edu.label}
+                      </label>
+                    </div>
+                  ))}
                 </div>
+              </div>
+
+              {/* 技能搜尋 */}
+              <div className="p-2">
+                <h3 className="font-medium mb-2">技能搜尋</h3>
+                <div className="flex">
+                  <input
+                    type="text"
+                    id="skills"
+                    name="skills"
+                    value={searchParams.get("skills") || ""}
+                    onChange={(e) => {
+                      // 這裡使用 debounce 可能會更好
+                      updateSearchParams({ skills: e.target.value || null });
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                    placeholder="輸入技能關鍵字，如：React, Python"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  多個技能請用逗號分隔
+                </p>
               </div>
             </div>
           </div>
         )}
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* 左側：搜尋結果 */}
           <div className="lg:col-span-3">
@@ -472,12 +608,6 @@ export default function SearchPage() {
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
                                   <h2 className="text-base sm:text-lg font-medium text-mingdao-blue truncate">
                                     {job.title}
-                                    {job.featured && (
-                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        <FaStar className="mr-1" size={10} />
-                                        精選
-                                      </span>
-                                    )}
                                   </h2>
                                   <div className="text-sm text-gray-500">
                                     刊登日期: {new Date(job.createdAt).toLocaleDateString('zh-TW')}
@@ -501,24 +631,36 @@ export default function SearchPage() {
                                     </span>
                                   )}
 
-                                  {job.remote && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                      遠端工作
-                                    </span>
-                                  )}
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                    {job.employmentType === 'FULL_TIME' && '全職'}
+                                    {job.employmentType === 'PART_TIME' && '兼職'}
+                                    {job.employmentType === 'CONTRACT' && '約聘'}
+                                    {job.employmentType === 'INTERN' && '實習'}
+                                    {job.employmentType === 'TEMPORARY' && '臨時工'}
+                                  </span>
 
-                                  {job.experienceLevel && (
+                                  {job.experience && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                      {job.experienceLevel === 'entry' && '初階 (0-2年)'}
-                                      {job.experienceLevel === 'mid' && '中階 (3-5年)'}
-                                      {job.experienceLevel === 'senior' && '資深 (5年以上)'}
-                                      {job.experienceLevel === 'executive' && '主管職'}
+                                      經驗: {job.experience}
                                     </span>
                                   )}
 
-                                  {job.salaryVisible && job.salaryMin && job.salaryMax && (
+                                  {job.education && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-pink-100 text-pink-800">
+                                      學歷: {job.education}
+                                    </span>
+                                  )}
+
+                                  {job.salaryMin > 0 && job.salaryMax > 0 && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                                       {Math.floor(job.salaryMin / 1000)}K - {Math.floor(job.salaryMax / 1000)}K
+                                      {job.negotiable && " (可議)"}
+                                    </span>
+                                  )}
+
+                                  {job.salaryMin === 0 && job.salaryMax === 0 && job.negotiable && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                      薪資可議
                                     </span>
                                   )}
                                 </div>
@@ -717,7 +859,7 @@ export default function SearchPage() {
             <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
               <div className="px-4 py-3 border-b border-gray-200 bg-mingdao-blue-light">
                 <h3 className="text-lg font-medium text-mingdao-blue-dark">
-                  搜尋小貼士
+                  搜尋小提醒
                 </h3>
               </div>
               <div className="p-4">
@@ -729,7 +871,7 @@ export default function SearchPage() {
                       </svg>
                     </div>
                     <p className="ml-2">
-                      使用多個關鍵字，例如「<span className="text-mingdao-blue">前端 React 遠端</span>」
+                      使用關鍵字，例如「<span className="text-mingdao-blue">前端、React、遠端</span>」
                     </p>
                   </li>
                   <li className="flex items-start">

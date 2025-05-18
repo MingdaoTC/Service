@@ -37,7 +37,7 @@ export default function Job({
               </Link>
               <div className="flex flex-wrap text-sm">
                 <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                  {data.company.address}
+                  {data.address}
                 </p>
                 <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
                   {data.experience}

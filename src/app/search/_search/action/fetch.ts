@@ -1,37 +1,44 @@
 "use server";
 
 import { prisma } from "@/library/prisma";
-import { Job, Company, JobCategory } from "@/prisma/client";
 
 /**
  * 強化版的搜尋結果查詢函數
- * 支持關鍵字、職業類別、地區和遠端工作等多維度篩選
+ * 支持關鍵字、職業類別、地區和工作類型等多維度篩選
  */
 export async function fetchSearchResults(params: {
   query?: string; // 關鍵字搜尋
   category?: string; // 職業類別 ID
-  city?: string; // 城市
-  district?: string; // 地區
-  remote?: boolean; // 遠端工作選項
+  location?: string; // 地區
+  employmentType?: string; // 工作類型 (FULL_TIME, PART_TIME 等)
   salaryMin?: number; // 最低薪資
   salaryMax?: number; // 最高薪資
-  experience?: string; // 經驗要求 (entry, mid, senior)
+  negotiable?: boolean; // 薪資可議
+  experience?: string; // 經驗要求
+  education?: string; // 教育要求
+  skills?: string; // 技能要求
+  remote?: boolean; // 遠端工作選項
   page?: number; // 頁碼
   limit?: number; // 每頁筆數
+  city?: string; // 城市
 }) {
   try {
     // 解構參數，設定默認值
     const {
       query = "",
       category = "",
-      city = "",
-      district = "",
-      remote = false,
+      location = "",
+      employmentType = "",
       salaryMin,
       salaryMax,
-      experience,
+      negotiable,
+      experience = "",
+      education = "",
+      skills = "",
+      remote = false,
       page = 1,
       limit = 20,
+      city = "",
     } = params;
 
     // 跳過的記錄數量 (用於分頁)
@@ -42,16 +49,26 @@ export async function fetchSearchResults(params: {
       published: true,
     };
 
-    // 關鍵字搜尋 (標題、公司名稱、描述)
+    // 關鍵字搜尋 (標題、描述)
     if (query) {
       jobWhere.OR = [
         { title: { contains: query, mode: "insensitive" } },
         { description: { contains: query, mode: "insensitive" } },
+        { skills: { contains: query, mode: "insensitive" } },
         {
           company: {
             name: { contains: query, mode: "insensitive" },
           },
         },
+        {
+          category: {
+            name: { contains: query, mode: "insensitive" },
+          },
+        },
+        {
+          tags: { hasSome: [query] }, // 使用標籤進行匹配
+        },
+        { address: { contains: city, mode: "insensitive" } },
       ];
     }
 
@@ -60,23 +77,14 @@ export async function fetchSearchResults(params: {
       jobWhere.categoryId = category;
     }
 
-    // 地區篩選
-    if (city) {
-      if (district) {
-        // 如果同時提供了城市和地區，則精確匹配
-        jobWhere.location = {
-          startsWith: `${city} ${district}`,
-          mode: "insensitive",
-        };
-      } else {
-        // 只提供城市，則匹配以該城市開頭的地點
-        jobWhere.location = { startsWith: city, mode: "insensitive" };
-      }
+    // 地區篩選 (當不是篩選遠端工作時)
+    if (location && !remote) {
+      jobWhere.address = { contains: location, mode: "insensitive" };
     }
 
-    // 遠端工作篩選
-    if (remote) {
-      jobWhere.remote = true;
+    // 工作類型篩選
+    if (employmentType) {
+      jobWhere.employmentType = employmentType;
     }
 
     // 薪資範圍篩選
@@ -92,9 +100,33 @@ export async function fetchSearchResults(params: {
       }
     }
 
+    if (city) {
+      jobWhere.AND.push({ address: { contains: city, mode: "insensitive" } });
+    }
+
+    // 薪資可議篩選
+    if (negotiable !== undefined) {
+      jobWhere.negotiable = negotiable;
+    }
+
     // 經驗要求篩選
     if (experience) {
-      jobWhere.experienceLevel = experience;
+      jobWhere.experience = { contains: experience, mode: "insensitive" };
+    }
+
+    // 教育要求篩選
+    if (education) {
+      jobWhere.education = { contains: education, mode: "insensitive" };
+    }
+
+    // 技能要求篩選
+    if (skills) {
+      jobWhere.skills = { contains: skills, mode: "insensitive" };
+    }
+
+    // 遠端工作篩選 - 修正為使用 location 枚舉類型
+    if (remote) {
+      jobWhere.location = "REMOTE";
     }
 
     // 獲取符合條件的工作列表
@@ -112,7 +144,7 @@ export async function fetchSearchResults(params: {
         category: true,
       },
       orderBy: [
-        { createdAt: "desc" }, // 其次按建立時間排序
+        { createdAt: "desc" }, // 按建立時間排序
       ],
       skip,
       take: limit,
@@ -133,20 +165,13 @@ export async function fetchSearchResults(params: {
       companyWhere.OR = [
         { name: { contains: query, mode: "insensitive" } },
         { description: { contains: query, mode: "insensitive" } },
-        { tags: { hasSome: query.split(/\s+/) } }, // 將搜尋關鍵字拆分為標籤進行匹配
+        { tags: { hasSome: [query] } }, // 使用標籤進行匹配
       ];
     }
 
-    // 地區篩選
-    if (city) {
-      if (district) {
-        companyWhere.address = {
-          contains: `${city} ${district}`,
-          mode: "insensitive",
-        };
-      } else {
-        companyWhere.address = { contains: city, mode: "insensitive" };
-      }
+    // 地區篩選 (當不是篩選遠端工作時)
+    if (location && !remote) {
+      companyWhere.address = { contains: location, mode: "insensitive" };
     }
 
     // 職業類別篩選 (通過該公司有該類別的職位來間接篩選)
@@ -157,6 +182,14 @@ export async function fetchSearchResults(params: {
           published: true,
         },
       };
+    }
+
+    // 遠端工作篩選對公司的影響 - 修正為使用 location 枚舉類型
+    if (remote) {
+      companyWhere.jobs = companyWhere.jobs || {
+        some: { published: true },
+      };
+      companyWhere.jobs.some.location = "REMOTE";
     }
 
     // 獲取符合條件的公司列表
@@ -175,7 +208,7 @@ export async function fetchSearchResults(params: {
         },
       },
       orderBy: [
-        { createdAt: "desc" }, // 其次按建立時間排序
+        { createdAt: "desc" }, // 按建立時間排序
       ],
       take: 10, // 公司列表限制顯示數量
     });
@@ -201,12 +234,15 @@ export async function fetchSearchResults(params: {
       filters: {
         query,
         category,
-        city,
-        district,
-        remote,
+        location,
+        employmentType,
         salaryMin,
         salaryMax,
+        negotiable,
         experience,
+        education,
+        skills,
+        remote,
       },
     };
   } catch (error) {
@@ -245,7 +281,6 @@ export async function getJobCategories() {
 
 /**
  * 獲取薪資範圍選項
- * 修改為 async 函數以符合 server action 要求
  */
 export async function getSalaryRanges() {
   return [
@@ -260,14 +295,42 @@ export async function getSalaryRanges() {
 }
 
 /**
+ * 獲取工作類型選項
+ */
+export async function getEmploymentTypes() {
+  return [
+    { value: "FULL_TIME", label: "全職" },
+    { value: "PART_TIME", label: "兼職" },
+    { value: "CONTRACT", label: "約聘" },
+    { value: "INTERN", label: "實習" },
+    { value: "TEMPORARY", label: "臨時工" },
+  ];
+}
+
+/**
  * 獲取經驗要求選項
- * 修改為 async 函數以符合 server action 要求
  */
 export async function getExperienceLevels() {
   return [
-    { value: "entry", label: "初階 (0-2年)" },
-    { value: "mid", label: "中階 (3-5年)" },
-    { value: "senior", label: "資深 (5年以上)" },
-    { value: "executive", label: "主管職" },
+    { value: "不拘", label: "不拘" },
+    { value: "1年以下", label: "1年以下" },
+    { value: "1-3年", label: "1-3年" },
+    { value: "3-5年", label: "3-5年" },
+    { value: "5-10年", label: "5-10年" },
+    { value: "10年以上", label: "10年以上" },
+  ];
+}
+
+/**
+ * 獲取教育程度選項
+ */
+export async function getEducationLevels() {
+  return [
+    { value: "不拘", label: "不拘" },
+    { value: "高中職", label: "高中職" },
+    { value: "專科", label: "專科" },
+    { value: "大學", label: "大學" },
+    { value: "碩士", label: "碩士" },
+    { value: "博士", label: "博士" },
   ];
 }

@@ -128,7 +128,7 @@ model Job {
   categoryId        String         @db.ObjectId
   salaryMin         Int            @default(0)
   salaryMax         Int            @default(0)
-  negotiable        Boolean
+  negotiable        Boolean        @default(false)
   employmentType    EmploymentType @default(FULL_TIME)
   location          Location?
   management        String?
@@ -143,6 +143,7 @@ model Job {
   skills            String?
   others            String?
   benefits          String?
+  address           String?
   published         Boolean        @default(false)
   company           Company        @relation(fields: [companyId], references: [id])
   category          JobCategory    @relation(fields: [categoryId], references: [id])
