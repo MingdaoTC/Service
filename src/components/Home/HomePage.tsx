@@ -5,7 +5,7 @@ import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
 import CompanyList from "@/components/Home/CompanyList";
 import JobList from "@/components/Home/JobList";
 import Link from "next/link";
-import { FaSearch, FaMapMarkerAlt, FaBriefcase, FaLightbulb, FaRegStar, FaBullhorn, FaBuilding, FaChartLine } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 type HomePageProps = {
   jobs: any[];
@@ -38,19 +38,13 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
   return (
     <div className="min-h-[calc(100vh-6rem)]">
       {/* 主視覺搜尋區域 */}
-      <div className="bg-gradient-to-r from-mingdao-blue to-mingdao-blue-dark relative overflow-hidden">
-        {/* 裝飾性背景元素 */}
-        <div className="absolute top-0 right-0 w-1/3 h-full opacity-10">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <path fill="#FFFFFF" d="M40.5,-64.1C55.1,-55.1,71.1,-47.6,78.2,-35.2C85.3,-22.8,83.6,-5.6,78.9,9.3C74.2,24.2,66.5,36.8,56.1,46.4C45.7,56,32.6,62.7,18.8,67.5C4.9,72.2,-9.7,75,-23.9,72.3C-38.1,69.7,-52,61.6,-62.5,49.6C-73,37.5,-80.2,21.6,-82.9,4.5C-85.5,-12.7,-83.7,-31.1,-73.2,-42.4C-62.8,-53.7,-43.7,-57.9,-28.3,-66.5C-12.9,-75,2.8,-87.8,16.5,-87.5C30.3,-87.1,42.1,-73.7,40.5,-64.1Z" transform="translate(100 100)" />
-          </svg>
-        </div>
-
+      <div className="bg-gradient-to-r from-mingdao-blue-dark to-mingdao-blue relative overflow-hidden">
         <div className="relative px-4 py-16 md:py-20 w-full max-w-6xl mx-auto">
           {/* 主標題 */}
           <div className="text-center mb-10 md:mb-12">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-              找到屬於您的<span className="text-green-300">理想職位</span>
+              找到屬於您的
+              <span className="text-[#09ffef]">理想職位</span>
             </h1>
             <p className="text-mingdao-blue-light text-lg md:text-xl max-w-2xl mx-auto">
               快速搜尋並找到符合您期望的工作機會
@@ -58,10 +52,12 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
           </div>
 
           {/* 搜尋框容器 */}
-          <div className={`
+          <div
+            className={`
             w-full max-w-3xl mx-auto transition-all duration-300
-            ${isSearchExpanded ? 'transform-gpu -translate-y-2' : ''}
-          `}>
+            ${isSearchExpanded ? "transform-gpu -translate-y-2" : ""}
+          `}
+          >
             <div className="bg-white rounded-xl shadow-xl p-4 md:p-5">
               <EnhancedSearch
                 onExpandChange={(expanded) => setIsSearchExpanded(expanded)}
