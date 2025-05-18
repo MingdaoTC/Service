@@ -1,7 +1,7 @@
 import { Content } from "@/components/Company/Content";
 import Info from "@/components/Company/Info";
 // import Job from "@/components/Global/Object/Job";
-import Other from "@/components/Global/Object/Other";
+// import Other from "@/components/Global/Object/Other";
 import type { Company } from "@/prisma/client";
 import { getCompanyById } from "./_company/actions/getCompany";
 import { redirect } from "next/navigation";
@@ -11,6 +11,10 @@ export default async function companyID({
 }: {
   params: { companyId: string };
 }) {
+  if (!params.companyId) {
+    redirect("/");
+  }
+
   const companyData = (await getCompanyById(params.companyId)) as Company;
 
   if (!companyData) {

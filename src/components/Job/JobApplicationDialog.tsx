@@ -8,10 +8,6 @@ type JobApplicationDialogProps = {
   jobData: {
     title: string;
     company: string;
-    location: string;
-    seniority: string;
-    education: string;
-    salary: string;
   };
 };
 
@@ -38,7 +34,7 @@ const JobApplicationDialog = ({
   };
 
   const [recommendationText, setRecommendationText] = useState<string>(
-    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！",
+    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
   );
   const maxLength = 2000;
 

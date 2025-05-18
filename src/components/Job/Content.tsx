@@ -1,19 +1,4 @@
-type Props = {
-  data: {
-    description: string;
-    category: string;
-    salary: string;
-    nature: string;
-    location: string;
-    responsibility: string;
-    commute: string;
-    workTime: string;
-    holiday: string;
-    workday: string;
-    peopleRequired: string;
-  };
-  className?: string;
-};
+import { Job } from "@/prisma/client";
 
 type Detail = {
   [key: string]: {
@@ -22,47 +7,39 @@ type Detail = {
   };
 };
 
-export default function Content(props: Props) {
+export default function Content(props: { data: Job; className?: string }) {
   const detail: Detail = {
-    category: {
-      title: "職務類別",
-      content: props.data.category,
-    },
     salary: {
       title: "工作待遇",
-      content: props.data.salary,
+      content: `${props.data.salaryMin} ~ ${props.data.salaryMax}`,
     },
     nature: {
       title: "工作性質",
-      content: props.data.nature,
+      content: props.data.employmentType,
     },
     location: {
       title: "上班地點",
-      content: props.data.location,
+      content: props.data.location || "暫不提供",
     },
     responsibility: {
       title: "管理責任",
-      content: props.data.responsibility,
+      content: props.data.management || "無",
     },
     commute: {
       title: "出差外派",
-      content: props.data.commute,
+      content: props.data.businessTrip || "無",
     },
     workTime: {
       title: "上班時段",
-      content: props.data.workTime,
-    },
-    holiday: {
-      title: "休假制度",
-      content: props.data.holiday,
+      content: props.data.workingHours || "暫不提供",
     },
     workday: {
       title: "可上班日",
-      content: props.data.workday,
+      content: props.data.startDate || "暫不提供",
     },
     peopleRequired: {
       title: "需求人數",
-      content: props.data.peopleRequired,
+      content: props.data.numberOfPositions?.toString() || "暫不提供",
     },
   };
 

@@ -2,26 +2,21 @@
 import { useState } from "react";
 
 import { AiOutlineMail } from "react-icons/ai";
-import { BiBookmark } from "react-icons/bi";
 
 import { joinClass } from "@/library/joinClass";
 import Button from "../Global/Button/Button";
 import LoginPromptDialog from "../Global/LoginPromptDialog/LoginPromptDialog";
 import JobApplicationDialog from "./JobApplicationDialog";
+import { Company, Job } from "@/prisma/client";
 
 export default function Info({
-  data,
+  jobData,
+  company,
   isLogin,
   className,
 }: {
-  data: {
-    title: string;
-    company: string;
-    location: string;
-    seniority: string;
-    education: string;
-    salary: string;
-  };
+  jobData: Job;
+  company: Company;
   isLogin: boolean;
   className?: string;
 }) {
@@ -38,7 +33,10 @@ export default function Info({
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
           onSubmit={handleSubmit}
-          jobData={data}
+          jobData={{
+            title: jobData.title,
+            company: company.name,
+          }}
         />
       ) : (
         <LoginPromptDialog
@@ -49,22 +47,25 @@ export default function Info({
       <div
         className={joinClass(
           "w-full bg-white shadow-md border-b py-4 sm:py-6 mb-3 sm:mb-5 px-2",
-          className,
+          className
         )}
       >
         <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
           <div className="w-full sm:w-fit">
             <h1 className="text-xl sm:text-2xl md:text-3xl text-mingdao-blue-dark font-bold line-clamp-2 sm:line-clamp-none">
-              {data.title}
+              {jobData.title}
             </h1>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 pt-2 sm:pt-3">
-              <a className="text-mingdao-blue text-sm sm:text-base">
-                {data.company}
-              </a>
-              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-              {/* <a href={"#"} className="text-mingdao-blue text-sm sm:text-base">
+              <p className="text-mingdao-blue text-sm sm:text-base">
+                {company.name}
+              </p>
+
+              <a
+                href={`/company/${company.id}`}
+                className="text-mingdao-blue text-sm sm:text-base"
+              >
                 本公司其他工作
-              </a> */}
+              </a>
             </div>
           </div>
           <div className="flex h-fit gap-3 sm:gap-4 md:gap-5 w-full sm:w-auto justify-end">
