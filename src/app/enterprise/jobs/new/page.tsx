@@ -123,21 +123,21 @@ export default function JobCreatePage() {
       [name]: numberValue
     }));
 
-    // 如果最低薪資大於最高薪資，則將最高薪資調整為最低薪資
-    if (name === "salaryMin" && numberValue > jobData.salaryMax && jobData.salaryMax !== 0) {
-      setJobData(prev => ({
-        ...prev,
-        salaryMax: numberValue
-      }));
-    }
+    // // 如果最低薪資大於最高薪資，則將最高薪資調整為最低薪資
+    // if (name === "salaryMin" && numberValue > jobData.salaryMax && jobData.salaryMax !== 0) {
+    //   setJobData(prev => ({
+    //     ...prev,
+    //     salaryMax: numberValue
+    //   }));
+    // }
 
-    // 如果最高薪資小於最低薪資，則將最低薪資調整為最高薪資
-    if (name === "salaryMax" && numberValue < jobData.salaryMin && numberValue !== 0) {
-      setJobData(prev => ({
-        ...prev,
-        salaryMin: numberValue
-      }));
-    }
+    // // 如果最高薪資小於最低薪資，則將最低薪資調整為最高薪資
+    // if (name === "salaryMax" && numberValue < jobData.salaryMin && numberValue !== 0) {
+    //   setJobData(prev => ({
+    //     ...prev,
+    //     salaryMin: numberValue
+    //   }));
+    // }
   };
 
   // 處理Checkbox變更
@@ -361,13 +361,14 @@ export default function JobCreatePage() {
                 <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="salaryMin" className="block text-sm font-medium text-gray-700 mb-1">
-                      最低薪資 (月薪/元)
+                      最低薪資 (月薪/元) <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"
                       id="salaryMin"
                       name="salaryMin"
                       min="0"
+                      required
                       value={jobData.salaryMin || ""}
                       onChange={handleNumberChange}
                       // disabled={jobData.negotiable}
@@ -383,13 +384,14 @@ export default function JobCreatePage() {
 
                   <div>
                     <label htmlFor="salaryMax" className="block text-sm font-medium text-gray-700 mb-1">
-                      最高薪資 (月薪/元)
+                      最高薪資 (月薪/元) <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"
                       id="salaryMax"
                       name="salaryMax"
                       min="0"
+                      required
                       value={jobData.salaryMax || ""}
                       onChange={handleNumberChange}
                       // disabled={jobData.negotiable}

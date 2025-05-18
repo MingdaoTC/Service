@@ -64,9 +64,8 @@ export default function EnterpriseLayout({
 
   // 確定當前活動頁籤的函數
   const getActiveTabFromPath = (path: string) => {
-    // 處理根路徑 /admin
-    if (path === "/admin") {
-      return "dashboard";
+    if (path === "/enterprise") {
+      return "information";
     }
 
     // 查找匹配的菜單項
@@ -77,7 +76,7 @@ export default function EnterpriseLayout({
 
     // 處理 /admin/xxx 格式的路徑
     const segments = path.split("/");
-    if (segments.length >= 3 && segments[1] === "admin") {
+    if (segments.length >= 3 && segments[1] === "enterprise") {
       const potentialId = segments[2];
       const menuItem = menuItems.find(item => item.id === potentialId);
       if (menuItem) {
@@ -86,7 +85,7 @@ export default function EnterpriseLayout({
     }
 
     // 默認返回 dashboard
-    return "dashboard";
+    return "information";
   };
 
   useEffect(() => {
