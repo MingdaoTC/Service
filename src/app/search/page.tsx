@@ -248,13 +248,7 @@ export default function SearchPage() {
       {/* <ScrollProgressIndicator /> */}
 
       {/* 搜尋區域 */}
-      <div className={`bg-gradient-to-r from-mingdao-blue to-mingdao-blue-dark relative p-3 md:p-6 flex justify-center items-start transition-all duration-300 ${isSearchExpanded ? 'min-h-[12rem]' : 'min-h-[8rem]'}`}>
-        <div className="absolute top-0 right-0 w-1/3 h-full opacity-10">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <path fill="#FFFFFF" d="M40.5,-64.1C55.1,-55.1,71.1,-47.6,78.2,-35.2C85.3,-22.8,83.6,-5.6,78.9,9.3C74.2,24.2,66.5,36.8,56.1,46.4C45.7,56,32.6,62.7,18.8,67.5C4.9,72.2,-9.7,75,-23.9,72.3C-38.1,69.7,-52,61.6,-62.5,49.6C-73,37.5,-80.2,21.6,-82.9,4.5C-85.5,-12.7,-83.7,-31.1,-73.2,-42.4C-62.8,-53.7,-43.7,-57.9,-28.3,-66.5C-12.9,-75,2.8,-87.8,16.5,-87.5C30.3,-87.1,42.1,-73.7,40.5,-64.1Z" transform="translate(100 100)" />
-          </svg>
-        </div>
-
+      <div className={`bg-mingdao-blue relative p-3 md:p-6 flex justify-center items-start ${isSearchExpanded ? 'min-h-[12rem]' : 'min-h-[8rem]'}`}>
         <div className="w-full max-w-3xl mx-auto relative z-10">
           <div className="bg-white rounded-xl shadow-xl p-4 md:p-5">
             <EnhancedSearch
@@ -270,7 +264,7 @@ export default function SearchPage() {
       {/* 主內容區域 */}
       <div className="w-full max-w-6xl mx-auto px-4 py-6">
         {/* 搜尋結果摘要 */}
-        <div className="bg-white rounded-lg shadow mb-6 p-4">
+        <div className="bg-white rounded-lg shadow mb-6 p-4 border border-black border-opacity-10 rounded-lg">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <h1 className="text-xl font-bold text-mingdao-blue-dark mb-2 sm:mb-0">
               搜尋結果 <span className="text-gray-500 text-base font-normal">({results.pagination?.total || 0} 個職位)</span>
@@ -583,7 +577,7 @@ export default function SearchPage() {
                 {/* 職位列表 */}
                 {results.jobs.length > 0 ? (
                   <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
-                    <ul className="divide-y divide-gray-200">
+                    <ul className="divide-y divide-gray-200 border border-black border-opacity-10 rounded-lg">
                       {results.jobs.map((job: any) => (
                         <li key={job.id} className="hover:bg-gray-50 transition-colors">
                           <Link href={`/job/${job.id}`} className="block p-4">
@@ -794,7 +788,7 @@ export default function SearchPage() {
           <div className="lg:col-span-1">
             {/* 推薦公司 */}
             {results.companies.length > 0 && (
-              <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
+              <div className="bg-white rounded-lg shadow overflow-hidden mb-6 border border-black border-opacity-10 rounded-lg">
                 <div className="px-4 py-3 border-b border-gray-200">
                   <h3 className="text-lg font-medium text-mingdao-blue-dark flex items-center">
                     <FaBuilding className="mr-2" />
