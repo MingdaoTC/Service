@@ -681,7 +681,7 @@ export default function SearchPage() {
 
                                   {job.salaryMin === 0 && job.salaryMax === 0 && job.negotiable && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                                      薪資可議
+                                      薪資面議
                                     </span>
                                   )}
                                 </div>
