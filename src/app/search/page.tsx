@@ -675,7 +675,7 @@ export default function SearchPage() {
                                   {job.salaryMin > 0 && job.salaryMax > 0 && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                                       {Math.floor(job.salaryMin / 1000)}K - {Math.floor(job.salaryMax / 1000)}K
-                                      {job.negotiable && " (可議)"}
+                                      {job.negotiable && " (可面議)"}
                                     </span>
                                   )}
 
