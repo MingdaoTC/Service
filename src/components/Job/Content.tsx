@@ -61,7 +61,24 @@ export default function Content(props: { data: Job; className?: string }) {
       title: "需求人數",
       content: props.data.numberOfPositions?.toString() || "暫不提供",
     },
+    experience: {
+      title: "工作經歷",
+      content: props.data.experience || "不拘",
+    },
+    education: {
+      title: "學歷要求",
+      content: props.data.education || "不拘",
+    },
+    major: {
+      title: "科系要求",
+      content: props.data.major || "不拘",
+    },
+    language: {
+      title: "語言能力",
+      content: props.data.language || "不拘",
+    },
   };
+  console.log(JSON.stringify(props.data.benefits));
 
   return (
     <div
@@ -70,11 +87,12 @@ export default function Content(props: { data: Job; className?: string }) {
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
         工作內容
       </h1>
-      <p className="mb-5 whitespace-pre-wrap text-sm sm:text-base">
-        {props.data.description}
-      </p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+      <div className="w-full rounded-md mt-2 mb-2 h-auto text-left">
+        <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
+          {props.data.description}
+        </p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-5">
         {Object.keys(detail).map((key, index) => {
           return (
             <div
@@ -92,6 +110,38 @@ export default function Content(props: { data: Job; className?: string }) {
             </div>
           );
         })}
+      </div>
+      <div className="flex flex-col text-left mt-2">
+        <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0 text-left">
+          專業技能
+        </h2>
+        <div className="w-full rounded-md mt-2 mb-2 h-auto text-left">
+          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
+            {props.data.skills || "暫不提供"}
+          </p>
+        </div>
+      </div>
+      <hr />
+      <div className="flex flex-col text-left mt-2">
+        <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0 text-left">
+          福利制度
+        </h2>
+        <div className="w-full rounded-md mt-2 mb-2 h-auto text-left">
+          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
+            {props.data.benefits || "暫不提供"}
+          </p>
+        </div>
+      </div>
+      <hr />
+      <div className="flex flex-col text-left mt-2">
+        <h2 className="text-sm sm:text-base font-bold w-full sm:w-24 flex-shrink-0 text-left">
+          其他資訊
+        </h2>
+        <div className=" w-full rounded-md mt-2 mb-2 h-auto text-left">
+          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
+            {props.data.others || "暫不提供"}
+          </p>
+        </div>
       </div>
     </div>
   );

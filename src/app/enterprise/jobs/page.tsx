@@ -534,7 +534,7 @@ export default function JobManagementPage() {
                     <div className="col-span-1 justify-center">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${job.published
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        : 'bg-yellow-100 text-yellow-800'
                         }`}>
                         {job.published ? '已發布' : '未發布'}
                       </span>
