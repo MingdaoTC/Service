@@ -15,7 +15,7 @@ export default async function companyID({
     redirect("/");
   }
 
-  const companyData: Company & { jobs: (TJob & { company: Company })[] } = (await getCompanyById(params.companyId)) as Company & { jobs: Job[] };
+  const companyData: Company & { jobs: TJob[] } = (await getCompanyById(params.companyId)) as Company & { jobs: TJob[] };
 
   if (!companyData) {
     redirect("/");

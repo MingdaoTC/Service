@@ -69,9 +69,9 @@ export async function fetchSearchResults(params: {
             name: { contains: query, mode: "insensitive" },
           },
         },
-        {
-          tags: { hasSome: [query] }, // 使用標籤進行匹配
-        },
+        // {
+        //   tags: { hasSome: [query] }, // 使用標籤進行匹配
+        // },
       ];
     }
 
