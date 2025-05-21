@@ -1,3 +1,4 @@
+// components/Register/CorporateRegistrationForm.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -12,20 +13,32 @@ export default function CorporateRegistrationForm({
   setTitle,
   setMessage,
   setbackHome,
+  isDisabled = false,
+  disabledReason = "",
 }: {
   setIsOpenDialog: (value: boolean) => void;
   setTitle: (value: string) => void;
   setMessage: (value: string) => void;
   setbackHome: (value: boolean) => void;
+  isDisabled?: boolean;
+  disabledReason?: string;
 }): JSX.Element {
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
   const formRef = useRef<HTMLFormElement>(null);
-  // 添加一個狀態來跟蹤表單提交狀態
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isDisabled) {
+      // Show dialog with the reason why form is disabled
+      setTitle("無法提交申請");
+      setMessage(disabledReason);
+      setIsOpenDialog(true);
+      setbackHome(false);
+      return;
+    }
 
     // 設置為正在提交
     setIsSubmitting(true);
@@ -72,6 +85,7 @@ export default function CorporateRegistrationForm({
     }
   };
 
+  // Wrap form in fieldset to easily disable all elements
   return (
     <form
       id="corporate-registration-form"
@@ -79,63 +93,65 @@ export default function CorporateRegistrationForm({
       onSubmit={handleSubmit}
       ref={formRef}
     >
-      <div className={styles.formGroup}>
-        <label htmlFor="email" className={styles.required}>
-          電子郵件
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          value={userMail}
-          disabled
-        />
-      </div>
+      <fieldset disabled={isDisabled} className={isDisabled ? "opacity-60" : ""}>
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.required}>
+            電子郵件
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            value={userMail}
+            disabled
+          />
+        </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="companyid" className={styles.required}>
-          公司統編
-        </label>
-        <input type="text" id="companyid" name="companyid" required />
-        <p className={styles.helpText}>請輸入公司統一編號</p>
-      </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="companyid" className={styles.required}>
+            公司統編
+          </label>
+          <input type="text" id="companyid" name="companyid" required />
+          <p className={styles.helpText}>請輸入公司統一編號</p>
+        </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="company" className={styles.required}>
-          公司名稱
-        </label>
-        <input type="text" id="company" name="company" required />
-        <p className={styles.helpText}>請輸入營業登記名稱</p>
-      </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="company" className={styles.required}>
+            公司名稱
+          </label>
+          <input type="text" id="company" name="company" required />
+          <p className={styles.helpText}>請輸入營業登記名稱</p>
+        </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="name" className={styles.required}>
-          連絡人姓名
-        </label>
-        <input type="text" id="name" name="name" required />
-      </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="name" className={styles.required}>
+            連絡人姓名
+          </label>
+          <input type="text" id="name" name="name" required />
+        </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="phone" className={styles.required}>
-          聯絡人電話
-        </label>
-        <input type="tel" id="phone" name="phone" required />
-      </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="phone" className={styles.required}>
+            聯絡人電話
+          </label>
+          <input type="tel" id="phone" name="phone" required />
+        </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="notes">備註</label>
-        <textarea id="notes" name="notes" rows={4} />
-        <p className={styles.helpText}>如有其他需要說明的事項，請在此填寫</p>
-      </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="notes">備註</label>
+          <textarea id="notes" name="notes" rows={4} />
+          <p className={styles.helpText}>如有其他需要說明的事項，請在此填寫</p>
+        </div>
 
-      <button
-        type="submit"
-        className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? '處理中...' : '送出申請'}
-      </button>
+        <button
+          type="submit"
+          className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
+          disabled={isSubmitting || isDisabled}
+        >
+          {isSubmitting ? '處理中...' : '送出申請'}
+        </button>
+      </fieldset>
     </form>
   );
 }
