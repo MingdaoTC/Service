@@ -4,8 +4,8 @@ import { updateCompany } from "@/library/prisma/company/update";
 import { updateJob } from "@/library/prisma/job/update";
 import { Company, Job } from "@/prisma/client";
 
-export async function handleUpdate(companyData: Partial<Company>) {
-  const { id, email, name, unifiedNumber, ...data } = companyData;
+export async function handleUpdate(companyData: Partial<Company & { jobs: Job[] }>) {
+  const { id, email, name, unifiedNumber, jobs,  ...data } = companyData;
   await updateCompany({ email: email }, data);
   return "OK";
 }
