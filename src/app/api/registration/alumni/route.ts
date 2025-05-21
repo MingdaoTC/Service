@@ -86,22 +86,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let alreadyRegistered = false;
     let registration = await findManyAlumniRegistration({
       email: user.email,
     });
 
     registration.forEach(async (registration: AlumniRegistration) => {
-      if (registration.status === RegistrationStatus.PENDING) {
-        return NextResponse.json(
-          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-          { status: 409 }
-        );
-      }
-      if (registration.status === RegistrationStatus.APPROVED) {
-        return NextResponse.json(
-          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-          { status: 409 }
-        );
+      if (
+        registration.status === RegistrationStatus.PENDING ||
+        registration.status === RegistrationStatus.APPROVED
+      ) {
+        alreadyRegistered = true;
       }
     });
 
@@ -110,19 +105,20 @@ export async function POST(request: NextRequest) {
     });
 
     registration2.forEach(async (registration: CompanyRegistration) => {
-      if (registration.status === RegistrationStatus.PENDING) {
-        return NextResponse.json(
-          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-          { status: 409 }
-        );
-      }
-      if (registration.status === RegistrationStatus.APPROVED) {
-        return NextResponse.json(
-          { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
-          { status: 409 }
-        );
+      if (
+        registration.status === RegistrationStatus.PENDING ||
+        registration.status === RegistrationStatus.APPROVED
+      ) {
+        alreadyRegistered = true;
       }
     });
+
+    if (alreadyRegistered) {
+      return NextResponse.json(
+        { status: 409, message: "您已經送過申請驗證資料或是已經通過驗證" },
+        { status: 409 }
+      );
+    }
 
     //@ts-ignore
     registration = await createAlumniRegistration({

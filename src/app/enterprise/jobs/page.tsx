@@ -575,8 +575,12 @@ export default function JobManagementPage() {
                         <p>{formatEmploymentType(job.employmentType)}</p>
                       </div>
                       <div>
-                        <p className="text-gray-500 mb-1">工作地點:</p>
+                        <p className="text-gray-500 mb-1">工作模式:</p>
                         <p>{job.location ? formatLocation(job.location) : '未指定'}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500 mb-1">工作地點:</p>
+                        <p>{job.address ? job.address : '未指定'}</p>
                       </div>
                       <div>
                         <p className="text-gray-500 mb-1">薪資範圍:</p>

@@ -34,11 +34,11 @@ export default function Content(props: { data: Job; className?: string }) {
       content: employmentType[props.data.employmentType as EmploymentType] || "暫不提供",
     },
     location: {
-      title: "上班形式",
+      title: "工作模式",
       content: location[props.data.location as Location] || "暫不提供",
     },
     address: {
-      title: "上班地點",
+      title: "工作地點",
       content: props.data.address || "暫不提供",
     },
     responsibility: {

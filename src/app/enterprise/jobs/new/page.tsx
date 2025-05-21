@@ -105,6 +105,29 @@ export default function JobCreatePage() {
     })();
   }, []);
 
+  const validateSalary = (salaryMin: number, salaryMax: number) => {
+    // 無論是否面議，都必須有有效的薪資範圍
+
+    // 如果最小和最大薪資都是0，返回錯誤
+    if (salaryMin === 0 && salaryMax === 0) {
+      return {
+        valid: false,
+        message: '薪資範圍不能同時為0，請輸入有效的薪資範圍'
+      };
+    }
+
+    // 如果最大薪資小於最小薪資，返回錯誤
+    if (salaryMax !== 0 && salaryMin !== 0 && salaryMax < salaryMin) {
+      return {
+        valid: false,
+        message: '最高薪資不能低於最低薪資，請修正薪資範圍'
+      };
+    }
+
+    // 薪資值有效
+    return { valid: true };
+  };
+
   // 處理輸入變更
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -168,13 +191,13 @@ export default function JobCreatePage() {
     }));
 
     // 如果選擇面議，則清空薪資範圍
-    if (name === "negotiable" && checked) {
-      setJobData(prev => ({
-        ...prev,
-        salaryMin: 0,
-        salaryMax: 0
-      }));
-    }
+    // if (name === "negotiable" && checked) {
+    //   setJobData(prev => ({
+    //     ...prev,
+    //     salaryMin: 0,
+    //     salaryMax: 0
+    //   }));
+    // }
   };
 
   // 返回職缺列表
@@ -186,8 +209,22 @@ export default function JobCreatePage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+
     startTransition(async () => {
       try {
+        const salaryValidation: any = validateSalary(
+          jobData.salaryMin || 0,
+          jobData.salaryMax || 0,
+        );
+
+        if (!salaryValidation.valid) {
+          setStatusMessage({
+            type: 'error',
+            text: salaryValidation.message || ""
+          });
+          // 中止提交
+          return;
+        }
         const result = await handleCreateJob(jobData);
         console.log(result);
 
