@@ -11,5 +11,8 @@ export async function findUniqueCompany(param: Partial<Company>) {
       id: param.id,
       email: param.email,
     },
+    include: {
+      jobs: true
+    }  
   });
 }

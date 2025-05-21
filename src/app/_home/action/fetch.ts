@@ -5,7 +5,7 @@ import { findManyCompanyWithPublished } from "@/library/prisma/company/findMany"
 import { findManyCompanyCategory } from "@/library/prisma/companyCategory/findMany";
 import { findManyJobCategory } from "@/library/prisma/jobCategory/findMany";
 
-export async function getJob() {
+export async function getJob(jobs?: any) {
   return await findManyJob();
 }
 

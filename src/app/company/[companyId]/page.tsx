@@ -1,8 +1,8 @@
 import { Content } from "@/components/Company/Content";
 import Info from "@/components/Company/Info";
-// import Job from "@/components/Global/Object/Job";
+import Job from "@/components/Company/Job";
 // import Other from "@/components/Global/Object/Other";
-import type { Company } from "@/prisma/client";
+import type { Company, Job as TJob } from "@/prisma/client";
 import { getCompanyById } from "./_company/actions/getCompany";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default async function companyID({
     redirect("/");
   }
 
-  const companyData = (await getCompanyById(params.companyId)) as Company;
+  const companyData: Company & { jobs: (TJob & { company: Company })[] } = (await getCompanyById(params.companyId)) as Company & { jobs: Job[] };
 
   if (!companyData) {
     redirect("/");
@@ -39,10 +39,23 @@ export default async function companyID({
           </div> */}
         </div>
 
-        <div className="flex flex-col gap-2 sm:gap-3">
-          <h2 className="text-xl font-bold text-mingdao-blue-dark mb-1 md:mb-2">
-            公司職缺列表
-          </h2>
+        <div className="border bg-white rounded-lg p-4 sm:p-6 md:p-8 shadow-sm">
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <h2 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
+              公司職缺列表
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+            {companyData.jobs?.length > 0 ? (
+              companyData.jobs.map((job) => (
+                <div key={job.id} className="w-full">
+                  <Job data={job} company={companyData} />
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-500">暫無職缺</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

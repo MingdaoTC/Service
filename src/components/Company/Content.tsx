@@ -23,7 +23,7 @@ export function Content({
       </h1>
 
       <div>
-        <table className="w-full border-separate border-spacing-x-4 border-spacing-y-1">
+        <table className="w-full border-separate border-spacing-y-1">
           <tbody>
             {detailList.map((item, index) => (
               <tr className="[&>td]:pb-3" key={index}>

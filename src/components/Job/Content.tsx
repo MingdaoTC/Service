@@ -70,7 +70,7 @@ export default function Content(props: { data: Job; className?: string }) {
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">
         工作內容
       </h1>
-      <p className="mx-1 sm:mx-2 mb-5 whitespace-pre-wrap text-sm sm:text-base">
+      <p className="mb-5 whitespace-pre-wrap text-sm sm:text-base">
         {props.data.description}
       </p>
 
