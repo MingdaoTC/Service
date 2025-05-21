@@ -49,7 +49,7 @@ export async function fetchSearchResults(params: {
     const skip = (page - 1) * limit;
 
     // 構建工作搜尋條件
-    let jobWhere: any = {
+    const jobWhere: any = {
       published: true,
     };
 
@@ -172,7 +172,7 @@ export async function fetchSearchResults(params: {
     });
 
     // 構建公司搜尋條件
-    let companyWhere: any = {
+    const companyWhere: any = {
       published: true,
     };
 

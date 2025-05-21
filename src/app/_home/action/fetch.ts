@@ -1,11 +1,11 @@
 "use server";
 
-import { findManyJob } from "@/library/prisma/job/findMany";
 import { findManyCompanyWithPublished } from "@/library/prisma/company/findMany";
 import { findManyCompanyCategory } from "@/library/prisma/companyCategory/findMany";
+import { findManyJob } from "@/library/prisma/job/findMany";
 import { findManyJobCategory } from "@/library/prisma/jobCategory/findMany";
 
-export async function getJob(jobs?: any) {
+export async function getJob(_jobs?: any) {
   return await findManyJob();
 }
 

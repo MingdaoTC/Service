@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef, Fragment } from "react";
+import { Fragment, useRef, useState } from "react";
 
-import { updateProfile } from "../actions/updateProfile";
-import { createProfile } from "../actions/createProfile";
 import OperationInfoDialog from "@/components/Global/OperationInfoDialog";
 import { Gender, UserProfile } from "@/prisma/client";
+import { createProfile } from "../actions/createProfile";
+import { updateProfile } from "../actions/updateProfile";
 
 import { validateTaiwanId } from "@/library/validators/taiwanId";
 
@@ -58,7 +58,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     if (
       formData.get("birthday") &&
       new Date(formData.get("birthday")?.toString() as string).toString() ===
-      "Invalid Date"
+        "Invalid Date"
     ) {
       setError("生日格式不正確");
       setDialogMessage("生日格式不正確");
@@ -125,11 +125,17 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       placeholder: "https://example.com",
       title: "個人網站",
     },
-    { name: "phone", type: "text", placeholder: "0912345678", title: "聯絡電話" },
+    {
+      name: "phone",
+      type: "text",
+      placeholder: "0912345678",
+      title: "聯絡電話",
+    },
     {
       name: "description",
       type: "textarea",
-      placeholder: "我畢業於台灣科技大學資訊工程學系，在校期間就對軟體開發產生濃厚興趣，並積極參與各種相關專案。畢業後，我在一家中型科技公司擔任後端工程師三年，主要負責API開發和數據庫優化，成功將系統響應時間縮短了40%。",
+      placeholder:
+        "我畢業於台灣科技大學資訊工程學系，在校期間就對軟體開發產生濃厚興趣，並積極參與各種相關專案。畢業後，我在一家中型科技公司擔任後端工程師三年，主要負責API開發和數據庫優化，成功將系統響應時間縮短了40%。",
       title: "自我介紹",
     },
     {
@@ -156,7 +162,6 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       type: "select",
       title: "性別",
       options: [
-
         { value: Gender.MALE, label: "男" },
         { value: Gender.FEMALE, label: "女" },
         { value: Gender.UNSPECIFIED, label: "其他" },
@@ -177,8 +182,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 h-24 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`border border-gray-300 rounded px-4 py-2 h-24 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
             />
           </Fragment>
@@ -191,8 +197,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               key={field.name}
               name={field.name}
               defaultValue={field.options[0].value}
-              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
             >
               {field.options.map((option) => (
@@ -213,8 +220,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${
+                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               disabled={field.disabled}
               pattern={field.pattern?.source}
               required={field.required}
@@ -254,10 +262,11 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className={`px-4 py-2 ${isPending
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
-            } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
+          className={`px-4 py-2 ${
+            isPending
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
+          } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
         >
           {isPending
             ? mode === "update"

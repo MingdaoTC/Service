@@ -3,23 +3,23 @@
 // 認證與權限
 import { auth } from "@/library/auth";
 import {
-  UserRole,
-  RegistrationStatus,
   AccountStatus,
+  RegistrationStatus,
   User,
+  UserRole,
 } from "@/prisma/client";
 
+import { findUniqueAlumniRegistration } from "@/library/prisma/registration/alumni/findUnique";
 // 註冊相關函數
 import { updateAlumniRegistration } from "@/library/prisma/registration/alumni/update";
-import { updateCompanyRegistration } from "@/library/prisma/registration/company/update";
-import { findUniqueAlumniRegistration } from "@/library/prisma/registration/alumni/findUnique";
 import { findUniqueCompanyRegistration } from "@/library/prisma/registration/company/findUnique";
-import { updateUser } from "@/library/prisma/user/update";
+import { updateCompanyRegistration } from "@/library/prisma/registration/company/update";
 import { findUniqueUser } from "@/library/prisma/user/findUnique";
+import { updateUser } from "@/library/prisma/user/update";
 
+import { createCompany } from "@/library/prisma/company/create";
 // 輔助函數
 import { revalidatePath } from "next/cache";
-import { createCompany } from "@/library/prisma/company/create";
 
 /**
  * 審核通過申請的 Server Action
@@ -79,7 +79,7 @@ export async function approveRegistration(formData: FormData) {
           status: RegistrationStatus.APPROVED,
           approvedAt: new Date(),
           approvedBy: user.id, // 記錄操作者ID
-        }
+        },
       );
 
       // 更新用戶狀態為已驗證
@@ -89,7 +89,7 @@ export async function approveRegistration(formData: FormData) {
       if (registrationUser) {
         await updateUser(
           { email: registration.email },
-          { status: AccountStatus.VERIFIED, role: UserRole.COMPANY }
+          { status: AccountStatus.VERIFIED, role: UserRole.COMPANY },
         );
       }
 
@@ -131,7 +131,7 @@ export async function approveRegistration(formData: FormData) {
           // 根據錯誤訊息，校友註冊模型沒有 approvedAt 欄位
           approvedAt: new Date(),
           approvedBy: user.id,
-        }
+        },
       );
 
       // 更新用戶狀態為已驗證
@@ -141,7 +141,7 @@ export async function approveRegistration(formData: FormData) {
       if (registrationUser) {
         await updateUser(
           { email: registration.email },
-          { status: AccountStatus.VERIFIED, role: UserRole.ALUMNI }
+          { status: AccountStatus.VERIFIED, role: UserRole.ALUMNI },
         );
       }
 

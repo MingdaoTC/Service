@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
 import CompanyList from "@/components/Home/CompanyList";
 import JobList from "@/components/Home/JobList";
 import Link from "next/link";
+import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 type HomePageProps = {

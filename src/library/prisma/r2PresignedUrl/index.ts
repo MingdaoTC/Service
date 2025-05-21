@@ -1,10 +1,10 @@
 import { prisma } from "@/library/prisma";
+import { ObjectId as MongoObjectId } from "mongodb";
 import {
   R2PresignedUrlCacheDocument,
   R2_CACHE_COLLECTION_NAME,
   R2_CACHE_TTL_SECONDS,
 } from "./type";
-import { ObjectId as MongoObjectId } from "mongodb";
 
 // Ensure TTL index
 export async function ensureR2CacheTtlIndex(): Promise<void> {

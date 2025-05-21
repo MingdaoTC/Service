@@ -1,6 +1,6 @@
 import { auth } from "@/library/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { User, UserRole, AccountStatus } from "./prisma/client";
+import { AccountStatus, User, UserRole } from "./prisma/client";
 
 export async function middleware(request: NextRequest) {
   const session = await auth();

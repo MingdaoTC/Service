@@ -1,7 +1,7 @@
-import ResumeItem from "./ResumeItem";
-import { getResumeListByUserEmail } from "../../actions/getResumeList";
 import { auth } from "@/library/auth";
 import { User } from "@/prisma/client";
+import { getResumeListByUserEmail } from "../../actions/getResumeList";
+import ResumeItem from "./ResumeItem";
 
 export default async function ResumeList() {
   const session = await auth();

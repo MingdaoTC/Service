@@ -3,7 +3,7 @@ import { Company } from "@/prisma/client";
 
 export async function updateCompany(
   param: Partial<Company>,
-  data: Partial<Company>
+  data: Partial<Company>,
 ) {
   if (!param.id && !param.email) {
     throw new Error("At least one parameter should be provided.");

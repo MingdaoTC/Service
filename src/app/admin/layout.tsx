@@ -5,17 +5,26 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 // Icons
-import { Store, Activity, BadgeCheck, ShieldUser, User, Menu as MenuIcon, X, LucideIcon } from "lucide-react";
+import {
+  Activity,
+  BadgeCheck,
+  LucideIcon,
+  Menu as MenuIcon,
+  ShieldUser,
+  Store,
+  User,
+  X,
+} from "lucide-react";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
-  id: string;               // 路由 ID
-  label: string;            // 顯示的標籤
-  icon: LucideIcon;         // 圖標組件
-  path?: string;            // 路徑 (為空時使用 /admin/{id})
-  disabled?: boolean;       // 是否禁用（無法點擊）
-  beta?: boolean;           // 是否為開發中功能
-  onClick?: () => void;     // 可選的自定義點擊處理函數
+  id: string; // 路由 ID
+  label: string; // 顯示的標籤
+  icon: LucideIcon; // 圖標組件
+  path?: string; // 路徑 (為空時使用 /admin/{id})
+  disabled?: boolean; // 是否禁用（無法點擊）
+  beta?: boolean; // 是否為開發中功能
+  onClick?: () => void; // 可選的自定義點擊處理函數
 };
 
 // 集中管理的菜單配置
@@ -26,7 +35,7 @@ const menuItems: MenuItem[] = [
     icon: Activity,
     path: "/admin",
     beta: true,
-    disabled: false
+    disabled: false,
   },
   {
     id: "registration",
@@ -34,7 +43,7 @@ const menuItems: MenuItem[] = [
     icon: BadgeCheck,
     path: "/admin/registration",
     beta: false,
-    disabled: false
+    disabled: false,
   },
   {
     id: "companie",
@@ -42,7 +51,7 @@ const menuItems: MenuItem[] = [
     icon: Store,
     path: "/admin/admins",
     beta: true,
-    disabled: false
+    disabled: false,
   },
   {
     id: "users",
@@ -50,7 +59,7 @@ const menuItems: MenuItem[] = [
     icon: User,
     path: "/admin/users",
     beta: true,
-    disabled: false
+    disabled: false,
   },
   {
     id: "admins",
@@ -58,8 +67,8 @@ const menuItems: MenuItem[] = [
     icon: ShieldUser,
     path: "/admin/admins",
     beta: true,
-    disabled: false
-  }
+    disabled: false,
+  },
   // {
   //   id: "help",
   //   label: "幫助中心",
@@ -87,7 +96,7 @@ export default function AdminLayout({
     }
 
     // 查找匹配的菜單項
-    const matchedItem = menuItems.find(item => item.path === path);
+    const matchedItem = menuItems.find((item) => item.path === path);
     if (matchedItem) {
       return matchedItem.id;
     }
@@ -96,7 +105,7 @@ export default function AdminLayout({
     const segments = path.split("/");
     if (segments.length >= 3 && segments[1] === "admin") {
       const potentialId = segments[2];
-      const menuItem = menuItems.find(item => item.id === potentialId);
+      const menuItem = menuItems.find((item) => item.id === potentialId);
       if (menuItem) {
         return menuItem.id;
       }
@@ -117,18 +126,18 @@ export default function AdminLayout({
     checkScreenSize();
 
     // 添加監聽器
-    window.addEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
 
     // 清理監聽器
     return () => {
-      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
 
   // 獲取當前頁面標題
   const getCurrentPageTitle = () => {
     const activeTab = getActiveTabFromPath(pathname);
-    const currentItem = menuItems.find(item => item.id === activeTab);
+    const currentItem = menuItems.find((item) => item.id === activeTab);
     return currentItem ? currentItem.label : "";
   };
 
@@ -169,11 +178,12 @@ export default function AdminLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${item.disabled
-              ? 'opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500'
-              : activeTab === item.id
-                ? "bg-blue-100 text-blue-600 font-medium"
-                : "text-gray-700 hover:bg-gray-100"
+            ${
+              item.disabled
+                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+                : activeTab === item.id
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}
@@ -191,7 +201,7 @@ export default function AdminLayout({
   if (isLoading) {
     return (
       <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-7rem)]">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
           <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
             載入中...
           </span>
@@ -205,7 +215,9 @@ export default function AdminLayout({
       {/* 手機板頂部導航欄 */}
       {isMobile && (
         <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
-          <h1 className="text-lg font-semibold text-gray-800">{getCurrentPageTitle()}</h1>
+          <h1 className="text-lg font-semibold text-gray-800">
+            {getCurrentPageTitle()}
+          </h1>
           <button
             onClick={toggleMobileMenu}
             className="p-1 rounded-md text-gray-700 hover:bg-gray-100"
@@ -220,9 +232,7 @@ export default function AdminLayout({
       {!isMobile && (
         <aside className="w-64 bg-white shadow-sm h-[calc(100vh-6rem)] flex-shrink-0">
           <nav className="p-4">
-            <ul className="space-y-1">
-              {menuItems.map(renderMenuItem)}
-            </ul>
+            <ul className="space-y-1">{menuItems.map(renderMenuItem)}</ul>
           </nav>
         </aside>
       )}
@@ -241,9 +251,7 @@ export default function AdminLayout({
               </button>
             </div>
             <div className="p-4">
-              <ul className="space-y-2">
-                {menuItems.map(renderMenuItem)}
-              </ul>
+              <ul className="space-y-2">{menuItems.map(renderMenuItem)}</ul>
             </div>
           </div>
         </div>

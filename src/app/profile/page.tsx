@@ -2,8 +2,8 @@ import { auth } from "@/library/auth";
 import { User, UserProfile } from "@/prisma/client";
 
 import BasicInfo from "./_profile/BasicInfo";
-import UpdateForm from "./_profile/UpdateForm";
 import ResumeManage from "./_profile/ResumeManage";
+import UpdateForm from "./_profile/UpdateForm";
 import { getProfile } from "./_profile/actions/getProfile";
 
 export default async function Profile() {

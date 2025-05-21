@@ -1,9 +1,9 @@
 // components/Register/CorporateRegistrationForm.tsx
 "use client";
 
+import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { FormEvent, useRef, useState } from "react";
-import styles from "@/styles/Register/index.module.css";
 
 // Import the server action
 import { handleCorporateRegister } from "@/app/register/_register/action/submitForm";
@@ -93,7 +93,10 @@ export default function CorporateRegistrationForm({
       onSubmit={handleSubmit}
       ref={formRef}
     >
-      <fieldset disabled={isDisabled} className={isDisabled ? "opacity-60" : ""}>
+      <fieldset
+        disabled={isDisabled}
+        className={isDisabled ? "opacity-60" : ""}
+      >
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.required}>
             電子郵件
@@ -149,7 +152,7 @@ export default function CorporateRegistrationForm({
           className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
           disabled={isSubmitting || isDisabled}
         >
-          {isSubmitting ? '處理中...' : '送出申請'}
+          {isSubmitting ? "處理中..." : "送出申請"}
         </button>
       </fieldset>
     </form>

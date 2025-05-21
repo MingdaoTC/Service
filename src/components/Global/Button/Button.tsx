@@ -20,10 +20,14 @@ export default function Button({
   disabled,
 }: TProps) {
   const styles = {
-    default: "px-4 py-2 rounded-md hover:rounded-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
-    primary: "bg-mingdao-blue text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
-    secondary: "bg-transparent text-mingdao-blue border border-mingdao-blue disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
-    danger: "bg-red-500 text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+    default:
+      "px-4 py-2 rounded-md hover:rounded-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+    primary:
+      "bg-mingdao-blue text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+    secondary:
+      "bg-transparent text-mingdao-blue border border-mingdao-blue disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+    danger:
+      "bg-red-500 text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
   };
   return (
     <>

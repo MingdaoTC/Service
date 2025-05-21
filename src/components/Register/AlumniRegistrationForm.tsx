@@ -1,9 +1,9 @@
 // components/Register/AlumniRegistrationForm.tsx
 "use client";
 
+import styles from "@/styles/Register/index.module.css";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import styles from "@/styles/Register/index.module.css";
 
 // Import the server action
 import { handleAlumniRegister } from "@/app/register/_register/action/submitForm";
@@ -40,13 +40,15 @@ export default function AlumniRegistrationForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
   const fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
-  const fileInputFrontRef = useRef<HTMLInputElement>(null);
-  const fileInputBackRef = useRef<HTMLInputElement>(null);
-  const fileInputPassportRef = useRef<HTMLInputElement>(null);
+  const _fileInputFrontRef = useRef<HTMLInputElement>(null);
+  const _fileInputBackRef = useRef<HTMLInputElement>(null);
+  const _fileInputPassportRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      return;
+    }
 
     setIdDocumentType(e.target.value as IdDocumentType);
     // 清空已上傳的其他證件文件，保留學生證
@@ -55,12 +57,14 @@ export default function AlumniRegistrationForm({
     );
   };
 
-  const handleFileChange = (
+  const _handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
     type: string,
     side?: "front" | "back",
   ) => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      return;
+    }
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -84,8 +88,10 @@ export default function AlumniRegistrationForm({
     }
   };
 
-  const removeFile = (type: string, side?: "front" | "back") => {
-    if (isDisabled) return;
+  const _removeFile = (type: string, side?: "front" | "back") => {
+    if (isDisabled) {
+      return;
+    }
 
     setUploadedFiles((prev) =>
       prev.filter((file) => !(file.type === type && file.side === side)),
@@ -205,7 +211,10 @@ export default function AlumniRegistrationForm({
       onSubmit={handleSubmit}
       ref={formRef}
     >
-      <fieldset disabled={isDisabled} className={isDisabled ? "opacity-60" : ""}>
+      <fieldset
+        disabled={isDisabled}
+        className={isDisabled ? "opacity-60" : ""}
+      >
         <input
           type="hidden"
           id="account-type"
@@ -254,7 +263,9 @@ export default function AlumniRegistrationForm({
             name="studentCard"
             className="mr-1 mb-2"
             onChange={(e: any) => {
-              if (isDisabled) return;
+              if (isDisabled) {
+                return;
+              }
               setStuCardYes(!e.target.checked);
               if (e.target.checked) {
                 if (fileInputStudentCardFrontRef.current) {
@@ -306,7 +317,7 @@ export default function AlumniRegistrationForm({
           className={`${styles.btn} ${styles.btnBlock} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:bg-mingdao-blue`}
           disabled={isSubmitting || isDisabled}
         >
-          {isSubmitting ? '處理中...' : '送出申請'}
+          {isSubmitting ? "處理中..." : "送出申請"}
         </button>
       </fieldset>
     </form>

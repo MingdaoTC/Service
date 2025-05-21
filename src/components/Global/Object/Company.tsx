@@ -1,16 +1,18 @@
 "use client";
 
+import { countJobs } from "@/components/Global/Object/_object/count";
 import type { CompanyCategory, Company as TCompany } from "@/prisma/client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BiMap } from "react-icons/bi";
 import { BiBuildings } from "react-icons/bi";
-import { useState, useEffect } from "react";
-import { countJobs } from "@/components/Global/Object/_object/count";
 
 type Props = {
   data: TCompany & { category: CompanyCategory | null };
   className?: string;
 };
+
+const CDN_URL: string = process.env.NEXT_PUBLIC_CDN_URL as string;
 
 export default function Company(props: Props) {
   const [jobsNum, setJobsNum] = useState<number>(0);
@@ -31,7 +33,7 @@ export default function Company(props: Props) {
           <div
             className="w-full h-full"
             style={{
-              backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL! + props.data.logoUrl})`,
+              backgroundImage: `url(${CDN_URL + props.data.logoUrl})`,
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -49,9 +51,7 @@ export default function Company(props: Props) {
         </div>
         <div className="flex gap-1 items-center text-xs sm:text-sm">
           <BiBuildings color="gray" size={"1em"} />
-          <span className="truncate">
-            {props.data.category?.name}
-          </span>
+          <span className="truncate">{props.data.category?.name}</span>
         </div>
         <div className="flex gap-1 py-1 flex-wrap">
           {props.data.tags.map((tag: any, index: any) => {
@@ -67,7 +67,10 @@ export default function Company(props: Props) {
         </div>
       </div>
       <div className="w-full text-center text-white bg-mingdao-blue-dark rounded-b-lg py-2 text-sm cursor-pointer mt-auto transition-all duration-300 hover:bg-mingdao-blue-dark/90">
-        <Link className="block w-full h-full" href={`/company/${props.data.id}`}>
+        <Link
+          className="block w-full h-full"
+          href={`/company/${props.data.id}`}
+        >
           查看工作機會 ({jobsNum})
         </Link>
       </div>

@@ -15,7 +15,7 @@ export async function updateAlumniRegistration(
 
   return await prisma.alumniRegistration.update({
     where: {
-    id: param.id,
+      id: param.id,
       email: param.email,
     },
     data: data,

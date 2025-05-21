@@ -1,7 +1,7 @@
 "use client";
+import OperationInfoDialog from "@/components/Global/OperationInfoDialog";
 import { useRef, useState } from "react";
 import { createNewResume } from "../actions/createNewResume";
-import OperationInfoDialog from "@/components/Global/OperationInfoDialog";
 
 import { resumeFileSizeLimit } from "../limitationConfig";
 

@@ -59,7 +59,10 @@ export default function Job({
               <BiBookmark className="translate-y-[1px]" />
               儲存
             </Button> */}
-            <Button className="flex items-center gap-1 text-sm py-1 px-3" disabled>
+            <Button
+              className="flex items-center gap-1 text-sm py-1 px-3"
+              disabled
+            >
               <AiOutlineMail className="translate-y-[0.5px]" />
               應徵
             </Button>
@@ -69,7 +72,9 @@ export default function Job({
 
     case "sm":
       return (
-        <div className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}>
+        <div
+          className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}
+        >
           <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}
@@ -99,7 +104,9 @@ export default function Job({
       );
     default:
       return (
-        <div className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}>
+        <div
+          className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}
+        >
           <Link href={`/job/${data.id}`}>
             <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
               {data.title}

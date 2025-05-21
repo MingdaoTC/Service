@@ -3,8 +3,8 @@
 import { auth } from "@/library/auth";
 import { findUniqueCompany } from "@/library/prisma/company/findUnique";
 import { findManyCompanyCategory } from "@/library/prisma/companyCategory/findMany";
-import { findUniqueJob } from "@/library/prisma/job/findUnique";
 import { findManyJob } from "@/library/prisma/job/findMany";
+import { findUniqueJob } from "@/library/prisma/job/findUnique";
 import { findManyJobCategory } from "@/library/prisma/jobCategory/findMany";
 import { User } from "@/prisma/client";
 

@@ -2,7 +2,7 @@ import { prisma } from "@/library/prisma";
 import { CompanyRegistration } from "@/prisma/client";
 
 export async function findUniqueCompanyRegistration(
-  param: Partial<CompanyRegistration>
+  param: Partial<CompanyRegistration>,
 ) {
   if (!param.id) {
     throw new Error("At least one parameter should be provided.");

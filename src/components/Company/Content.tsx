@@ -15,7 +15,7 @@ export function Content({
     <div
       className={joinClass(
         "border bg-white rounded-lg p-4 sm:p-6 md:p-8 shadow-sm",
-        className
+        className,
       )}
     >
       <h1 className="text-xl sm:text-2xl text-mingdao-blue-dark font-bold mb-4">

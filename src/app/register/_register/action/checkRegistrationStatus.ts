@@ -1,13 +1,13 @@
 "use server";
 
 import { auth } from "@/library/auth";
-import {
-  RegistrationStatus,
-  AlumniRegistration,
-  CompanyRegistration,
-} from "@/prisma/client";
 import { findManyAlumniRegistration } from "@/library/prisma/registration/alumni/findMany";
 import { findManyCompanyRegistration } from "@/library/prisma/registration/company/findMany";
+import {
+  AlumniRegistration,
+  CompanyRegistration,
+  RegistrationStatus,
+} from "@/prisma/client";
 
 export async function checkRegistrationStatus() {
   try {
@@ -25,11 +25,11 @@ export async function checkRegistrationStatus() {
     let alreadyRegistered = false;
     let status: RegistrationStatus = RegistrationStatus.PENDING;
 
-    let registration = await findManyAlumniRegistration({
+    const registration = await findManyAlumniRegistration({
       email: session.user.email,
     });
 
-    registration.forEach(async (registration: AlumniRegistration) => {
+    registration.map(async (registration: AlumniRegistration) => {
       if (
         registration.status === RegistrationStatus.PENDING ||
         registration.status === RegistrationStatus.APPROVED
@@ -41,11 +41,11 @@ export async function checkRegistrationStatus() {
       }
     });
 
-    let registration2 = await findManyCompanyRegistration({
+    const registration2 = await findManyCompanyRegistration({
       email: session.user.email,
     });
 
-    registration2.forEach(async (registration: CompanyRegistration) => {
+    registration2.map(async (registration: CompanyRegistration) => {
       if (
         registration.status === RegistrationStatus.PENDING ||
         registration.status === RegistrationStatus.APPROVED

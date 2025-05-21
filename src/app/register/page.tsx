@@ -1,14 +1,14 @@
 // app/register/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import AlumniRegistrationForm from "@/components/Register/AlumniRegistrationForm";
 import CorporateRegistrationForm from "@/components/Register/CorporateRegistrationForm";
 import RegistrationDialog from "@/components/Register/RegistrationDialog";
-import styles from "@/styles/Register/index.module.css";
-import { checkRegistrationStatus } from "./_register/action/checkRegistrationStatus";
 import { RegistrationStatus } from "@/prisma/client";
+import styles from "@/styles/Register/index.module.css";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { checkRegistrationStatus } from "./_register/action/checkRegistrationStatus";
 
 type AccountType = "alumni" | "corporate";
 
@@ -37,22 +37,24 @@ export default function RegistrationPage() {
       const checkStatus = async () => {
         try {
           const result: any = await checkRegistrationStatus();
-          console.log("Result from checkRegistrationStatus:", result);
 
           // 修改：直接檢查 data.isRegistered，不依賴 success 字段
           if (result.data?.isRegistered) {
             setIsFormDisabled(true);
 
             const registrationStatus = result.data.status as RegistrationStatus;
-            console.log("Registration status:", registrationStatus);
 
             // Create message based on status
-            const statusText = registrationStatus === RegistrationStatus.APPROVED ?
-              "已核准" : "審核中";
-            const typeText = result.data.type === "alumni" ?
-              "校友帳號" : "企業帳號";
+            const statusText =
+              registrationStatus === RegistrationStatus.APPROVED
+                ? "已核准"
+                : "審核中";
+            const typeText =
+              result.data.type === "alumni" ? "校友帳號" : "企業帳號";
 
-            setFormDisabledReason(`您已有一個${statusText}的${typeText}註冊。如需更改，請聯絡管理員。`);
+            setFormDisabledReason(
+              `您已有一個${statusText}的${typeText}註冊。如需更改，請聯絡管理員。`,
+            );
 
             // Set the account type to match the existing registration
             setAccountType(result.data.type as AccountType);
@@ -71,15 +73,19 @@ export default function RegistrationPage() {
   }, [status, session]);
 
   if (isLoading) {
-    return <div className={styles.container}>
-      <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mingdao-blue"></div>
+    return (
+      <div className={styles.container}>
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mingdao-blue" />
+        </div>
       </div>
-    </div>;
+    );
   }
 
   return (
-    <div className={`${styles.container} border-black border border-opacity-30`}>
+    <div
+      className={`${styles.container} border-black border border-opacity-30`}
+    >
       <RegistrationDialog
         isOpen={isOpenDialog}
         title={title}
@@ -98,14 +104,20 @@ export default function RegistrationPage() {
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              <svg
+                className="h-5 w-5 text-yellow-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-yellow-700">
-                {formDisabledReason}
-              </p>
+              <p className="text-sm text-yellow-700">{formDisabledReason}</p>
             </div>
           </div>
         </div>

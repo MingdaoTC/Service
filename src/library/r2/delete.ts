@@ -17,7 +17,7 @@ interface DeleteResponse {
 
 export async function deleteObject(
   key: string,
-  options: DeleteOptions = {}
+  options: DeleteOptions = {},
 ): Promise<DeleteResponse> {
   if (!key || typeof key !== "string") {
     return { success: false, error: "should provide a valid key" };

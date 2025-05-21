@@ -1,7 +1,7 @@
 "use server";
 
-import { Job } from "@/prisma/client";
 import { createJob } from "@/library/prisma/job/create";
+import { Job } from "@/prisma/client";
 import { getCompanyData } from "./fetch";
 
 export async function handleCreateJob(jobData: Partial<Job>) {

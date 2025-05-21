@@ -1,13 +1,13 @@
 "use server";
 
-import { updateUserProfile } from "@/library/prisma/userProfile/update";
 import { auth } from "@/library/auth";
+import { updateUserProfile } from "@/library/prisma/userProfile/update";
 
 import { Gender, UserProfile } from "@/prisma/client";
 
+import { User } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { User } from "next-auth";
 
 export type UserProfileUpdate = Omit<
   UserProfile,

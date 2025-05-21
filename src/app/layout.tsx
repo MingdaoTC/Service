@@ -26,7 +26,9 @@ export default function RootLayout({
     <SessionProvider>
       <html lang="en">
         <body
-          className={`[&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden`}
+          className={
+            "[&:has(dialog[open])]:overflow-hidden h-[100dvh] overflow-hidden"
+          }
         >
           <HeaderBar />
           <div className="h-[calc(100dvh-3rem)] flex flex-col overflow-auto">

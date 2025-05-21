@@ -1,7 +1,7 @@
 "use server";
 
-import { Job } from "@/prisma/client";
 import { deleteJob } from "@/library/prisma/job/remove";
+import { Job } from "@/prisma/client";
 
 export async function handleJobDelete(jobData: Partial<Job>) {
   try {

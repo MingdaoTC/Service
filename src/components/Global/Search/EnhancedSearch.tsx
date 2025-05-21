@@ -1,10 +1,13 @@
 "use client";
 
+import { getJobCategory } from "@/app/_home/action/fetch";
+import {
+  getAllCities,
+  getDistrictsByCity,
+} from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Button from "../Button/Button";
-import { getAllCities, getDistrictsByCity } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
-import { getJobCategory } from "@/app/_home/action/fetch";
 
 type TProps = {
   searchText?: string;
@@ -60,8 +63,12 @@ export default function EnhancedSearch(props: TProps) {
           const cityParam = searchParams.get("city");
           const districtParam = searchParams.get("district");
 
-          if (query) setKeyword(query);
-          if (categoryParam) setCategory(categoryParam);
+          if (query) {
+            setKeyword(query);
+          }
+          if (categoryParam) {
+            setCategory(categoryParam);
+          }
 
           if (cityParam) {
             setCityChoose(cityParam);
@@ -106,8 +113,12 @@ export default function EnhancedSearch(props: TProps) {
   const handleSearch = () => {
     // 構建查詢參數
     const params = new URLSearchParams();
-    if (keyword) params.set("q", keyword);
-    if (category) params.set("category", category);
+    if (keyword) {
+      params.set("q", keyword);
+    }
+    if (category) {
+      params.set("category", category);
+    }
     if (cityChoose) {
       params.set("city", cityChoose);
       if (districtChoose) {
@@ -159,7 +170,12 @@ export default function EnhancedSearch(props: TProps) {
         <div className="flex flex-col sm:flex-row gap-2 mt-2 pt-2 border-t border-gray-200">
           {/* 職業類別選擇 */}
           <div className="flex-1">
-            <label className="block text-xs text-gray-700 mb-1">職業類別</label>
+            <label
+              className="block text-xs text-gray-700 mb-1"
+              htmlFor="category"
+            >
+              職業類別
+            </label>
             <select
               title="category"
               value={category}
@@ -179,7 +195,12 @@ export default function EnhancedSearch(props: TProps) {
           {/* 地區選擇 */}
           <div className="flex-1 flex flex-col sm:flex-row gap-2">
             <div className="flex-1">
-              <label className="block text-xs text-gray-700 mb-1">縣市</label>
+              <label
+                className="block text-xs text-gray-700 mb-1"
+                htmlFor="city"
+              >
+                縣市
+              </label>
               <select
                 title="city"
                 value={cityChoose}
@@ -196,7 +217,12 @@ export default function EnhancedSearch(props: TProps) {
             </div>
 
             <div className="flex-1">
-              <label className="block text-xs text-gray-700 mb-1">地區</label>
+              <label
+                className="block text-xs text-gray-700 mb-1"
+                htmlFor="district"
+              >
+                地區
+              </label>
               <select
                 title="district"
                 value={districtChoose}

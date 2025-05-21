@@ -1,10 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { auth } from "@/library/auth";
 import { upload } from "@/library/r2/upload";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { cookies } from "next/headers";
-import { auth } from "@/library/auth";
 
 /**
  * 獲取當前的主機URL，用於構建API請求地址
@@ -13,10 +13,10 @@ function getBaseUrl() {
   // 獲取請求頭
   const headersList = headers();
   // 獲取主機名
-  const host = headersList.get('host') || 'localhost:3000';
+  const host = headersList.get("host") || "localhost:3000";
   // 確定協議（如果有X-Forwarded-Proto使用它，否則預設為https）
-  const protocol = headersList.get('x-forwarded-proto') || 'http';
-  
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+
   return `${protocol}://${host}`;
 }
 
@@ -28,10 +28,10 @@ export async function handleAlumniRegister(formData: FormData) {
     // 確保有有效的用戶會話
     const session = await auth();
     if (!session?.user) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: "未登入或會話已過期",
-        data: { status: 403 }
+        data: { status: 403 },
       };
     }
 
@@ -107,35 +107,35 @@ export async function handleAlumniRegister(formData: FormData) {
     const cookieStore = cookies();
     const allCookies = cookieStore.getAll();
     const cookieHeader = allCookies
-      .map(cookie => `${cookie.name}=${cookie.value}`)
-      .join('; ');
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join("; ");
 
     // Send data to API with cookies for authentication
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cookie": cookieHeader // 傳遞 cookies 以保持身份驗證
+        Cookie: cookieHeader, // 傳遞 cookies 以保持身份驗證
       },
       body: JSON.stringify(data),
-      credentials: 'include' // 包含憑證
+      credentials: "include", // 包含憑證
     });
 
     // Process response
     const result = await response.json();
-    
+
     // Revalidate path
     revalidatePath("/register");
-    
-    return { 
-      success: true, 
-      data: { ...result, status: response.status } 
+
+    return {
+      success: true,
+      data: { ...result, status: response.status },
     };
   } catch (error) {
     console.error("Error in alumni registration:", error);
-    return { 
-      success: false, 
-      error: (error as Error).message 
+    return {
+      success: false,
+      error: (error as Error).message,
     };
   }
 }
@@ -148,10 +148,10 @@ export async function handleCorporateRegister(formData: FormData) {
     // 確保有有效的用戶會話
     const session = await auth();
     if (!session?.user) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: "未登入或會話已過期",
-        data: { status: 403 }
+        data: { status: 403 },
       };
     }
 
@@ -180,35 +180,35 @@ export async function handleCorporateRegister(formData: FormData) {
     const cookieStore = cookies();
     const allCookies = cookieStore.getAll();
     const cookieHeader = allCookies
-      .map(cookie => `${cookie.name}=${cookie.value}`)
-      .join('; ');
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join("; ");
 
     // Send data to API with cookies for authentication
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cookie": cookieHeader // 傳遞 cookies 以保持身份驗證
+        Cookie: cookieHeader, // 傳遞 cookies 以保持身份驗證
       },
       body: JSON.stringify(data),
-      credentials: 'include' // 包含憑證
+      credentials: "include", // 包含憑證
     });
 
     // Process response
     const result = await response.json();
-    
+
     // Revalidate path
     revalidatePath("/register");
-    
-    return { 
-      success: true, 
-      data: { ...result, status: response.status } 
+
+    return {
+      success: true,
+      data: { ...result, status: response.status },
     };
   } catch (error) {
     console.error("Error in corporate registration:", error);
-    return { 
-      success: false, 
-      error: (error as Error).message 
+    return {
+      success: false,
+      error: (error as Error).message,
     };
   }
 }

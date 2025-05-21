@@ -12,7 +12,7 @@ export async function findUniqueCompany(param: Partial<Company>) {
       email: param.email,
     },
     include: {
-      jobs: true
-    }  
+      jobs: true,
+    },
   });
 }

@@ -70,7 +70,7 @@ export class TaiwanAdminDivisions {
           this.nameToLocationsMap.set(district.name, []);
         }
 
-        this.nameToLocationsMap.get(district.name)!.push(locationInfo);
+        this.nameToLocationsMap.get(district.name)?.push(locationInfo);
       }
     }
   }
@@ -90,7 +90,9 @@ export class TaiwanAdminDivisions {
    */
   public getDistrictsByCity(cityName: string): DistrictInfo[] {
     const city = this.data.find((c) => c.name === cityName);
-    if (!city) return [];
+    if (!city) {
+      return [];
+    }
 
     return city.districts.map((d) => ({
       name: d.name,
@@ -147,13 +149,17 @@ export class TaiwanAdminDivisions {
    */
   public getFormattedAddress(
     cityName: string,
-    districtName: string
+    districtName: string,
   ): string | null {
     const city = this.data.find((c) => c.name === cityName);
-    if (!city) return null;
+    if (!city) {
+      return null;
+    }
 
     const district = city.districts.find((d) => d.name === districtName);
-    if (!district) return null;
+    if (!district) {
+      return null;
+    }
 
     return `${district.zip} ${cityName}${districtName}`;
   }
@@ -198,7 +204,7 @@ export function getTaiwanAdminUtil(): TaiwanAdminDivisions {
     try {
       // 使用直接導入的數據
       defaultInstance = new TaiwanAdminDivisions(
-        parseTaiwanAdminData(taiwanDataRaw)
+        parseTaiwanAdminData(taiwanDataRaw),
       );
     } catch (error) {
       console.error("初始化台灣行政區劃實用工具失敗:", error);

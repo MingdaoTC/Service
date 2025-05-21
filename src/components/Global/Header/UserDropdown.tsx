@@ -75,8 +75,9 @@ function UserDropdown({ user }: { user: User }) {
         {user?.displayName}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`h-4 w-4 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -102,7 +103,9 @@ function UserDropdown({ user }: { user: User }) {
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <h3 className="text-md font-semibold truncate">{user.displayName}</h3>
+                <h3 className="text-md font-semibold truncate">
+                  {user.displayName}
+                </h3>
                 <p className="text-xs text-gray-500">{user.email}</p>
               </div>
             </div>
@@ -117,8 +120,9 @@ function UserDropdown({ user }: { user: User }) {
               <p>
                 驗證身分：
                 <span
-                  className={`font-medium ${status[user.status as keyof typeof status].color
-                    }`}
+                  className={`font-medium ${
+                    status[user.status as keyof typeof status].color
+                  }`}
                 >
                   {status[user.status as keyof typeof status].text}
                 </span>
@@ -126,23 +130,25 @@ function UserDropdown({ user }: { user: User }) {
             </div>
             {(user.role === UserRole.ADMIN ||
               user.role === UserRole.SUPERADMIN) && (
-                <>
-                  <hr className="border-gray-300 my-2" />
-                  <div className="px-4 flex flex-col gap-1">
-                    <Link
-                      href="/admin"
-                      className="w-full text-left text-md text-black hover:text-mingdao-blue"
-                    >
-                      管理員後台
-                    </Link>
-                  </div>
-                </>
-              )}
-            {((user.role === UserRole.SUPERADMIN) || (user.status !== AccountStatus.PENDING)) && (
+              <>
+                <hr className="border-gray-300 my-2" />
+                <div className="px-4 flex flex-col gap-1">
+                  <Link
+                    href="/admin"
+                    className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                  >
+                    管理員後台
+                  </Link>
+                </div>
+              </>
+            )}
+            {(user.role === UserRole.SUPERADMIN ||
+              user.status !== AccountStatus.PENDING) && (
               <hr className="border-gray-300 my-2" />
             )}
             <div className="flex flex-col px-4 gap-1">
-              {((user.status === AccountStatus.UNVERIFIED) || (user.role === UserRole.SUPERADMIN)) && (
+              {(user.status === AccountStatus.UNVERIFIED ||
+                user.role === UserRole.SUPERADMIN) && (
                 <Link
                   href="/register"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
@@ -151,7 +157,9 @@ function UserDropdown({ user }: { user: User }) {
                 </Link>
               )}
 
-              {(((user.status === AccountStatus.VERIFIED) && (user.role === UserRole.ALUMNI)) || (user.role === UserRole.SUPERADMIN)) && (
+              {((user.status === AccountStatus.VERIFIED &&
+                user.role === UserRole.ALUMNI) ||
+                user.role === UserRole.SUPERADMIN) && (
                 <Link
                   href="/profile"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"
@@ -159,7 +167,9 @@ function UserDropdown({ user }: { user: User }) {
                   我的檔案
                 </Link>
               )}
-              {(((user.status === AccountStatus.VERIFIED) && (user.role === UserRole.COMPANY)) || (user.role === UserRole.SUPERADMIN)) && (
+              {((user.status === AccountStatus.VERIFIED &&
+                user.role === UserRole.COMPANY) ||
+                user.role === UserRole.SUPERADMIN) && (
                 <Link
                   href="/enterprise"
                   className="w-full text-left text-md text-black hover:text-mingdao-blue"

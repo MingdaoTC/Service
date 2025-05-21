@@ -3,11 +3,11 @@
 import { auth } from "@/library/auth";
 
 import { createUserProfile } from "@/library/prisma/userProfile/create";
-import { Gender, Prisma } from "@/prisma/client";
+import { Gender } from "@/prisma/client";
 
+import { User } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { User } from "next-auth";
 
 export async function createProfile(formData: FormData) {
   const session = await auth();

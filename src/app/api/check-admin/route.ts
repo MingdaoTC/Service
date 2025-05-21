@@ -25,13 +25,13 @@ export async function GET() {
 
     return NextResponse.json(
       { success: 200, isAdmin: isAdmin },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error checking admin status:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "pnpx prisma generate & next build",
     "start": "next start",
-    "format": "npx @biomejs/biome check --fix --unsafe .",
+    "format": "pnpx @biomejs/biome check --fix --unsafe .",
     "prisma:generate": "pnpx prisma generate",
     "prisma:push": "pnpx prisma db push"
   },

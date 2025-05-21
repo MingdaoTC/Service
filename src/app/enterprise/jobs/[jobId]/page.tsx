@@ -1,22 +1,29 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 // Module
-import { useState, useTransition, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 // types
 import {
   Company,
-  JobCategory,
   EmploymentType,
+  Job,
+  JobCategory,
   Location,
-  Job
 } from "@/prisma/client";
 
 // Server Actions
-import { getCompanyData, getJobCategoryData, getJobById } from "@/app/enterprise/_enterprise/action/fetch";
+import {
+  getCompanyData,
+  getJobById,
+  getJobCategoryData,
+} from "@/app/enterprise/_enterprise/action/fetch";
+import {
+  getAllCities,
+  getDistrictsByCity,
+} from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 import { handleUpdateJob } from "@/app/enterprise/_enterprise/action/handleUpdate";
-import { getAllCities, getDistrictsByCity } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 
 export default function JobEditPage({
   params,
@@ -26,13 +33,13 @@ export default function JobEditPage({
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<Array<JobCategory>>([]);
-  const [companyData, setCompanyData] = useState<Company>();
+  const [_companyData, setCompanyData] = useState<Company>();
   const [jobData, setJobData] = useState<Job>();
   const [cityChoose, setCityChoose] = useState("");
   const [districtChoose, setDistrictChoose] = useState("");
   const [taiwanDistrictList, setTaiwanDistrictList] = useState<[]>([]);
   const [statusMessage, setStatusMessage] = useState<{
-    type: 'success' | 'error';
+    type: "success" | "error";
     text: string;
   } | null>(null);
 
@@ -48,7 +55,7 @@ export default function JobEditPage({
     "1-3年",
     "3-5年",
     "5-10年",
-    "10年以上"
+    "10年以上",
   ];
 
   // 學歷要求選項
@@ -58,7 +65,7 @@ export default function JobEditPage({
     "專科以上",
     "大學以上",
     "碩士以上",
-    "博士以上"
+    "博士以上",
   ];
 
   // 初始資料載入 useEffect (上一個階段的程式碼保持不變)
@@ -98,8 +105,8 @@ export default function JobEditPage({
       } catch (error) {
         console.error("獲取資料失敗:", error);
         setStatusMessage({
-          type: 'error',
-          text: '無法載入職缺資料'
+          type: "error",
+          text: "無法載入職缺資料",
         });
       } finally {
         setIsLoading(false);
@@ -113,7 +120,7 @@ export default function JobEditPage({
     if (salaryMin === 0 && salaryMax === 0) {
       return {
         valid: false,
-        message: '薪資範圍不能同時為0，請輸入有效的薪資範圍'
+        message: "薪資範圍不能同時為0，請輸入有效的薪資範圍",
       };
     }
 
@@ -121,7 +128,7 @@ export default function JobEditPage({
     if (salaryMax !== 0 && salaryMin !== 0 && salaryMax < salaryMin) {
       return {
         valid: false,
-        message: '最高薪資不能低於最低薪資，請修正薪資範圍'
+        message: "最高薪資不能低於最低薪資，請修正薪資範圍",
       };
     }
 
@@ -130,8 +137,14 @@ export default function JobEditPage({
   };
 
   // 處理輸入變更
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (!jobData) return;
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    if (!jobData) {
+      return;
+    }
 
     const { name, value } = e.target;
 
@@ -145,7 +158,7 @@ export default function JobEditPage({
       // 更新 jobData 的地址
       setJobData({
         ...jobData,
-        address: `${selectedCity} `
+        address: `${selectedCity} `,
       });
       return;
     }
@@ -157,38 +170,42 @@ export default function JobEditPage({
       // 更新 jobData 的地址
       setJobData({
         ...jobData,
-        address: `${cityChoose} ${selectedDistrict}`
+        address: `${cityChoose} ${selectedDistrict}`,
       });
       return;
     }
 
     setJobData({
       ...jobData,
-      [name]: value
+      [name]: value,
     });
   };
 
   // 處理數字輸入變更
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!jobData) return;
+    if (!jobData) {
+      return;
+    }
 
     const { name, value } = e.target;
-    const numberValue = value === "" ? 0 : parseInt(value);
+    const numberValue = value === "" ? 0 : Number.parseInt(value);
 
     setJobData({
       ...jobData,
-      [name]: numberValue
+      [name]: numberValue,
     });
   };
 
   // 處理Checkbox變更
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!jobData) return;
+    if (!jobData) {
+      return;
+    }
 
     const { name, checked } = e.target;
     setJobData({
       ...jobData,
-      [name]: checked
+      [name]: checked,
     });
   };
 
@@ -203,7 +220,9 @@ export default function JobEditPage({
 
     startTransition(async () => {
       try {
-        if (!jobData) return;
+        if (!jobData) {
+          return;
+        }
 
         const salaryValidation: any = validateSalary(
           jobData.salaryMin || 0,
@@ -212,8 +231,8 @@ export default function JobEditPage({
 
         if (!salaryValidation.valid) {
           setStatusMessage({
-            type: 'error',
-            text: salaryValidation.message || ""
+            type: "error",
+            text: salaryValidation.message || "",
           });
           // 中止提交
           return;
@@ -223,8 +242,8 @@ export default function JobEditPage({
 
         if (result === "OK") {
           setStatusMessage({
-            type: 'success',
-            text: '職缺更新成功！'
+            type: "success",
+            text: "職缺更新成功！",
           });
 
           setTimeout(() => {
@@ -232,15 +251,15 @@ export default function JobEditPage({
           }, 1000);
         } else {
           setStatusMessage({
-            type: 'error',
-            text: '更新職缺失敗，請稍後再試'
+            type: "error",
+            text: "更新職缺失敗，請稍後再試",
           });
         }
       } catch (error) {
-        console.error('更新職缺時發生錯誤:', error);
+        console.error("更新職缺時發生錯誤:", error);
         setStatusMessage({
-          type: 'error',
-          text: '系統錯誤：更新職缺時發生錯誤'
+          type: "error",
+          text: "系統錯誤：更新職缺時發生錯誤",
         });
       }
     });
@@ -248,30 +267,63 @@ export default function JobEditPage({
 
   // 格式化薪資顯示
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('zh-TW').format(num);
+    return new Intl.NumberFormat("zh-TW").format(num);
   };
 
   // 如果尚未載入資料，顯示空白
-  if (isLoading || !jobData) return (<></>);
+  if (isLoading || !jobData) {
+    return <></>;
+  }
 
   return (
     <>
       <div className="w-full mx-auto h-full">
         {/* 狀態訊息 */}
         {statusMessage && (
-          <div className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === 'success' ? 'bg-green-100 border-l-4 border-green-500' : 'bg-red-100 border-l-4 border-red-500'
-            } transition-all duration-500 ease-in-out`}>
+          <div
+            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${
+              statusMessage.type === "success"
+                ? "bg-green-100 border-l-4 border-green-500"
+                : "bg-red-100 border-l-4 border-red-500"
+            } transition-all duration-500 ease-in-out`}
+          >
             <div className="flex items-center">
-              {statusMessage.type === 'success' ? (
-                <svg className="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              {statusMessage.type === "success" ? (
+                <svg
+                  className="h-6 w-6 text-green-500 mr-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               ) : (
-                <svg className="h-6 w-6 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-6 w-6 text-red-500 mr-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               )}
-              <p className={statusMessage.type === 'success' ? 'text-green-700' : 'text-red-700'}>
+              <p
+                className={
+                  statusMessage.type === "success"
+                    ? "text-green-700"
+                    : "text-red-700"
+                }
+              >
                 {statusMessage.text}
               </p>
             </div>
@@ -291,8 +343,19 @@ export default function JobEditPage({
               onClick={handleGoBack}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors flex items-center"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
               </svg>
               返回列表
             </button>
@@ -308,7 +371,10 @@ export default function JobEditPage({
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     職缺標題 <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -324,7 +390,10 @@ export default function JobEditPage({
                 </div>
 
                 <div>
-                  <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="categoryId"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     職缺類別 <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -336,7 +405,7 @@ export default function JobEditPage({
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
                   >
                     <option value="">請選擇職缺類別</option>
-                    {categories.map(category => (
+                    {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
@@ -347,7 +416,10 @@ export default function JobEditPage({
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="employmentType" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="employmentType"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     僱用類型 <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -365,7 +437,10 @@ export default function JobEditPage({
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="location"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     工作模式
                   </label>
                   <select
@@ -382,7 +457,10 @@ export default function JobEditPage({
               </div>
 
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   工作地點 <span className="text-red-500">*</span>
                 </label>
                 <div className="flex w-full gap-2 mb-2">
@@ -423,7 +501,10 @@ export default function JobEditPage({
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                   <div className="flex items-left flex-col">
-                    <label htmlFor="negotiable" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="negotiable"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       薪資面議
                     </label>
                     <div className="flex items-center px-3 py-2 border border-gray-300 rounded-md">
@@ -447,8 +528,12 @@ export default function JobEditPage({
                   </div>
                   <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="salaryMin" className="block text-sm font-medium text-gray-700 mb-1">
-                        最低薪資 (月薪/元) <span className="text-red-500">*</span>
+                      <label
+                        htmlFor="salaryMin"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        最低薪資 (月薪/元){" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
@@ -459,7 +544,9 @@ export default function JobEditPage({
                         value={jobData.salaryMin || ""}
                         onChange={handleNumberChange}
                         // disabled={jobData.negotiable}
-                        className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+                        className={
+                          "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                        }
                         placeholder="請輸入最低薪資"
                       />
                       {jobData.salaryMin > 0 && (
@@ -470,8 +557,12 @@ export default function JobEditPage({
                     </div>
 
                     <div>
-                      <label htmlFor="salaryMax" className="block text-sm font-medium text-gray-700 mb-1">
-                        最高薪資 (月薪/元) <span className="text-red-500">*</span>
+                      <label
+                        htmlFor="salaryMax"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        最高薪資 (月薪/元){" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
@@ -482,7 +573,9 @@ export default function JobEditPage({
                         value={jobData.salaryMax || ""}
                         onChange={handleNumberChange}
                         // disabled={jobData.negotiable}
-                        className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+                        className={
+                          "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                        }
                         placeholder="請輸入最高薪資"
                       />
                       {jobData.salaryMax > 0 && (
@@ -497,7 +590,10 @@ export default function JobEditPage({
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="numberOfPositions" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="numberOfPositions"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     招聘人數
                   </label>
                   <input
@@ -513,7 +609,10 @@ export default function JobEditPage({
                 </div>
 
                 <div>
-                  <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="startDate"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     到職日期
                   </label>
                   <input
@@ -536,7 +635,10 @@ export default function JobEditPage({
               </h2>
 
               <div className="mb-4">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   職缺描述 <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -548,7 +650,7 @@ export default function JobEditPage({
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 resize-none"
                   placeholder="請詳細描述工作內容、職責和日常工作..."
-                ></textarea>
+                />
                 <p className="mt-1 text-xs text-gray-500">
                   字數: {jobData.description.length} / 建議 100-500 字
                 </p>
@@ -556,7 +658,10 @@ export default function JobEditPage({
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="experience"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     工作經驗要求
                   </label>
                   <select
@@ -575,7 +680,10 @@ export default function JobEditPage({
                 </div>
 
                 <div>
-                  <label htmlFor="education" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="education"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     學歷要求
                   </label>
                   <select
@@ -595,7 +703,10 @@ export default function JobEditPage({
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="major" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="major"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     科系要求
                   </label>
                   <input
@@ -610,7 +721,10 @@ export default function JobEditPage({
                 </div>
 
                 <div>
-                  <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="language"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     語言能力要求
                   </label>
                   <input
@@ -626,7 +740,10 @@ export default function JobEditPage({
               </div>
 
               <div className="mb-4">
-                <label htmlFor="skills" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="skills"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   專業技能要求
                 </label>
                 <textarea
@@ -637,12 +754,15 @@ export default function JobEditPage({
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 resize-none"
                   placeholder="例如：熟悉React、Node.js、熟悉SQL資料庫..."
-                ></textarea>
+                />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="management" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="management"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     管理責任
                   </label>
                   <input
@@ -657,7 +777,10 @@ export default function JobEditPage({
                 </div>
 
                 <div>
-                  <label htmlFor="businessTrip" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="businessTrip"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     出差外派要求
                   </label>
                   <input
@@ -673,7 +796,10 @@ export default function JobEditPage({
               </div>
 
               <div>
-                <label htmlFor="workingHours" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="workingHours"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   工作時間
                 </label>
                 <input
@@ -693,7 +819,10 @@ export default function JobEditPage({
               </h2>
 
               <div className="mb-4">
-                <label htmlFor="benefits" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="benefits"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   員工福利
                 </label>
                 <textarea
@@ -704,11 +833,14 @@ export default function JobEditPage({
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 resize-none"
                   placeholder="例如：三節獎金、年終獎金、員工旅遊、健保、勞保..."
-                ></textarea>
+                />
               </div>
 
               <div>
-                <label htmlFor="others" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="others"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   其他說明
                 </label>
                 <textarea
@@ -719,7 +851,7 @@ export default function JobEditPage({
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 resize-none"
                   placeholder="其他您想補充的資訊..."
-                ></textarea>
+                />
               </div>
             </div>
 
@@ -738,7 +870,10 @@ export default function JobEditPage({
                   onChange={handleCheckboxChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
+                <label
+                  htmlFor="published"
+                  className="ml-2 block text-sm text-gray-700"
+                >
                   立即發布職缺
                 </label>
               </div>
@@ -752,31 +887,70 @@ export default function JobEditPage({
                 type="button"
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors flex items-center"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
                 取消
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className={`px-6 py-2 ${isPending
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-                  } text-white rounded-md transition-colors flex items-center`}
+                className={`px-6 py-2 ${
+                  isPending
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } text-white rounded-md transition-colors flex items-center`}
               >
                 {isPending ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
                     </svg>
                     處理中...
                   </>
                 ) : (
                   <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     儲存變更
                   </>

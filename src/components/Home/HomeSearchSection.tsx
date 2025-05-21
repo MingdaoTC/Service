@@ -1,17 +1,33 @@
 "use client";
 
-import { useState } from "react";
 import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
 import Link from "next/link";
-import { FaSearch, FaMapMarkerAlt, FaBriefcase, FaLightbulb, FaRegStar } from "react-icons/fa";
+import { useState } from "react";
+import {
+  FaBriefcase,
+  FaLightbulb,
+  FaMapMarkerAlt,
+  FaRegStar,
+  FaSearch,
+} from "react-icons/fa";
 
 export default function HomeSearchSection() {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   // 熱門職業類別
   const popularCategories = [
-    { id: "software", name: "軟體工程師", icon: <FaLightbulb />, color: "blue" },
-    { id: "marketing", name: "行銷專員", icon: <FaLightbulb />, color: "purple" },
+    {
+      id: "software",
+      name: "軟體工程師",
+      icon: <FaLightbulb />,
+      color: "blue",
+    },
+    {
+      id: "marketing",
+      name: "行銷專員",
+      icon: <FaLightbulb />,
+      color: "purple",
+    },
     { id: "design", name: "設計師", icon: <FaLightbulb />, color: "pink" },
     { id: "sales", name: "業務銷售", icon: <FaBriefcase />, color: "orange" },
     { id: "finance", name: "財務會計", icon: <FaBriefcase />, color: "green" },
@@ -26,7 +42,13 @@ export default function HomeSearchSection() {
   ];
 
   // 熱門搜尋詞
-  const trendingSearches = ["遠端工作", "實習生", "前端工程師", "產品經理", "資料分析師"];
+  const trendingSearches = [
+    "遠端工作",
+    "實習生",
+    "前端工程師",
+    "產品經理",
+    "資料分析師",
+  ];
 
   return (
     <>
@@ -34,8 +56,16 @@ export default function HomeSearchSection() {
       <div className="bg-gradient-to-r from-mingdao-blue to-mingdao-blue-dark relative overflow-hidden">
         {/* 裝飾性背景元素 */}
         <div className="absolute top-0 right-0 w-1/3 h-full opacity-10">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <path fill="#FFFFFF" d="M40.5,-64.1C55.1,-55.1,71.1,-47.6,78.2,-35.2C85.3,-22.8,83.6,-5.6,78.9,9.3C74.2,24.2,66.5,36.8,56.1,46.4C45.7,56,32.6,62.7,18.8,67.5C4.9,72.2,-9.7,75,-23.9,72.3C-38.1,69.7,-52,61.6,-62.5,49.6C-73,37.5,-80.2,21.6,-82.9,4.5C-85.5,-12.7,-83.7,-31.1,-73.2,-42.4C-62.8,-53.7,-43.7,-57.9,-28.3,-66.5C-12.9,-75,2.8,-87.8,16.5,-87.5C30.3,-87.1,42.1,-73.7,40.5,-64.1Z" transform="translate(100 100)" />
+          <svg
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-full"
+          >
+            <path
+              fill="#FFFFFF"
+              d="M40.5,-64.1C55.1,-55.1,71.1,-47.6,78.2,-35.2C85.3,-22.8,83.6,-5.6,78.9,9.3C74.2,24.2,66.5,36.8,56.1,46.4C45.7,56,32.6,62.7,18.8,67.5C4.9,72.2,-9.7,75,-23.9,72.3C-38.1,69.7,-52,61.6,-62.5,49.6C-73,37.5,-80.2,21.6,-82.9,4.5C-85.5,-12.7,-83.7,-31.1,-73.2,-42.4C-62.8,-53.7,-43.7,-57.9,-28.3,-66.5C-12.9,-75,2.8,-87.8,16.5,-87.5C30.3,-87.1,42.1,-73.7,40.5,-64.1Z"
+              transform="translate(100 100)"
+            />
           </svg>
         </div>
 
@@ -51,10 +81,12 @@ export default function HomeSearchSection() {
           </div>
 
           {/* 搜尋框容器 */}
-          <div className={`
+          <div
+            className={`
             w-full max-w-3xl mx-auto transition-all duration-300
-            ${isSearchExpanded ? 'transform-gpu -translate-y-2' : ''}
-          `}>
+            ${isSearchExpanded ? "transform-gpu -translate-y-2" : ""}
+          `}
+          >
             <div className="bg-white rounded-xl shadow-xl p-4 md:p-5">
               <EnhancedSearch
                 onExpandChange={(expanded) => setIsSearchExpanded(expanded)}
@@ -99,11 +131,11 @@ export default function HomeSearchSection() {
                       key={category.id}
                       className={`
                         flex items-center px-3 py-2 rounded-lg text-sm font-medium
-                        ${category.color === 'blue' && 'bg-blue-50 text-blue-700 hover:bg-blue-100'}
-                        ${category.color === 'purple' && 'bg-purple-50 text-purple-700 hover:bg-purple-100'}
-                        ${category.color === 'pink' && 'bg-pink-50 text-pink-700 hover:bg-pink-100'}
-                        ${category.color === 'orange' && 'bg-orange-50 text-orange-700 hover:bg-orange-100'}
-                        ${category.color === 'green' && 'bg-green-50 text-green-700 hover:bg-green-100'}
+                        ${category.color === "blue" && "bg-blue-50 text-blue-700 hover:bg-blue-100"}
+                        ${category.color === "purple" && "bg-purple-50 text-purple-700 hover:bg-purple-100"}
+                        ${category.color === "pink" && "bg-pink-50 text-pink-700 hover:bg-pink-100"}
+                        ${category.color === "orange" && "bg-orange-50 text-orange-700 hover:bg-orange-100"}
+                        ${category.color === "green" && "bg-green-50 text-green-700 hover:bg-green-100"}
                         transition-colors shadow-sm
                       `}
                     >
@@ -134,7 +166,9 @@ export default function HomeSearchSection() {
                       key={location.city}
                       className="flex items-center px-3 py-3 rounded-lg text-sm font-medium bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors shadow-sm"
                     >
-                      <span className="mr-2 text-mingdao-blue">{location.icon}</span>
+                      <span className="mr-2 text-mingdao-blue">
+                        {location.icon}
+                      </span>
                       {location.name}
                     </Link>
                   ))}
@@ -145,8 +179,19 @@ export default function HomeSearchSection() {
                     href="/search?remote=true"
                     className="flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium bg-white text-mingdao-blue hover:bg-mingdao-blue hover:text-white transition-colors shadow-sm"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
                     </svg>
                     遠端工作機會
                   </Link>

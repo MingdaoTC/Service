@@ -5,9 +5,9 @@ import { Company, Job, User } from "@/prisma/client";
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import { getJobById } from "./_job/actions/getJob";
-import { getCompanyById } from "./_job/actions/getCompany";
 import { redirect } from "next/navigation";
+import { getCompanyById } from "./_job/actions/getCompany";
+import { getJobById } from "./_job/actions/getJob";
 
 export default async function JobPage({
   params,

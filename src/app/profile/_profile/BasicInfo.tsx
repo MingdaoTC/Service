@@ -9,9 +9,7 @@ export default function BasicInfo({ user }: { user: User }) {
         className="w-24 h-24 rounded-full max-lg:w-20 max-lg:h-20"
       />
       <div className="flex flex-col gap-3 items-start justify-around px-4 cursor-default">
-        <p className="text-3xl max-md:hidden">
-          早安，{user.displayName}
-        </p>
+        <p className="text-3xl max-md:hidden">早安，{user.displayName}</p>
         <p className="text-2xl hidden max-md:block">{user.displayName}</p>
         <p className="text-sm text-mingdao-blue-dark font-thin bg-mingdao-blue-light rounded-full px-4 pt-1 pb-2 max-lg:text-xs max-lg:px-2">
           @{user.username}
