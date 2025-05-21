@@ -3,6 +3,7 @@
 import { auth } from "@/library/auth";
 import { findUniqueCompany } from "@/library/prisma/company/findUnique";
 import { findManyCompanyCategory } from "@/library/prisma/companyCategory/findMany";
+import { findUniqueJob } from "@/library/prisma/job/findUnique";
 import { findManyJob } from "@/library/prisma/job/findMany";
 import { findManyJobCategory } from "@/library/prisma/jobCategory/findMany";
 import { User } from "@/prisma/client";
@@ -45,4 +46,14 @@ export async function getCompanyCategoryData() {
 
 export async function getJobCategoryData() {
   return await findManyJobCategory();
+}
+
+export async function getJobById(jobId: string) {
+  try {
+    const job = await findUniqueJob({ id: jobId });
+    return job;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

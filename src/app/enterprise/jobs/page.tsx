@@ -85,7 +85,7 @@ export default function JobManagementPage() {
 
   // 處理編輯職缺
   const handleEditJob = (id: string) => {
-    router.push(`/enterprise/jobs/${id}/edit`);
+    router.push(`/enterprise/jobs/${id}`);
   };
 
   // 顯示刪除對話框
