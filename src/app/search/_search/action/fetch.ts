@@ -181,7 +181,7 @@ export async function fetchSearchResults(params: {
       companyWhere.OR = [
         { name: { contains: query, mode: "insensitive" } },
         { description: { contains: query, mode: "insensitive" } },
-        { tags: { hasSome: [query] } }, // 使用標籤進行匹配
+        // { tags: { hasSome: [query] } }, // 使用標籤進行匹配
       ];
     }
 

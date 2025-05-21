@@ -636,11 +636,18 @@ export default function SearchPage() {
                                 </div>
 
                                 <p className="text-sm text-gray-700 mt-1">
-                                  <span className="font-medium">{job.company?.name}</span>
+                                  <span className="font-medium text-mingdao-blue-dark">{job.company?.name}</span>
                                   {job.location && (
                                     <span className="ml-2 inline-flex items-center text-gray-500">
                                       <FaMapMarkerAlt className="mr-1" size={12} />
-                                      {job.location}
+                                      {job.address}
+                                    </span>
+                                  )}
+                                  {job.location && (
+                                    <span className="ml-2 inline-flex items-center text-gray-500">
+                                      <FaMapMarkerAlt className="mr-1" size={12} />
+                                      {job.location === "REMOTE" && "遠端工作"}
+                                      {job.location === "ONSITE" && "現場工作"}
                                     </span>
                                   )}
                                 </p>
@@ -815,7 +822,7 @@ export default function SearchPage() {
           <div className="lg:col-span-1">
             {/* 推薦公司 */}
             {results.companies.length > 0 && (
-              <div className="bg-white rounded-lg shadow overflow-hidden mb-6 border border-black border-opacity-10 rounded-lg">
+              <div className="bg-white rounded-lg shadow overflow-hidden mb-6 border border-black border-opacity-10">
                 <div className="px-4 py-3 border-b border-gray-200">
                   <h3 className="text-lg font-medium text-mingdao-blue-dark flex items-center">
                     <FaBuilding className="mr-2" />
