@@ -40,9 +40,9 @@ export default function AlumniRegistrationForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
   const fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
-  const _fileInputFrontRef = useRef<HTMLInputElement>(null);
-  const _fileInputBackRef = useRef<HTMLInputElement>(null);
-  const _fileInputPassportRef = useRef<HTMLInputElement>(null);
+  const fileInputFrontRef = useRef<HTMLInputElement>(null);
+  const fileInputBackRef = useRef<HTMLInputElement>(null);
+  const fileInputPassportRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -57,7 +57,7 @@ export default function AlumniRegistrationForm({
     );
   };
 
-  const _handleFileChange = (
+  const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
     type: string,
     side?: "front" | "back",
@@ -88,7 +88,7 @@ export default function AlumniRegistrationForm({
     }
   };
 
-  const _removeFile = (type: string, side?: "front" | "back") => {
+  const removeFile = (type: string, side?: "front" | "back") => {
     if (isDisabled) {
       return;
     }
@@ -283,7 +283,108 @@ export default function AlumniRegistrationForm({
               styles.documentUploadContainer + (stuCardYes ? " " : " !hidden")
             }
           >
-            {/* Rest of the student card upload UI... */}
+            <div className={styles.documentUploadSide}>
+              <p className={styles.uploadLabel}>學生證正面</p>
+              <div
+                className={
+                  styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")
+                }
+              >
+                <label
+                  htmlFor="student-card-front"
+                  className={
+                    styles.fileUploadLabel +
+                    (stuCardYes
+                      ? " "
+                      : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")
+                  }
+                >
+                  <span className={styles.fileUploadIcon}>📎</span>
+                  <span>點擊上傳</span>
+                </label>
+                <input
+                  type="file"
+                  id="student-card-front"
+                  name="studentCardFront"
+                  accept="image/*,.pdf"
+                  ref={fileInputStudentCardFrontRef}
+                  onChange={(e) => handleFileChange(e, "studentCard", "front")}
+                  disabled={!stuCardYes}
+                />
+              </div>
+
+              {uploadedFiles.some(
+                (f) => f.type === "studentCard" && f.side === "front",
+              ) && (
+                <div className={styles.uploadedFile}>
+                  <span>
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "studentCard" && f.side === "front",
+                      )?.file.name
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile("studentCard", "front")}
+                    className={styles.removeButton}
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className={styles.documentUploadSide}>
+              <p className={styles.uploadLabel}>學生證反面</p>
+              <div
+                className={
+                  styles.fileUpload + (stuCardYes ? " " : " cursor-not-allowed")
+                }
+              >
+                <label
+                  htmlFor="student-card-back"
+                  className={
+                    styles.fileUploadLabel +
+                    (stuCardYes
+                      ? " "
+                      : " hover:!border-[#ddd] hover:cursor-not-allowed select-none")
+                  }
+                >
+                  <span className={styles.fileUploadIcon}>📎</span>
+                  <span>點擊上傳</span>
+                </label>
+                <input
+                  type="file"
+                  id="student-card-back"
+                  name="studentCardBack"
+                  accept="image/*,.pdf"
+                  ref={fileInputStudentCardBackRef}
+                  onChange={(e) => handleFileChange(e, "studentCard", "back")}
+                  disabled={!stuCardYes}
+                />
+              </div>
+
+              {uploadedFiles.some(
+                (f) => f.type === "studentCard" && f.side === "back",
+              ) && (
+                <div className={styles.uploadedFile}>
+                  <span>
+                    {
+                      uploadedFiles.find(
+                        (f) => f.type === "studentCard" && f.side === "back",
+                      )?.file.name
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile("studentCard", "back")}
+                    className={styles.removeButton}
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -302,8 +403,137 @@ export default function AlumniRegistrationForm({
             <option value="idCard">身分證</option>
             <option value="passport">護照</option>
           </select>
+          {idDocumentType === "idCard" && (
+            <div className={styles.documentUploadContainer}>
+              <div className={styles.documentUploadSide}>
+                <p className={styles.uploadLabel}>身分證正面</p>
+                <div className={styles.fileUpload}>
+                  <label
+                    htmlFor="id-document-front"
+                    className={styles.fileUploadLabel}
+                  >
+                    <span className={styles.fileUploadIcon}>📎</span>
+                    <span>點擊上傳</span>
+                  </label>
+                  <input
+                    type="file"
+                    id="id-document-front"
+                    name="idDocumentFront"
+                    accept="image/*,.pdf"
+                    ref={fileInputFrontRef}
+                    onChange={(e) => handleFileChange(e, "idCard", "front")}
+                    required
+                  />
+                </div>
 
-          {/* Rest of the ID document upload UI... */}
+                {uploadedFiles.some(
+                  (f) => f.type === "idCard" && f.side === "front",
+                ) && (
+                  <div className={styles.uploadedFile}>
+                    <span>
+                      {
+                        uploadedFiles.find(
+                          (f) => f.type === "idCard" && f.side === "front",
+                        )?.file.name
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile("idCard", "front")}
+                      className={styles.removeButton}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.documentUploadSide}>
+                <p className={styles.uploadLabel}>身分證反面</p>
+                <div className={styles.fileUpload}>
+                  <label
+                    htmlFor="id-document-back"
+                    className={styles.fileUploadLabel}
+                  >
+                    <span className={styles.fileUploadIcon}>📎</span>
+                    <span>點擊上傳</span>
+                  </label>
+                  <input
+                    type="file"
+                    id="id-document-back"
+                    name="idDocumentBack"
+                    accept="image/*,.pdf"
+                    ref={fileInputBackRef}
+                    onChange={(e) => handleFileChange(e, "idCard", "back")}
+                    required
+                  />
+                </div>
+
+                {uploadedFiles.some(
+                  (f) => f.type === "idCard" && f.side === "back",
+                ) && (
+                  <div className={styles.uploadedFile}>
+                    <span>
+                      {
+                        uploadedFiles.find(
+                          (f) => f.type === "idCard" && f.side === "back",
+                        )?.file.name
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile("idCard", "back")}
+                      className={styles.removeButton}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {idDocumentType === "passport" && (
+            <div>
+              <p className={styles.uploadLabel}>護照照片</p>
+              <div className={styles.fileUpload}>
+                <label
+                  htmlFor="id-document-passport"
+                  className={styles.fileUploadLabel}
+                >
+                  <span className={styles.fileUploadIcon}>📎</span>
+                  <span>點擊上傳</span>
+                </label>
+                <input
+                  type="file"
+                  id="id-document-passport"
+                  name="idDocumentPassport"
+                  accept="image/*,.pdf"
+                  ref={fileInputPassportRef}
+                  onChange={(e) => handleFileChange(e, "passport")}
+                  required
+                />
+              </div>
+
+              {uploadedFiles.some((f) => f.type === "passport") && (
+                <div className={styles.uploadedFile}>
+                  <span>
+                    {
+                      uploadedFiles.find((f) => f.type === "passport")?.file
+                        .name
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile("passport")}
+                    className={styles.removeButton}
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className={styles.formGroup}>
