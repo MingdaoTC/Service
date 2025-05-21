@@ -3,14 +3,11 @@
 // Module
 import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 // types
 import {
   Company,
   JobCategory,
-  User,
-  UserRole,
   EmploymentType,
   Location
 } from "@/prisma/client";
@@ -18,19 +15,22 @@ import {
 // Server Actions
 import { getCompanyData, getJobCategoryData } from "@/app/enterprise/_enterprise/action/fetch";
 import { handleCreateJob } from "@/app/enterprise/_enterprise/action/handleCreateJob";
+import { getAllCities, getDistrictsByCity } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 
-
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export default function JobCreatePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<Array<JobCategory>>([]);
   const [companyData, setCompanyData] = useState<Company>();
+  const [cityChoose, setCityChoose] = useState("");
+  const [districtChoose, setDistrictChoose] = useState("");
+  const [taiwanDistrictList, setTaiwanDistrictList] = useState<[]>([]);
   const [statusMessage, setStatusMessage] = useState<{
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const taiwanCityList = getAllCities();
 
   // 工作經驗選項
   const experienceOptions = [
@@ -75,7 +75,8 @@ export default function JobCreatePage() {
     skills: "",
     others: "",
     benefits: "",
-    published: false
+    published: false,
+    address: ""
   });
 
   const router = useRouter();
@@ -107,6 +108,24 @@ export default function JobCreatePage() {
   // 處理輸入變更
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    if (name === "city") {
+      const selectedCity: any = e.target.value;
+      const districts: any = getDistrictsByCity(selectedCity);
+      setTaiwanDistrictList(districts);
+      setCityChoose(selectedCity);
+      setDistrictChoose("");
+      return;
+    }
+
+    if (name === "district") {
+      const selectedDistrict: any = e.target.value;
+      setDistrictChoose(selectedDistrict);
+      setJobData({
+        ...jobData,
+        "address": cityChoose + " " + selectedDistrict
+      });
+      return;
+    }
     setJobData(prev => ({
       ...prev,
       [name]: value
@@ -319,7 +338,7 @@ export default function JobCreatePage() {
                 </div>
                 <div>
                   <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                    工作地點
+                    工作模式
                   </label>
                   <select
                     id="location"
@@ -333,7 +352,47 @@ export default function JobCreatePage() {
                   </select>
                 </div>
               </div>
-
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                  工作地點 <span className="text-red-500">*</span>
+                </label>
+                <div className="flex w-full gap-2 mb-2">
+                  <div className="flex-1">
+                    <select
+                      id="city"
+                      name="city"
+                      required
+                      value={cityChoose}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                    >
+                      <option value="">請選擇縣市</option>
+                      {taiwanCityList.map((city: string) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <select
+                      id="district"
+                      name="district"
+                      required
+                      value={districtChoose}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+                    >
+                      <option value="">請選擇地區</option>
+                      {taiwanDistrictList.map((district: any) => (
+                        <option key={district.name} value={district.name}>
+                          {district.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                 <div className="flex items-left flex-col">
                   <label htmlFor="negotiable" className="block text-sm font-medium text-gray-700 mb-1">

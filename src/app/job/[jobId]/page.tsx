@@ -34,7 +34,7 @@ export default async function JobPage({
       <Info isLogin={!!user} jobData={job} company={company} />
       <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
         <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
-          <div className="w-full lg:w-3/4 flex flex-col gap-3 md:gap-4">
+          <div className="w-full flex flex-col gap-3 md:gap-4">
             <Content data={job} className="w-full" />
           </div>
           {/* <div className="w-full lg:w-1/4">

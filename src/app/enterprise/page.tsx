@@ -2,15 +2,11 @@
 
 // Module
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react"
 
 // types
 import {
   Company,
   CompanyCategory,
-  User,
-  UserRole
 } from "@/prisma/client";
 
 // Server Actions
