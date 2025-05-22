@@ -23,7 +23,7 @@ export default async function Info({
               <div
                 className="w-full h-full bg-contain bg-no-repeat bg-center"
                 style={{
-                  backgroundImage: `url(${data.logoUrl})`,
+                  backgroundImage: `url(${process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL}${data.logoUrl})`,
                   // backgroundImage: `url(${await getDownloadPresignedUrl(
                   //   data.logoUrl,
                   // )})`,
