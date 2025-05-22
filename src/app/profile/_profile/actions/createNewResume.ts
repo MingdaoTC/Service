@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@/library/auth";
-import { upload } from "@/library/r2/upload";
+import { upload } from "@/library/storage/upload";
 
 import { createResumeByUser } from "@/library/prisma/resume/create";
 
@@ -39,7 +39,7 @@ export async function createNewResume(formData: FormData) {
 
     const response = await uploadToBucket(
       file,
-      `${user.email}/${title}_${Date.now()}.pdf`,
+      `${user.email}/${title}_${Date.now()}.pdf`
     );
 
     const _resume = await createResumeByUser(
@@ -47,7 +47,7 @@ export async function createNewResume(formData: FormData) {
         name: title,
         objectKey: response.key as string,
       },
-      user.email,
+      user.email
     );
     revalidatePath("/profile");
   } catch (error) {
@@ -62,7 +62,7 @@ async function uploadToBucket(file: File | Blob, filename: string) {
     const response = await upload(
       file,
       `resume/${filename}`,
-      "application/pdf",
+      "application/pdf"
     );
     return response;
   } catch (_) {

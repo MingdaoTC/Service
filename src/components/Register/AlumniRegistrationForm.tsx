@@ -253,7 +253,7 @@ export default function AlumniRegistrationForm({
         </div>
 
         {/* 必填項目：學生證 */}
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label htmlFor="student-card" className={styles.required}>
             學生證
           </label>
@@ -386,10 +386,10 @@ export default function AlumniRegistrationForm({
               )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* 其他身份證明文件選項 */}
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label htmlFor="id-document-type" className={styles.required}>
             其他身份驗證文件
           </label>
@@ -534,7 +534,7 @@ export default function AlumniRegistrationForm({
               )}
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className={styles.formGroup}>
           <label htmlFor="notes">備註</label>

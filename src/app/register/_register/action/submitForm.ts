@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/library/auth";
-import { upload } from "@/library/r2/upload";
+import { upload } from "@/library/storage/upload";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { cookies } from "next/headers";

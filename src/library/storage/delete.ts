@@ -2,7 +2,7 @@ import {
   DeleteObjectCommand,
   DeleteObjectCommandOutput,
 } from "@aws-sdk/client-s3";
-import { r2 } from "./client";
+import { storage } from "./client";
 
 interface DeleteOptions {
   bucketName?: string;
@@ -17,7 +17,7 @@ interface DeleteResponse {
 
 export async function deleteObject(
   key: string,
-  options: DeleteOptions = {},
+  options: DeleteOptions = {}
 ): Promise<DeleteResponse> {
   if (!key || typeof key !== "string") {
     return { success: false, error: "should provide a valid key" };
@@ -39,7 +39,7 @@ export async function deleteObject(
       Key: key,
     };
 
-    const response = await r2.send(new DeleteObjectCommand(params));
+    const response = await storage.send(new DeleteObjectCommand(params));
 
     return {
       success: true,
@@ -50,12 +50,12 @@ export async function deleteObject(
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
 
-    console.error("Failed to delete from R2:", error);
+    console.error("Failed to delete from storage:", error);
 
     return {
       success: false,
       key,
-      error: `Failed to delete from R2: ${errorMessage}`,
+      error: `Failed to delete from storage: ${errorMessage}`,
     };
   }
 }

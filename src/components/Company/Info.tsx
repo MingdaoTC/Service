@@ -1,5 +1,5 @@
 import { joinClass } from "@/library/joinClass";
-import { getDownloadPresignedUrl } from "@/library/r2UrlCache/presign";
+// import { getDownloadPresignedUrl } from "@/library/storageUrlCache/presign";
 import type { Company } from "@/prisma/client";
 
 export default async function Info({
@@ -23,9 +23,10 @@ export default async function Info({
               <div
                 className="w-full h-full bg-contain bg-no-repeat bg-center"
                 style={{
-                  backgroundImage: `url(${await getDownloadPresignedUrl(
-                    data.logoUrl,
-                  )})`,
+                  backgroundImage: `url(${data.logoUrl})`,
+                  // backgroundImage: `url(${await getDownloadPresignedUrl(
+                  //   data.logoUrl,
+                  // )})`,
                 }}
               />
             </div>

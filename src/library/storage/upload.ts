@@ -1,5 +1,5 @@
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
-import { r2 } from "./client";
+import { storage } from "./client";
 
 interface UploadOptions {
   bucketName?: string;
@@ -20,7 +20,7 @@ export async function upload(
   file: File | Blob,
   key: string,
   contentType: string,
-  options: UploadOptions = {},
+  options: UploadOptions = {}
 ): Promise<UploadResponse> {
   if (!file) {
     return { success: false, error: "file is required" };
@@ -54,7 +54,9 @@ export async function upload(
     } catch (e) {
       return {
         success: false,
-        error: `Cannot read file: ${e instanceof Error ? e.message : String(e)}`,
+        error: `Cannot read file: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
       };
     }
 
@@ -75,9 +77,9 @@ export async function upload(
       }
     }
 
-    const response = await r2.send(new PutObjectCommand(params));
+    const response = await storage.send(new PutObjectCommand(params));
 
-    const url = `https://${bucketName}.r2.cloudflarestorage.com/${key}`;
+    const url = `https://${bucketName}.storage.cloudflarestorage.com/${key}`;
 
     return {
       success: true,
@@ -89,12 +91,12 @@ export async function upload(
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
 
-    console.error("Failed to upload to R2:", error);
+    console.error("Failed to upload to storage:", error);
 
     return {
       success: false,
       key,
-      error: `Failed to upload to R2: ${errorMessage}`,
+      error: `Failed to upload to storage: ${errorMessage}`,
     };
   }
 }
