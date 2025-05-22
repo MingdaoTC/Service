@@ -56,7 +56,10 @@ export async function POST(request: NextRequest) {
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const webpImage = await sharp(buffer).webp({ quality: 50 }).toBuffer();
+    const webpImage = await sharp(buffer)
+      .resize({ height: 256 })
+      .webp({ quality: 50 })
+      .toBuffer();
     const blob = new Blob([webpImage], { type: "image/webp" });
     const uploadResult = await upload(blob, filename, blob.type, {
       bucketName: process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_NAME,
