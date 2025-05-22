@@ -7,6 +7,9 @@ import { auth } from "@/library/auth";
 import { findUniqueCompany } from "@/library/prisma/company/findUnique";
 import { User } from "@/prisma/client";
 
+import fs from "fs";
+import sharp from "sharp";
+
 export async function POST(request: NextRequest) {
   const session = await auth();
   const user: User = session?.user as User;
@@ -49,10 +52,13 @@ export async function POST(request: NextRequest) {
     }
 
     const date = Date.now();
-    const extension = file.name.split(".").pop() || "";
-    const filename = `company/${company.email}/logo/${date}.${extension}`;
+    const filename = `company/${company.email}/logo/${date}.webp`;
 
-    const uploadResult = await upload(file, filename, file.type, {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const webpImage = await sharp(buffer).webp({ quality: 50 }).toBuffer();
+    const blob = new Blob([webpImage], { type: "image/webp" });
+    const uploadResult = await upload(blob, filename, blob.type, {
       bucketName: process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_NAME,
     });
     if (uploadResult?.url) {
