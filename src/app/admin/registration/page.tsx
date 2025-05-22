@@ -15,7 +15,7 @@ import {
 import { approveRegistration } from "@/app/admin/registration/_registration/action/approve";
 import { rejectRegistration } from "@/app/admin/registration/_registration/action/reject";
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
+const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
 // 註冊類型
 type RegistrationType = "all" | "alumni" | "company";

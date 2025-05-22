@@ -722,7 +722,8 @@ export default function SearchPage() {
                                 {job.company?.logoUrl ? (
                                   <img
                                     src={
-                                      process.env.NEXT_PUBLIC_CDN_URL +
+                                      process.env
+                                        .NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL +
                                       job.company.logoUrl
                                     }
                                     alt={job.company.name}
@@ -1040,7 +1041,7 @@ export default function SearchPage() {
                             {company.logoUrl ? (
                               <img
                                 src={
-                                  process.env.NEXT_PUBLIC_CDN_URL +
+                                  process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL +
                                   company.logoUrl
                                 }
                                 alt={company.name}

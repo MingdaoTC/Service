@@ -17,7 +17,7 @@ import {
 } from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
 import { handleUpdate } from "@/app/enterprise/_enterprise/action/handleUpdate";
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
+const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
 export default function CompanyProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -177,6 +177,8 @@ export default function CompanyProfilePage() {
       uploadLogo(file);
     }
   };
+
+  // function getCompanyLogoUrl() {}
 
   const uploadLogo = (file: File) => {
     if (!file) {

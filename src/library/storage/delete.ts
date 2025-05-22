@@ -17,14 +17,14 @@ interface DeleteResponse {
 
 export async function deleteObject(
   key: string,
-  options: DeleteOptions = {}
+  options: DeleteOptions = {},
 ): Promise<DeleteResponse> {
   if (!key || typeof key !== "string") {
     return { success: false, error: "should provide a valid key" };
   }
 
   const bucketName =
-    options.bucketName || process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
+    options.bucketName || process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_NAME;
   if (!bucketName) {
     return {
       success: false,

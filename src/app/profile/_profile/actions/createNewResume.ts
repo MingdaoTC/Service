@@ -39,15 +39,15 @@ export async function createNewResume(formData: FormData) {
 
     const response = await uploadToBucket(
       file,
-      `${user.email}/${title}_${Date.now()}.pdf`
+      `${user.email}/${Date.now()}.pdf`,
     );
 
-    const _resume = await createResumeByUser(
+    await createResumeByUser(
       {
         name: title,
         objectKey: response.key as string,
       },
-      user.email
+      user.email,
     );
     revalidatePath("/profile");
   } catch (error) {
@@ -62,7 +62,10 @@ async function uploadToBucket(file: File | Blob, filename: string) {
     const response = await upload(
       file,
       `resume/${filename}`,
-      "application/pdf"
+      "application/pdf",
+      {
+        bucketName: process.env.NEXT_PUBLIC_S3_BUCKET_PRIVATE_NAME,
+      },
     );
     return response;
   } catch (_) {

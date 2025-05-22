@@ -20,7 +20,7 @@ export async function upload(
   file: File | Blob,
   key: string,
   contentType: string,
-  options: UploadOptions = {}
+  options: UploadOptions = {},
 ): Promise<UploadResponse> {
   if (!file) {
     return { success: false, error: "file is required" };

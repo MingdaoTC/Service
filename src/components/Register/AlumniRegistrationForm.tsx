@@ -33,19 +33,19 @@ export default function AlumniRegistrationForm({
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
 
-  const [stuCardYes, setStuCardYes] = useState(true);
+  const [stuCardYes, _setStuCardYes] = useState(true);
   const [idDocumentType, setIdDocumentType] =
     useState<IdDocumentType>("idCard");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
-  const fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
-  const fileInputFrontRef = useRef<HTMLInputElement>(null);
-  const fileInputBackRef = useRef<HTMLInputElement>(null);
-  const fileInputPassportRef = useRef<HTMLInputElement>(null);
+  const _fileInputStudentCardFrontRef = useRef<HTMLInputElement>(null);
+  const _fileInputStudentCardBackRef = useRef<HTMLInputElement>(null);
+  const _fileInputFrontRef = useRef<HTMLInputElement>(null);
+  const _fileInputBackRef = useRef<HTMLInputElement>(null);
+  const _fileInputPassportRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const _handleDocumentTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (isDisabled) {
       return;
     }
@@ -57,7 +57,7 @@ export default function AlumniRegistrationForm({
     );
   };
 
-  const handleFileChange = (
+  const _handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
     type: string,
     side?: "front" | "back",
@@ -88,7 +88,7 @@ export default function AlumniRegistrationForm({
     }
   };
 
-  const removeFile = (type: string, side?: "front" | "back") => {
+  const _removeFile = (type: string, side?: "front" | "back") => {
     if (isDisabled) {
       return;
     }

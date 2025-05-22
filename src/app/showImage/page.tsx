@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
+const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
 export default function ShowImagePage() {
   const searchParams = useSearchParams();

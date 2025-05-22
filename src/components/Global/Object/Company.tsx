@@ -12,7 +12,7 @@ type Props = {
   className?: string;
 };
 
-const CDN_URL: string = process.env.NEXT_PUBLIC_CDN_URL as string;
+const CDN_URL: string = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL as string;
 
 export default function Company(props: Props) {
   const [jobsNum, setJobsNum] = useState<number>(0);
