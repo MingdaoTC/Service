@@ -30,3 +30,36 @@ export async function findManyCompanyWithPublishedWithJobs() {
     },
   });
 }
+
+export async function findManyCompanyForAdmin() {
+  return await prisma.company.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          displayName: true,
+          status: true,
+        },
+      },
+      category: true,
+      _count: {
+        select: {
+          jobs: true,
+        },
+      },
+      jobs: {
+        select: {
+          id: true,
+          title: true,
+          published: true,
+        },
+        take: 10, // Limit to prevent too much data
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}

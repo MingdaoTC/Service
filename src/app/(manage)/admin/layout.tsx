@@ -50,8 +50,8 @@ const menuItems: MenuItem[] = [
     id: "companie",
     label: "企業管理",
     icon: Store,
-    path: "/admin/admins",
-    beta: true,
+    path: "/admin/company",
+    beta: false,
     disabled: false,
   },
   {

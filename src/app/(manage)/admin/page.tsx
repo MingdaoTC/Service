@@ -1,7 +1,7 @@
 "use client";
 
+import { Briefcase } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CiInboxIn } from "react-icons/ci";
 import { FaRegBuilding } from "react-icons/fa";
 import { IoPeopleOutline } from "react-icons/io5";
 import {
@@ -310,7 +310,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
-              <CiInboxIn className="text-yellow-600 h-6 w-6" />
+              <Briefcase className="h-6 w-6 text-yellow-600" />
             </div>
           </div>
         </div>

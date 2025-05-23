@@ -1,5 +1,6 @@
+import { auth } from "@/library/auth";
 import { getDashboardStats } from "@/library/dashboard/dashboardService";
-// app/api/dashboard/route.ts
+import { User, UserRole } from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // 輔助函數：獲取日期範圍
@@ -45,7 +46,7 @@ function generateDateArray(startDate: Date, days: number) {
 // 輔助函數：計算成長率
 function calculateGrowthRate(
   currentPeriodCount: number,
-  previousPeriodCount: number
+  previousPeriodCount: number,
 ): number {
   if (previousPeriodCount === 0) {
     return currentPeriodCount > 0 ? 100 : 0;
@@ -57,6 +58,23 @@ function calculateGrowthRate(
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth();
+    const user: User = session?.user as User;
+
+    if (!session?.user) {
+      return NextResponse.json(
+        { status: 403, message: "您沒有權限查看內容" },
+        { status: 403 },
+      );
+    }
+
+    if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
+      return NextResponse.json(
+        { status: 403, message: "您沒有權限查看內容" },
+        { status: 403 },
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const timeRange = searchParams.get("timeRange") || "30d";
     const onlyPublished = searchParams.get("onlyPublished") === "true";
@@ -74,7 +92,7 @@ export async function GET(request: NextRequest) {
       endDate,
       previousStartDate,
       previousEndDate,
-      onlyPublished
+      onlyPublished,
     );
 
     // 處理每日統計數據
@@ -141,15 +159,15 @@ export async function GET(request: NextRequest) {
     // 計算成長率
     const userGrowthRate = calculateGrowthRate(
       stats.currentPeriodUsers,
-      stats.previousPeriodUsers
+      stats.previousPeriodUsers,
     );
     const companyGrowthRate = calculateGrowthRate(
       stats.currentPeriodCompanies,
-      stats.previousPeriodCompanies
+      stats.previousPeriodCompanies,
     );
     const jobGrowthRate = calculateGrowthRate(
       stats.currentPeriodJobs,
-      stats.previousPeriodJobs
+      stats.previousPeriodJobs,
     );
 
     const dashboardData = {
@@ -184,7 +202,7 @@ export async function GET(request: NextRequest) {
         message: "獲取統計數據時發生錯誤",
         error: process.env.NODE_ENV === "development" ? error : undefined,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
