@@ -30,7 +30,7 @@ export default async function Profile() {
   const userProfile = await getProfile(user.email);
 
   return (
-    <div>
+    <div className="mb-10">
       <BasicInfo user={user} />
       <div className="w-[90dvw] max-w-[1440px] mx-auto py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-transparent rounded-lg">
