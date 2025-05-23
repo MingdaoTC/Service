@@ -50,22 +50,19 @@ export default function Footer() {
           <p className="text-sm">
             © {new Date().getFullYear()} 明道人才雲 - 打造理想職涯
           </p>
-          <p className="text-xs text-gray-600 mt-1">
-            Powered by our amazing sponsors and partners
-          </p>
         </div>
 
         {/* 額外連結 (可選) */}
         <div className="flex justify-center space-x-4 mt-3 text-xs">
-          <a href="/privacy" className="text-gray-600 hover:text-gray-800 transition-colors">
+          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
             隱私政策
           </a>
           <span className="text-gray-400">|</span>
-          <a href="/terms" className="text-gray-600 hover:text-gray-800 transition-colors">
+          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
             服務條款
           </a>
           <span className="text-gray-400">|</span>
-          <a href="/contact" className="text-gray-600 hover:text-gray-800 transition-colors">
+          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
             聯繫我們
           </a>
         </div>
