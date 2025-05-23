@@ -17,7 +17,6 @@ import {
 } from "@/app/(manage)/enterprise/_enterprise/action/fetchTaiwanData";
 import { handleUpdate } from "@/app/(manage)/enterprise/_enterprise/action/handleUpdate";
 
-
 const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
 export default function CompanyProfilePage() {
@@ -282,10 +281,11 @@ export default function CompanyProfilePage() {
         {/* 狀態訊息 */}
         {statusMessage && (
           <div
-            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-              ? "bg-green-100 border-l-4 border-green-500"
-              : "bg-red-100 border-l-4 border-red-500"
-              } transition-all duration-500 ease-in-out`}
+            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${
+              statusMessage.type === "success"
+                ? "bg-green-100 border-l-4 border-green-500"
+                : "bg-red-100 border-l-4 border-red-500"
+            } transition-all duration-500 ease-in-out`}
           >
             <div className="flex items-center">
               {statusMessage.type === "success" ? (
@@ -821,10 +821,11 @@ export default function CompanyProfilePage() {
               <button
                 type="submit"
                 disabled={isPending}
-                className={`px-6 py-2 ${isPending
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-                  } text-white rounded-md transition-colors flex items-center`}
+                className={`px-6 py-2 ${
+                  isPending
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } text-white rounded-md transition-colors flex items-center`}
               >
                 {isPending ? (
                   <>

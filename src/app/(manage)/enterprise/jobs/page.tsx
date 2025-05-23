@@ -309,10 +309,11 @@ export default function JobManagementPage() {
         {/* 狀態訊息 */}
         {statusMessage && (
           <div
-            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
+            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${
+              statusMessage.type === "success"
                 ? "bg-green-100 border-l-4 border-green-500"
                 : "bg-red-100 border-l-4 border-red-500"
-              } transition-all duration-500 ease-in-out`}
+            } transition-all duration-500 ease-in-out`}
           >
             <div className="flex items-center">
               {statusMessage.type === "success" ? (
@@ -399,10 +400,11 @@ export default function JobManagementPage() {
                 <button
                   onClick={confirmDelete}
                   disabled={isPending}
-                  className={`px-4 py-2 rounded-md text-sm font-medium text-white ${isPending
+                  className={`px-4 py-2 rounded-md text-sm font-medium text-white ${
+                    isPending
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-[#F44336] hover:bg-[#d32f2f]"
-                    } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition flex items-center`}
+                  } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition flex items-center`}
                 >
                   {isPending && jobToDelete === processingId ? (
                     <>
@@ -615,10 +617,11 @@ export default function JobManagementPage() {
                     </div>
                     <div className="col-span-1 justify-center">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${job.published
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          job.published
                             ? "bg-green-100 text-green-800"
                             : "bg-yellow-100 text-yellow-800"
-                          }`}
+                        }`}
                       >
                         {job.published ? "已發布" : "未發布"}
                       </span>

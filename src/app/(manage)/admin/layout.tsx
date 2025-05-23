@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 // Module
 import React, { useState, useEffect } from "react";
 
+import Footer from "@/components/Global/Footer";
 // Icons
 import {
   Activity,
@@ -15,7 +16,6 @@ import {
   User,
   X,
 } from "lucide-react";
-import Footer from "@/components/Global/Footer";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -179,11 +179,12 @@ export default function AdminLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${item.disabled
-              ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
-              : activeTab === item.id
-                ? "bg-blue-100 text-blue-600 font-medium"
-                : "text-gray-700 hover:bg-gray-100"
+            ${
+              item.disabled
+                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+                : activeTab === item.id
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}

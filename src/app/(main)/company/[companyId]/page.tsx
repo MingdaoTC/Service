@@ -3,7 +3,7 @@ import Info from "@/components/Company/Info";
 import Job from "@/components/Company/Job";
 // import Other from "@/components/Global/Object/Other";
 import type { Company, Job as TJob } from "@/prisma/client";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getCompanyById } from "./_company/actions/getCompany";
 
 export default async function companyID({
@@ -12,7 +12,7 @@ export default async function companyID({
   params: { companyId: string };
 }) {
   if (!params.companyId) {
-    redirect("/");
+    notFound();
   }
 
   const companyData: Company & { jobs: TJob[] } = (await getCompanyById(
@@ -20,7 +20,7 @@ export default async function companyID({
   )) as Company & { jobs: TJob[] };
 
   if (!companyData) {
-    redirect("/");
+    notFound();
   }
 
   return (

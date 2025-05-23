@@ -149,7 +149,7 @@ export class TaiwanAdminDivisions {
    */
   public getFormattedAddress(
     cityName: string,
-    districtName: string
+    districtName: string,
   ): string | null {
     const city = this.data.find((c) => c.name === cityName);
     if (!city) {
@@ -204,7 +204,7 @@ export function getTaiwanAdminUtil(): TaiwanAdminDivisions {
     try {
       // 使用直接導入的數據
       defaultInstance = new TaiwanAdminDivisions(
-        parseTaiwanAdminData(taiwanDataRaw)
+        parseTaiwanAdminData(taiwanDataRaw),
       );
     } catch (error) {
       console.error("初始化台灣行政區劃實用工具失敗:", error);

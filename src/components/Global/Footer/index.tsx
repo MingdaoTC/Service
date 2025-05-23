@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 export default function Footer() {
   const sponsors = [
     { name: "明道中學", logo: "/images/mingdao-logo.png" },
     { name: "明道中學校友會", logo: "/images/alumni-association-logo.png" },
     { name: "明道中學家長會", logo: "/images/parents-association-logo.png" },
-    { name: "明道文教基金會", logo: "/images/mingdao-education-logo.png" }
+    { name: "明道文教基金會", logo: "/images/mingdao-education-logo.png" },
   ];
 
   return (
@@ -28,9 +28,12 @@ export default function Footer() {
                   onError={(e) => {
                     // 如果圖片載入失敗，顯示文字
                     const img = e.target as HTMLImageElement;
-                    img.style.display = 'none';
-                    if (img.nextSibling && img.nextSibling instanceof HTMLElement) {
-                      (img.nextSibling as HTMLElement).style.display = 'block';
+                    img.style.display = "none";
+                    if (
+                      img.nextSibling &&
+                      img.nextSibling instanceof HTMLElement
+                    ) {
+                      (img.nextSibling as HTMLElement).style.display = "block";
                     }
                   }}
                 />
@@ -43,7 +46,7 @@ export default function Footer() {
         </div>
 
         {/* 分隔線 */}
-        <div className="border-t border-gray-300 mb-4"></div>
+        <div className="border-t border-gray-300 mb-4" />
 
         {/* 版權資訊 */}
         <div className="text-center">
@@ -54,17 +57,26 @@ export default function Footer() {
 
         {/* 額外連結 (可選) */}
         <div className="flex justify-center space-x-4 mt-3 text-xs">
-          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
+          <a
+            href="/privacy"
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+          >
             隱私政策
           </a>
           <span className="text-gray-400">|</span>
-          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
+          <a
+            href="/tos"
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+          >
             服務條款
           </a>
-          <span className="text-gray-400">|</span>
-          <a href="#" className="text-gray-600 hover:text-gray-800 transition-colors">
+          {/* <span className="text-gray-400">|</span>
+          <a
+            href="#"
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+          >
             聯繫我們
-          </a>
+          </a> */}
         </div>
       </div>
     </footer>

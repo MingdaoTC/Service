@@ -5,7 +5,7 @@ import { Company, Job, User } from "@/prisma/client";
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getCompanyById } from "./_job/actions/getCompany";
 import { getJobById } from "./_job/actions/getJob";
 
@@ -18,13 +18,13 @@ export default async function JobPage({
   const jobId = params.jobId;
 
   if (!jobId) {
-    redirect("/");
+    notFound();
   }
 
   const job = (await getJobById(jobId)) as Job;
 
   if (!job) {
-    redirect("/");
+    notFound();
   }
 
   const company = (await getCompanyById(job.companyId)) as Company;

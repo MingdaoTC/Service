@@ -6,8 +6,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/library/auth";
 import { findUniqueCompany } from "@/library/prisma/company/findUnique";
 import { User } from "@/prisma/client";
-
-import fs from "fs";
 import sharp from "sharp";
 
 export async function POST(request: NextRequest) {
@@ -17,7 +15,7 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { status: 403, message: "您沒有權限查看內容" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -36,7 +34,7 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { success: false, message: "缺少必要參數" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -69,7 +67,7 @@ export async function POST(request: NextRequest) {
         { email },
         {
           logoUrl: filename,
-        }
+        },
       );
 
       return NextResponse.json({
@@ -83,12 +81,12 @@ export async function POST(request: NextRequest) {
       { email },
       {
         logoUrl: "",
-      }
+      },
     );
 
     return NextResponse.json(
       { success: false, message: "Logo 上傳失敗" },
-      { status: 500 }
+      { status: 500 },
     );
   } catch (error) {
     console.error("Error uploading logo:", error);
@@ -99,7 +97,7 @@ export async function POST(request: NextRequest) {
         message:
           error instanceof Error ? error.message : "上傳過程發生未知錯誤",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
