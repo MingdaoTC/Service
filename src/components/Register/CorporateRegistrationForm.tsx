@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { FormEvent, useRef, useState } from "react";
 
 // Import the server action
-import { handleCorporateRegister } from "@/app/register/_register/action/submitForm";
+import { handleCorporateRegister } from "@/app/(main)/register/_register/action/submitForm";
 
 export default function CorporateRegistrationForm({
   setIsOpenDialog,

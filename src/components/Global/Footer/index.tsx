@@ -9,7 +9,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-200 bg-opacity-75 text-gray-800 py-6 mt-auto h-[12rem]">
+    <footer className="bg-gray-200 bg-opacity-75 text-gray-800 py-6 mt-auto h-[12rem] w-full">
       <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto">
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-600 mb-3 text-center">

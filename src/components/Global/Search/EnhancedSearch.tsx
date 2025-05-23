@@ -1,10 +1,10 @@
 "use client";
 
-import { getJobCategory } from "@/app/_home/action/fetch";
+import { getJobCategory } from "@/app/(main)/_home/action/fetch";
 import {
   getAllCities,
   getDistrictsByCity,
-} from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
+} from "@/app/(manage)/enterprise/_enterprise/action/fetchTaiwanData";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Button from "../Button/Button";

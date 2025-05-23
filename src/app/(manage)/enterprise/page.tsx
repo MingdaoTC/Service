@@ -10,12 +10,12 @@ import { Company, CompanyCategory } from "@/prisma/client";
 import {
   getCompanyCategoryData,
   getCompanyData,
-} from "@/app/enterprise/_enterprise/action/fetch";
+} from "@/app/(manage)/enterprise/_enterprise/action/fetch";
 import {
   getAllCities,
   getDistrictsByCity,
-} from "@/app/enterprise/_enterprise/action/fetchTaiwanData";
-import { handleUpdate } from "@/app/enterprise/_enterprise/action/handleUpdate";
+} from "@/app/(manage)/enterprise/_enterprise/action/fetchTaiwanData";
+import { handleUpdate } from "@/app/(manage)/enterprise/_enterprise/action/handleUpdate";
 
 
 const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
@@ -283,8 +283,8 @@ export default function CompanyProfilePage() {
         {statusMessage && (
           <div
             className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-                ? "bg-green-100 border-l-4 border-green-500"
-                : "bg-red-100 border-l-4 border-red-500"
+              ? "bg-green-100 border-l-4 border-green-500"
+              : "bg-red-100 border-l-4 border-red-500"
               } transition-all duration-500 ease-in-out`}
           >
             <div className="flex items-center">
@@ -822,8 +822,8 @@ export default function CompanyProfilePage() {
                 type="submit"
                 disabled={isPending}
                 className={`px-6 py-2 ${isPending
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
                   } text-white rounded-md transition-colors flex items-center`}
               >
                 {isPending ? (

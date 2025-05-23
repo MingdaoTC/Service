@@ -11,10 +11,11 @@ import { LucideIcon, Menu as MenuIcon, SquarePen, User, X } from "lucide-react";
 // Types
 import { Company, User as TUser, UserRole } from "@/prisma/client";
 
-import { getCompanyData } from "@/app/enterprise/_enterprise/action/fetch";
+import { getCompanyData } from "@/app/(manage)/enterprise/_enterprise/action/fetch";
 
 // Components
 import Button from "@/components/Global/Button/Button";
+import Footer from "@/components/Global/Footer";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -153,7 +154,7 @@ export default function EnterpriseLayout({
 
   if (isSuperAdmin && !company) {
     return (
-      <div className="relative w-full h-[calc(100vh-6rem)] flex items-center justify-center">
+      <div className="relative w-full h-[calc(100vh-3rem)] flex items-center justify-center">
         <div className="fixed top-0 left-0 w-full h-full bg-white/70 backdrop-blur-sm flex items-center justify-center z-[1000] overflow-hidden mt-12">
           <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-[90%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <h2 className="text-xl font-bold mb-2">管理員通知</h2>
@@ -193,12 +194,11 @@ export default function EnterpriseLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${
-              item.disabled
-                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
-                : activeTab === item.id
-                  ? "bg-blue-100 text-blue-600 font-medium"
-                  : "text-gray-700 hover:bg-gray-100"
+            ${item.disabled
+              ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+              : activeTab === item.id
+                ? "bg-blue-100 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}
@@ -213,7 +213,7 @@ export default function EnterpriseLayout({
   };
 
   return (
-    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-15rem)]">
+    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-3rem)]">
       {/* 手機板頂部導航欄 */}
       {isMobile && (
         <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
@@ -232,7 +232,7 @@ export default function EnterpriseLayout({
 
       {/* 電腦版側邊欄 */}
       {!isMobile && (
-        <aside className="w-64 bg-white shadow-sm h-[calc(100vh-6rem)] flex-shrink-0">
+        <aside className="w-64 bg-white shadow-sm h-[calc(100vh-3rem)] flex-shrink-0">
           <nav className="p-4">
             <ul className="space-y-1">{menuItems.map(renderMenuItem)}</ul>
           </nav>
@@ -260,8 +260,11 @@ export default function EnterpriseLayout({
       )}
 
       {/* 主要內容區域 */}
-      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-15rem)] flex">
-        {children}
+      <div className="h-[calc(100dvh-3rem)] flex flex-col overflow-auto w-full">
+        <div className="flex-none min-h-[calc(100dvh-15rem)] p-4 w-full">
+          {children}
+        </div>
+        <Footer />
       </div>
     </div>
   );

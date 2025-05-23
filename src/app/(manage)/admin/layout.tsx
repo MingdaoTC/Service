@@ -15,6 +15,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import Footer from "@/components/Global/Footer";
 
 // 菜单配置类型定义 - 簡化後的版本
 type MenuItem = {
@@ -178,12 +179,11 @@ export default function AdminLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${
-              item.disabled
-                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
-                : activeTab === item.id
-                  ? "bg-blue-100 text-blue-600 font-medium"
-                  : "text-gray-700 hover:bg-gray-100"
+            ${item.disabled
+              ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+              : activeTab === item.id
+                ? "bg-blue-100 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}
@@ -200,7 +200,7 @@ export default function AdminLayout({
   // 如果還在加載中，顯示加載界面或返回空
   if (isLoading) {
     return (
-      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-15rem)]">
+      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-3rem)]">
         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
           <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
             載入中...
@@ -211,7 +211,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-15rem)]">
+    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-3rem)]">
       {/* 手機板頂部導航欄 */}
       {isMobile && (
         <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
@@ -230,7 +230,7 @@ export default function AdminLayout({
 
       {/* 電腦版側邊欄 */}
       {!isMobile && (
-        <aside className="w-64 bg-white shadow-sm h-[calc(100vh-6rem)] flex-shrink-0">
+        <aside className="w-64 bg-white shadow-sm h-[calc(100vh-3rem)] flex-shrink-0">
           <nav className="p-4">
             <ul className="space-y-1">{menuItems.map(renderMenuItem)}</ul>
           </nav>
@@ -257,8 +257,11 @@ export default function AdminLayout({
         </div>
       )}
       {/* 主內容區域 */}
-      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-15rem)] flex">
-        {children}
+      <div className="h-[calc(100dvh-3rem)] flex flex-col overflow-auto w-full">
+        <div className="flex-none min-h-[calc(100dvh-15rem)] p-4 w-full">
+          {children}
+        </div>
+        <Footer />
       </div>
     </div>
   );

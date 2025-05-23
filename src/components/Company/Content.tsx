@@ -1,4 +1,4 @@
-import { getCompanyDetailItems } from "@/app/company/[companyId]/_company/field";
+import { getCompanyDetailItems } from "@/app/(main)/company/[companyId]/_company/field";
 import { Separator } from "@/components/Global/Separator/Separator";
 import { joinClass } from "@/library/joinClass";
 import type { Company } from "@/prisma/client";

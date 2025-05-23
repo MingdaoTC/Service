@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 
 // Import the server action
-import { handleAlumniRegister } from "@/app/register/_register/action/submitForm";
+import { handleAlumniRegister } from "@/app/(main)/register/_register/action/submitForm";
 
 type IdDocumentType = "idCard" | "passport";
 type UploadedFile = {

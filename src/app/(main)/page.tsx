@@ -1,4 +1,4 @@
-import { getCompany, getJob } from "@/app/_home/action/fetch";
+import { getCompany, getJob } from "@/app/(main)/_home/action/fetch";
 import HomePage from "@/components/Home/HomePage";
 import { Suspense } from "react";
 

@@ -12,8 +12,8 @@ import {
 } from "@/prisma/client";
 
 // Server Actions
-import { approveRegistration } from "@/app/admin/registration/_registration/action/approve";
-import { rejectRegistration } from "@/app/admin/registration/_registration/action/reject";
+import { approveRegistration } from "@/app/(manage)/admin/registration/_registration/action/approve";
+import { rejectRegistration } from "@/app/(manage)/admin/registration/_registration/action/reject";
 
 const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
