@@ -51,6 +51,9 @@ export async function fetchSearchResults(params: {
     // 構建工作搜尋條件
     const jobWhere: any = {
       published: true,
+      company: {
+        published: true,
+      },
     };
 
     // 關鍵字搜尋 (標題、描述)

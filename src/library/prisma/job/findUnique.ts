@@ -22,6 +22,9 @@ export async function findUniqueJobWithPublished(param: Partial<Job>) {
     where: {
       id: param.id,
       published: true,
+      company: {
+        published: true,
+      },
     },
   });
 }
