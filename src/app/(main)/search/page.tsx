@@ -7,7 +7,7 @@ import {
   getExperienceLevels,
   getJobCategories,
   getSalaryRanges,
-} from "@/app/search/_search/action/fetch";
+} from "@/app/(main)/search/_search/action/fetch";
 import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -490,7 +490,7 @@ export default function SearchPage() {
                             (range.max === null
                               ? true
                               : searchParams.get("salaryMax") ===
-                                String(range.max))) ||
+                              String(range.max))) ||
                           (!searchParams.get("salaryMin") &&
                             !searchParams.get("salaryMax") &&
                             index === 0)
@@ -844,11 +844,10 @@ export default function SearchPage() {
                                 )
                               }
                               disabled={results.pagination.page <= 1}
-                              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                                results.pagination.page <= 1
+                              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${results.pagination.page <= 1
                                   ? "text-gray-400 bg-gray-100"
                                   : "text-gray-700 bg-white hover:bg-gray-50"
-                              }`}
+                                }`}
                             >
                               上一頁
                             </button>
@@ -865,12 +864,11 @@ export default function SearchPage() {
                                 results.pagination.page >=
                                 results.pagination.totalPages
                               }
-                              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                                results.pagination.page >=
-                                results.pagination.totalPages
+                              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${results.pagination.page >=
+                                  results.pagination.totalPages
                                   ? "text-gray-400 bg-gray-100"
                                   : "text-gray-700 bg-white hover:bg-gray-50"
-                              }`}
+                                }`}
                             >
                               下一頁
                             </button>
@@ -888,7 +886,7 @@ export default function SearchPage() {
                                 <span className="font-medium">
                                   {Math.min(
                                     results.pagination.page *
-                                      results.pagination.limit,
+                                    results.pagination.limit,
                                     results.pagination.total,
                                   )}
                                 </span>{" "}
@@ -911,11 +909,10 @@ export default function SearchPage() {
                                     )
                                   }
                                   disabled={results.pagination.page <= 1}
-                                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
-                                    results.pagination.page <= 1
+                                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${results.pagination.page <= 1
                                       ? "text-gray-400"
                                       : "text-gray-500 hover:bg-gray-50"
-                                  }`}
+                                    }`}
                                 >
                                   <span className="sr-only">上一頁</span>
                                   <FaChevronUp className="h-5 w-5 rotate-90" />
@@ -952,11 +949,10 @@ export default function SearchPage() {
                                     <button
                                       key={i}
                                       onClick={() => handlePageChange(pageNum)}
-                                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                                        pageNum === results.pagination.page
+                                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${pageNum === results.pagination.page
                                           ? "z-10 bg-mingdao-blue text-white border-mingdao-blue"
                                           : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                                      }`}
+                                        }`}
                                     >
                                       {pageNum}
                                     </button>
@@ -976,12 +972,11 @@ export default function SearchPage() {
                                     results.pagination.page >=
                                     results.pagination.totalPages
                                   }
-                                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                                    results.pagination.page >=
-                                    results.pagination.totalPages
+                                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${results.pagination.page >=
+                                      results.pagination.totalPages
                                       ? "text-gray-400"
                                       : "text-gray-500 hover:bg-gray-50"
-                                  }`}
+                                    }`}
                                 >
                                   <span className="sr-only">下一頁</span>
                                   <FaChevronDown className="h-5 w-5 rotate-90" />
