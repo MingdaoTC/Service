@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { IoPeopleOutline } from "react-icons/io5";
+import { FaRegBuilding } from "react-icons/fa";
+import { CiInboxIn } from "react-icons/ci";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 // 數據類型
 interface DashboardData {
-  users: Array<{ date: string; count: number; }>;
+  users: Array<{ date: string; count: number; }>; // 累積數據用於趨勢圖
   companies: Array<{ date: string; count: number; }>;
   jobs: Array<{ date: string; count: number; }>;
+  dailyUsers: Array<{ date: string; count: number; }>; // 每日新增數據用於柱狀圖
+  dailyCompanies: Array<{ date: string; count: number; }>;
+  dailyJobs: Array<{ date: string; count: number; }>;
   summary: {
     totalUsers: number;
     totalCompanies: number;
@@ -22,21 +28,34 @@ interface DashboardData {
 }
 
 // 獲取統計數據的 API 函數
-const fetchDashboardData = async (timeRange: '7d' | '30d' | '90d'): Promise<DashboardData> => {
+const fetchDashboardData = async (timeRange: '7d' | '30d' | '90d', onlyPublished: boolean): Promise<DashboardData> => {
   try {
-    const response = await fetch(`/api/dashboard?timeRange=${timeRange}`, {
+    console.log('Fetching dashboard data for timeRange:', timeRange, 'onlyPublished:', onlyPublished);
+    const response = await fetch(`/api/dashboard?timeRange=${timeRange}&onlyPublished=${onlyPublished}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
     if (!response.ok) {
-      throw new Error('Failed to fetch dashboard data');
+      const errorText = await response.text();
+      console.error('Response error:', errorText);
+      throw new Error(`Failed to fetch dashboard data: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.data;
+    const result = await response.json();
+    console.log('API Response:', result);
+
+    if (!result.success) {
+      throw new Error(result.message || 'API returned unsuccessful response');
+    }
+
+    console.log('Dashboard data received:', result.data);
+    return result.data;
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
 
@@ -45,6 +64,9 @@ const fetchDashboardData = async (timeRange: '7d' | '30d' | '90d'): Promise<Dash
       users: [],
       companies: [],
       jobs: [],
+      dailyUsers: [],
+      dailyCompanies: [],
+      dailyJobs: [],
       summary: {
         totalUsers: 0,
         totalCompanies: 0,
@@ -71,23 +93,28 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [onlyPublished, setOnlyPublished] = useState(false); // 新增：是否只查看已發布
 
   useEffect(() => {
     const loadDashboardData = async () => {
+      console.log('Loading dashboard data...');
       setIsLoading(true);
+      setError(null);
       try {
-        const data = await fetchDashboardData(selectedTimeRange);
+        const data = await fetchDashboardData(selectedTimeRange, onlyPublished);
+        console.log('Data loaded successfully:', data);
         setDashboardData(data);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
-        // 可以在這裡設置錯誤狀態或顯示錯誤訊息
+        setError(error instanceof Error ? error.message : 'Unknown error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
     loadDashboardData();
-  }, [selectedTimeRange]);
+  }, [selectedTimeRange, onlyPublished]); // 新增 onlyPublished 依賴
 
   // 格式化日期顯示
   const formatDate = (dateStr: string) => {
@@ -95,12 +122,20 @@ export default function DashboardPage() {
     return `${date.getMonth() + 1}/${date.getDate()}`;
   };
 
-  // 準備組合圖表數據
+  // 準備組合圖表數據（累積趨勢）
   const combinedChartData = dashboardData?.users.map((user, index) => ({
     date: formatDate(user.date),
     users: user.count,
     companies: dashboardData.companies[index]?.count || 0,
     jobs: dashboardData.jobs[index]?.count || 0,
+  })) || [];
+
+  // 準備每日新增柱狀圖數據
+  const dailyChartData = dashboardData?.dailyUsers.map((user, index) => ({
+    date: formatDate(user.date),
+    users: user.count,
+    companies: dashboardData.dailyCompanies[index]?.count || 0,
+    jobs: dashboardData.dailyJobs[index]?.count || 0,
   })) || [];
 
   // 準備餅圖數據
@@ -110,12 +145,39 @@ export default function DashboardPage() {
     { name: '工作', value: dashboardData.summary.totalJobs, color: COLORS.jobs },
   ] : [];
 
+  console.log('Render data:', {
+    dashboardData: !!dashboardData,
+    combinedChartDataLength: combinedChartData.length,
+    dailyChartDataLength: dailyChartData.length,
+    pieDataLength: pieData.length,
+    sampleCombinedData: combinedChartData[0],
+    sampleDailyData: dailyChartData[0],
+    samplePieData: pieData[0]
+  });
+
   if (isLoading) {
     return (
       <div className="w-full mx-auto h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-mingdao-blue mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className="text-gray-600">載入統計資料中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full mx-auto h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-lg mb-4">載入失敗</div>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            重新載入
+          </button>
         </div>
       </div>
     );
@@ -125,25 +187,48 @@ export default function DashboardPage() {
     <div className="w-full mx-auto h-full">
       {/* 頁面標題 */}
       <div className="mb-6 bg-white shadow-sm rounded-lg border p-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl font-semibold text-mingdao-blue-dark">
-            數據統計 Dashboard
-          </h1>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-2xl font-semibold text-blue-600">
+              數據統計 Dashboard
+            </h1>
 
-          {/* 時間範圍選擇器 */}
-          <div className="flex gap-2">
-            {(['7d', '30d', '90d'] as const).map((range) => (
-              <button
-                key={range}
-                onClick={() => setSelectedTimeRange(range)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${selectedTimeRange === range
-                    ? "bg-mingdao-blue text-white"
+            {/* 時間範圍選擇器 */}
+            <div className="flex gap-2">
+              {(['7d', '30d', '90d'] as const).map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setSelectedTimeRange(range)}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${selectedTimeRange === range
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-              >
-                {range === '7d' ? '7天' : range === '30d' ? '30天' : '90天'}
-              </button>
-            ))}
+                    }`}
+                >
+                  {range === '7d' ? '7天' : range === '30d' ? '30天' : '90天'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 發布狀態篩選器 */}
+          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+            <span className="text-sm font-medium text-gray-700">篩選選項：</span>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={onlyPublished}
+                onChange={(e) => setOnlyPublished(e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="text-sm text-gray-700">
+                只顯示已發布的公司和工作
+              </span>
+            </label>
+            {onlyPublished && (
+              <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                🔍 已啟用篩選
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -155,17 +240,15 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">總使用者數</p>
-              <p className="text-3xl font-bold text-mingdao-blue">
-                {dashboardData?.summary.totalUsers.toLocaleString()}
+              <p className="text-3xl font-bold text-blue-600">
+                {dashboardData?.summary.totalUsers.toLocaleString() || 0}
               </p>
               <p className="text-sm text-green-600 mt-1">
-                +{dashboardData?.summary.newUsersToday} 今日新增
+                +{dashboardData?.summary.newUsersToday || 0} 今日新增
               </p>
             </div>
             <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-              </svg>
+              <IoPeopleOutline className="text-blue-600 h-6 w-6" />
             </div>
           </div>
         </div>
@@ -176,16 +259,14 @@ export default function DashboardPage() {
             <div>
               <p className="text-sm font-medium text-gray-600">總公司數</p>
               <p className="text-3xl font-bold text-green-600">
-                {dashboardData?.summary.totalCompanies.toLocaleString()}
+                {dashboardData?.summary.totalCompanies.toLocaleString() || 0}
               </p>
               <p className="text-sm text-green-600 mt-1">
-                +{dashboardData?.summary.newCompaniesToday} 今日新增
+                +{dashboardData?.summary.newCompaniesToday || 0} 今日新增
               </p>
             </div>
             <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+              <FaRegBuilding className="text-green-600 h-6 w-6" />
             </div>
           </div>
         </div>
@@ -196,16 +277,15 @@ export default function DashboardPage() {
             <div>
               <p className="text-sm font-medium text-gray-600">總工作數</p>
               <p className="text-3xl font-bold text-yellow-600">
-                {dashboardData?.summary.totalJobs.toLocaleString()}
+                {dashboardData?.summary.totalJobs.toLocaleString() || 0}
               </p>
               <p className="text-sm text-green-600 mt-1">
-                +{dashboardData?.summary.newJobsToday} 今日新增
+                +{dashboardData?.summary.newJobsToday || 0} 今日新增
               </p>
             </div>
             <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
-              <svg className="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 00-2 2H10a2 2 0 00-2-2V6m8 0h2a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h2" />
-              </svg>
+              <CiInboxIn className="text-yellow-600 h-6 w-6" />
+
             </div>
           </div>
         </div>
@@ -215,18 +295,117 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* 趨勢圖表 */}
         <div className="bg-white shadow-sm rounded-lg border p-6">
-          <h2 className="text-lg font-semibold text-mingdao-blue-dark mb-4">
-            成長趨勢圖
+          <h2 className="text-lg font-semibold text-blue-600 mb-4">
+            成長趨勢圖 ({combinedChartData.length} 筆數據)
           </h2>
+          {combinedChartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={combinedChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 12 }}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  tick={{ fontSize: 12 }}
+                  domain={['dataMin - 1', 'dataMax + 1']}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px'
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  stroke={COLORS.users}
+                  strokeWidth={2}
+                  name="使用者"
+                  dot={{ r: 4 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="companies"
+                  stroke={COLORS.companies}
+                  strokeWidth={2}
+                  name="公司"
+                  dot={{ r: 4 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="jobs"
+                  stroke={COLORS.jobs}
+                  strokeWidth={2}
+                  name="工作"
+                  dot={{ r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-gray-500">
+              無趨勢數據
+            </div>
+          )}
+        </div>
+
+        {/* 比例圓餅圖 */}
+        <div className="bg-white shadow-sm rounded-lg border p-6">
+          <h2 className="text-lg font-semibold text-blue-600 mb-4">
+            數據比例分布 ({pieData.length} 筆數據)
+          </h2>
+          {pieData.length > 0 && pieData.some(item => item.value > 0) ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => [value.toLocaleString(), '數量']}
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px'
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-gray-500">
+              無比例數據
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 柱狀圖 - 最近7天每日新增 */}
+      <div className="bg-white shadow-sm rounded-lg border p-6 mb-8">
+        <h2 className="text-lg font-semibold text-blue-600 mb-4">
+          最近7天每日新增統計 ({dailyChartData.slice(-7).length} 筆數據)
+        </h2>
+        {dailyChartData.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={combinedChartData}>
+            <BarChart data={dailyChartData.slice(-7)}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <YAxis
                 tick={{ fontSize: 12 }}
-                interval="preserveStartEnd"
+                domain={[0, 'dataMax + 1']}
               />
-              <YAxis tick={{ fontSize: 12 }} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'white',
@@ -235,97 +414,22 @@ export default function DashboardPage() {
                 }}
               />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="users"
-                stroke={COLORS.users}
-                strokeWidth={2}
-                name="使用者"
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="companies"
-                stroke={COLORS.companies}
-                strokeWidth={2}
-                name="公司"
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="jobs"
-                stroke={COLORS.jobs}
-                strokeWidth={2}
-                name="工作"
-                dot={{ r: 4 }}
-              />
-            </LineChart>
+              <Bar dataKey="users" fill={COLORS.users} name="使用者" />
+              <Bar dataKey="companies" fill={COLORS.companies} name="公司" />
+              <Bar dataKey="jobs" fill={COLORS.jobs} name="工作" />
+            </BarChart>
           </ResponsiveContainer>
-        </div>
-
-        {/* 比例圓餅圖 */}
-        <div className="bg-white shadow-sm rounded-lg border p-6">
-          <h2 className="text-lg font-semibold text-mingdao-blue-dark mb-4">
-            數據比例分布
-          </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value) => [value.toLocaleString(), '數量']}
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px'
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* 柱狀圖 - 最近7天每日新增 */}
-      <div className="bg-white shadow-sm rounded-lg border p-6 mb-8">
-        <h2 className="text-lg font-semibold text-mingdao-blue-dark mb-4">
-          最近7天每日新增統計
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={combinedChartData.slice(-7)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #ccc',
-                borderRadius: '4px'
-              }}
-            />
-            <Legend />
-            <Bar dataKey="users" fill={COLORS.users} name="使用者" />
-            <Bar dataKey="companies" fill={COLORS.companies} name="公司" />
-            <Bar dataKey="jobs" fill={COLORS.jobs} name="工作" />
-          </BarChart>
-        </ResponsiveContainer>
+        ) : (
+          <div className="h-[300px] flex items-center justify-center text-gray-500">
+            無每日統計數據
+          </div>
+        )}
       </div>
 
       {/* 快速統計表格 */}
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
         <div className="p-4 bg-gray-50 border-b">
-          <h2 className="text-lg font-semibold text-mingdao-blue-dark">
+          <h2 className="text-lg font-semibold text-blue-600">
             詳細統計數據
           </h2>
         </div>

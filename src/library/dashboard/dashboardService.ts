@@ -6,12 +6,25 @@ export async function getTotalUsers(): Promise<number> {
   return await prisma.user.count();
 }
 
-export async function getTotalCompanies(): Promise<number> {
-  return await prisma.company.count();
+export async function getTotalCompanies(
+  onlyPublished: boolean = false
+): Promise<number> {
+  return await prisma.company.count({
+    where: onlyPublished ? { published: true } : undefined,
+  });
 }
 
-export async function getTotalJobs(): Promise<number> {
-  return await prisma.job.count();
+export async function getTotalJobs(
+  onlyPublished: boolean = false
+): Promise<number> {
+  return await prisma.job.count({
+    where: {
+      ...(onlyPublished ? { published: true } : {}),
+      company: {
+        ...(onlyPublished ? { published: true } : {}),
+      },
+    },
+  });
 }
 
 // 獲取今日新增數量
@@ -31,7 +44,9 @@ export async function getNewUsersToday(): Promise<number> {
   });
 }
 
-export async function getNewCompaniesToday(): Promise<number> {
+export async function getNewCompaniesToday(
+  onlyPublished: boolean = false
+): Promise<number> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
   const todayEnd = new Date();
@@ -43,11 +58,14 @@ export async function getNewCompaniesToday(): Promise<number> {
         gte: todayStart,
         lte: todayEnd,
       },
+      ...(onlyPublished ? { published: true } : {}),
     },
   });
 }
 
-export async function getNewJobsToday(): Promise<number> {
+export async function getNewJobsToday(
+  onlyPublished: boolean = false
+): Promise<number> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
   const todayEnd = new Date();
@@ -58,6 +76,10 @@ export async function getNewJobsToday(): Promise<number> {
       createdAt: {
         gte: todayStart,
         lte: todayEnd,
+      },
+      ...(onlyPublished ? { published: true } : {}),
+      company: {
+        ...(onlyPublished ? { published: true } : {}),
       },
     },
   });
@@ -80,7 +102,8 @@ export async function getUsersInPeriod(
 
 export async function getCompaniesInPeriod(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  onlyPublished: boolean = false
 ): Promise<number> {
   return await prisma.company.count({
     where: {
@@ -88,13 +111,15 @@ export async function getCompaniesInPeriod(
         gte: startDate,
         lte: endDate,
       },
+      ...(onlyPublished ? { published: true } : {}),
     },
   });
 }
 
 export async function getJobsInPeriod(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  onlyPublished: boolean = false
 ): Promise<number> {
   return await prisma.job.count({
     where: {
@@ -102,133 +127,118 @@ export async function getJobsInPeriod(
         gte: startDate,
         lte: endDate,
       },
+      ...(onlyPublished ? { published: true } : {}),
+      company: {
+        ...(onlyPublished ? { published: true } : {}),
+      },
     },
   });
 }
 
-// 獲取每日統計數據 - 使用 MongoDB 聚合查詢
+// 簡化版每日統計 - 先使用基本查詢來測試
 export async function getDailyUserStats(
   startDate: Date,
   endDate: Date
 ): Promise<Array<{ date: string; count: number }>> {
-  // 使用 MongoDB 聚合管道
-  const result = await prisma.user.aggregateRaw({
-    pipeline: [
-      {
-        $match: {
-          createdAt: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-        },
+  // 先獲取所有在範圍內的用戶
+  const users = await prisma.user.findMany({
+    where: {
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
       },
-      {
-        $group: {
-          _id: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
-            },
-          },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-      {
-        $project: {
-          date: "$_id",
-          count: 1,
-          _id: 0,
-        },
-      },
-    ],
+    },
+    select: {
+      createdAt: true,
+    },
   });
 
-  return result as unknown as Array<{ date: string; count: number }>;
+  // 手動按日期分組
+  const dateGroups = new Map<string, number>();
+
+  users.forEach((user) => {
+    const dateStr = user.createdAt.toISOString().split("T")[0];
+    dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
+  });
+
+  // 轉換為需要的格式
+  const result = Array.from(dateGroups.entries())
+    .map(([date, count]) => ({
+      date,
+      count,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  return result;
 }
 
 export async function getDailyCompanyStats(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  onlyPublished: boolean = false
 ): Promise<Array<{ date: string; count: number }>> {
-  const result = await prisma.company.aggregateRaw({
-    pipeline: [
-      {
-        $match: {
-          createdAt: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-        },
+  const companies = await prisma.company.findMany({
+    where: {
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
       },
-      {
-        $group: {
-          _id: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
-            },
-          },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-      {
-        $project: {
-          date: "$_id",
-          count: 1,
-          _id: 0,
-        },
-      },
-    ],
+      ...(onlyPublished ? { published: true } : {}),
+    },
+    select: {
+      createdAt: true,
+    },
   });
 
-  return result as unknown as Array<{ date: string; count: number }>;
+  const dateGroups = new Map<string, number>();
+
+  companies.forEach((company) => {
+    const dateStr = company.createdAt.toISOString().split("T")[0];
+    dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
+  });
+
+  return Array.from(dateGroups.entries())
+    .map(([date, count]) => ({
+      date,
+      count,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export async function getDailyJobStats(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  onlyPublished: boolean = false
 ): Promise<Array<{ date: string; count: number }>> {
-  const result = await prisma.job.aggregateRaw({
-    pipeline: [
-      {
-        $match: {
-          createdAt: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-        },
+  const jobs = await prisma.job.findMany({
+    where: {
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
       },
-      {
-        $group: {
-          _id: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
-            },
-          },
-          count: { $sum: 1 },
-        },
+      ...(onlyPublished ? { published: true } : {}),
+      company: {
+        ...(onlyPublished ? { published: true } : {}),
       },
-      {
-        $sort: { _id: 1 },
-      },
-      {
-        $project: {
-          date: "$_id",
-          count: 1,
-          _id: 0,
-        },
-      },
-    ],
+    },
+    select: {
+      createdAt: true,
+    },
   });
 
-  return result as unknown as Array<{ date: string; count: number }>;
+  const dateGroups = new Map<string, number>();
+
+  jobs.forEach((job) => {
+    const dateStr = job.createdAt.toISOString().split("T")[0];
+    dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
+  });
+
+  return Array.from(dateGroups.entries())
+    .map(([date, count]) => ({
+      date,
+      count,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // 複合函數：獲取完整的儀表板數據
@@ -254,7 +264,8 @@ export async function getDashboardStats(
   startDate: Date,
   endDate: Date,
   previousStartDate: Date,
-  previousEndDate: Date
+  previousEndDate: Date,
+  onlyPublished: boolean = false
 ): Promise<DashboardStats> {
   const [
     totalUsers,
@@ -274,20 +285,20 @@ export async function getDashboardStats(
     dailyJobStats,
   ] = await Promise.all([
     getTotalUsers(),
-    getTotalCompanies(),
-    getTotalJobs(),
+    getTotalCompanies(onlyPublished),
+    getTotalJobs(onlyPublished),
     getNewUsersToday(),
-    getNewCompaniesToday(),
-    getNewJobsToday(),
+    getNewCompaniesToday(onlyPublished),
+    getNewJobsToday(onlyPublished),
     getUsersInPeriod(startDate, endDate),
     getUsersInPeriod(previousStartDate, previousEndDate),
-    getCompaniesInPeriod(startDate, endDate),
-    getCompaniesInPeriod(previousStartDate, previousEndDate),
-    getJobsInPeriod(startDate, endDate),
-    getJobsInPeriod(previousStartDate, previousEndDate),
+    getCompaniesInPeriod(startDate, endDate, onlyPublished),
+    getCompaniesInPeriod(previousStartDate, previousEndDate, onlyPublished),
+    getJobsInPeriod(startDate, endDate, onlyPublished),
+    getJobsInPeriod(previousStartDate, previousEndDate, onlyPublished),
     getDailyUserStats(startDate, endDate),
-    getDailyCompanyStats(startDate, endDate),
-    getDailyJobStats(startDate, endDate),
+    getDailyCompanyStats(startDate, endDate, onlyPublished),
+    getDailyJobStats(startDate, endDate, onlyPublished),
   ]);
 
   return {

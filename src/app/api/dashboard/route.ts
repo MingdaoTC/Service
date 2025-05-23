@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const timeRange = searchParams.get("timeRange") || "30d";
-
+    const onlyPublished = searchParams.get("onlyPublished") === "true";
     const { startDate, days, endDate } = getDateRange(timeRange);
 
     // 獲取上個時期的日期範圍（用於計算成長率）
@@ -72,7 +72,8 @@ export async function GET(request: NextRequest) {
       startDate,
       endDate,
       previousStartDate,
-      previousEndDate
+      previousEndDate,
+      onlyPublished
     );
 
     // 處理每日統計數據
@@ -83,37 +84,54 @@ export async function GET(request: NextRequest) {
     const companyStatsMap = new Map();
     const jobStatsMap = new Map();
 
-    stats.dailyUserStats.forEach((stat: any) => {
+    // 處理 MongoDB 聚合查詢結果
+    (stats.dailyUserStats as any[]).forEach((stat) => {
       userStatsMap.set(stat.date, stat.count);
     });
 
-    stats.dailyCompanyStats.forEach((stat: any) => {
+    (stats.dailyCompanyStats as any[]).forEach((stat) => {
       companyStatsMap.set(stat.date, stat.count);
     });
 
-    stats.dailyJobStats.forEach((stat: any) => {
+    (stats.dailyJobStats as any[]).forEach((stat) => {
       jobStatsMap.set(stat.date, stat.count);
     });
 
-    // 計算累積統計
+    // 計算每日新增數量（而非累積）
+    const users = dateArray.map((date) => {
+      const dailyCount = userStatsMap.get(date) || 0;
+      return { date, count: dailyCount };
+    });
+
+    const companies = dateArray.map((date) => {
+      const dailyCount = companyStatsMap.get(date) || 0;
+      return { date, count: dailyCount };
+    });
+
+    const jobs = dateArray.map((date) => {
+      const dailyCount = jobStatsMap.get(date) || 0;
+      return { date, count: dailyCount };
+    });
+
+    // 計算累積總數用於圖表顯示
     let cumulativeUsers = stats.totalUsers - stats.currentPeriodUsers;
     let cumulativeCompanies =
       stats.totalCompanies - stats.currentPeriodCompanies;
     let cumulativeJobs = stats.totalJobs - stats.currentPeriodJobs;
 
-    const users = dateArray.map((date) => {
+    const cumulativeUsersData = dateArray.map((date) => {
       const dailyCount = userStatsMap.get(date) || 0;
       cumulativeUsers += dailyCount;
       return { date, count: cumulativeUsers };
     });
 
-    const companies = dateArray.map((date) => {
+    const cumulativeCompaniesData = dateArray.map((date) => {
       const dailyCount = companyStatsMap.get(date) || 0;
       cumulativeCompanies += dailyCount;
       return { date, count: cumulativeCompanies };
     });
 
-    const jobs = dateArray.map((date) => {
+    const cumulativeJobsData = dateArray.map((date) => {
       const dailyCount = jobStatsMap.get(date) || 0;
       cumulativeJobs += dailyCount;
       return { date, count: cumulativeJobs };
@@ -134,9 +152,12 @@ export async function GET(request: NextRequest) {
     );
 
     const dashboardData = {
-      users,
-      companies,
-      jobs,
+      users: cumulativeUsersData, // 用於趨勢圖的累積數據
+      companies: cumulativeCompaniesData,
+      jobs: cumulativeJobsData,
+      dailyUsers: users, // 用於柱狀圖的每日新增數據
+      dailyCompanies: companies,
+      dailyJobs: jobs,
       summary: {
         totalUsers: stats.totalUsers,
         totalCompanies: stats.totalCompanies,
