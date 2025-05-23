@@ -86,10 +86,10 @@ export default function RegistrationApprovalPage() {
               prevRegistrations?.map((reg) =>
                 reg.id === id
                   ? {
-                      ...reg,
-                      status: RegistrationStatus.APPROVED,
-                      approvedAt: new Date(),
-                    }
+                    ...reg,
+                    status: RegistrationStatus.APPROVED,
+                    approvedAt: new Date(),
+                  }
                   : reg,
               ),
             );
@@ -99,10 +99,10 @@ export default function RegistrationApprovalPage() {
               prevRegistrations?.map((reg) =>
                 reg.id === id
                   ? {
-                      ...reg,
-                      status: RegistrationStatus.APPROVED,
-                      // 不設置 approvedAt
-                    }
+                    ...reg,
+                    status: RegistrationStatus.APPROVED,
+                    // 不設置 approvedAt
+                  }
                   : reg,
               ),
             );
@@ -172,11 +172,11 @@ export default function RegistrationApprovalPage() {
               prevRegistrations?.map((reg) =>
                 reg.id === rejectingRegistration.id
                   ? {
-                      ...reg,
-                      status: RegistrationStatus.REJECTED,
-                      rejectReason,
-                      rejectAt: new Date(),
-                    }
+                    ...reg,
+                    status: RegistrationStatus.REJECTED,
+                    rejectReason,
+                    rejectAt: new Date(),
+                  }
                   : reg,
               ),
             );
@@ -186,10 +186,10 @@ export default function RegistrationApprovalPage() {
               prevRegistrations?.map((reg) =>
                 reg.id === rejectingRegistration.id
                   ? {
-                      ...reg,
-                      status: RegistrationStatus.REJECTED,
-                      // 不設置 rejectAt 和 rejectReason
-                    }
+                    ...reg,
+                    status: RegistrationStatus.REJECTED,
+                    // 不設置 rejectAt 和 rejectReason
+                  }
                   : reg,
               ),
             );
@@ -410,11 +410,10 @@ export default function RegistrationApprovalPage() {
       {/* 新增: 狀態訊息 */}
       {statusMessage && (
         <div
-          className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${
-            statusMessage.type === "success"
+          className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
               ? "bg-green-100 border-l-4 border-green-500"
               : "bg-red-100 border-l-4 border-red-500"
-          } transition-all duration-500 ease-in-out`}
+            } transition-all duration-500 ease-in-out`}
         >
           <div className="flex items-center">
             {statusMessage.type === "success" ? (
@@ -505,11 +504,10 @@ export default function RegistrationApprovalPage() {
               <button
                 onClick={submitReject}
                 disabled={isPending || !rejectReason.trim()}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-white ${
-                  isPending || !rejectReason.trim()
+                className={`px-4 py-2 rounded-md text-sm font-medium text-white ${isPending || !rejectReason.trim()
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-[#F44336] hover:bg-[#d32f2f]"
-                } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition flex items-center`}
+                  } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition flex items-center`}
               >
                 {isPending && rejectingRegistration?.id === processingId ? (
                   <>
@@ -625,31 +623,28 @@ export default function RegistrationApprovalPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleTypeChange("all")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                  registrationType === "all"
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${registrationType === "all"
                     ? "bg-mingdao-blue text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 全部
               </button>
               <button
                 onClick={() => handleTypeChange("alumni")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                  registrationType === "alumni"
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${registrationType === "alumni"
                     ? "bg-mingdao-blue text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 僅校友
               </button>
               <button
                 onClick={() => handleTypeChange("company")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                  registrationType === "company"
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${registrationType === "company"
                     ? "bg-mingdao-blue text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 僅企業
               </button>
@@ -793,88 +788,86 @@ export default function RegistrationApprovalPage() {
                         <div className="mt-5 flex flex-wrap justify-end gap-3">
                           {registration.status ===
                             RegistrationStatus.PENDING && (
-                            <>
-                              {/* 更新: 通過企業申請按鈕 */}
-                              <button
-                                onClick={() =>
-                                  handleApprove(registration.id, "company")
-                                }
-                                disabled={
-                                  isPending && processingId === registration.id
-                                }
-                                className={`px-4 py-1.5 ${
-                                  isPending && processingId === registration.id
-                                    ? "bg-gray-400"
-                                    : "bg-[#4CAF50] hover:bg-[#3f9142]"
-                                } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
-                              >
-                                {isPending &&
-                                processingId === registration.id ? (
-                                  <>
-                                    <svg
-                                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <circle
-                                        className="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                      />
-                                      <path
-                                        className="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                      />
-                                    </svg>
-                                    處理中...
-                                  </>
-                                ) : (
-                                  "通過"
-                                )}
-                              </button>
-                              {/* 更新: 拒絕企業申請按鈕 */}
-                              <button
-                                onClick={() =>
-                                  showRejectDialogHandler(
-                                    registration.id,
-                                    "company",
-                                  )
-                                }
-                                disabled={
-                                  isPending && processingId === registration.id
-                                }
-                                className={`px-4 py-1.5 ${
-                                  isPending && processingId === registration.id
-                                    ? "bg-gray-400"
-                                    : "bg-[#F44336] hover:bg-[#d32f2f]"
-                                } text-white text-sm font-medium rounded shadow-sm transition`}
-                              >
-                                拒絕
-                              </button>
-                            </>
-                          )}
+                              <>
+                                {/* 更新: 通過企業申請按鈕 */}
+                                <button
+                                  onClick={() =>
+                                    handleApprove(registration.id, "company")
+                                  }
+                                  disabled={
+                                    isPending && processingId === registration.id
+                                  }
+                                  className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                      ? "bg-gray-400"
+                                      : "bg-[#4CAF50] hover:bg-[#3f9142]"
+                                    } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
+                                >
+                                  {isPending &&
+                                    processingId === registration.id ? (
+                                    <>
+                                      <svg
+                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <circle
+                                          className="opacity-25"
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                          stroke="currentColor"
+                                          strokeWidth="4"
+                                        />
+                                        <path
+                                          className="opacity-75"
+                                          fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        />
+                                      </svg>
+                                      處理中...
+                                    </>
+                                  ) : (
+                                    "通過"
+                                  )}
+                                </button>
+                                {/* 更新: 拒絕企業申請按鈕 */}
+                                <button
+                                  onClick={() =>
+                                    showRejectDialogHandler(
+                                      registration.id,
+                                      "company",
+                                    )
+                                  }
+                                  disabled={
+                                    isPending && processingId === registration.id
+                                  }
+                                  className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                      ? "bg-gray-400"
+                                      : "bg-[#F44336] hover:bg-[#d32f2f]"
+                                    } text-white text-sm font-medium rounded shadow-sm transition`}
+                                >
+                                  拒絕
+                                </button>
+                              </>
+                            )}
                           {registration.status !==
                             RegistrationStatus.PENDING && (
-                            <div className="text-gray-500 text-sm">
-                              <span className="italic">已處理完畢</span>
-                              {/* 顯示拒絕原因 */}
-                              {registration.status ===
-                                RegistrationStatus.REJECTED &&
-                                registration.rejectReason && (
-                                  <div className="mt-1">
-                                    <span className="font-medium">
-                                      拒絕原因：
-                                    </span>
-                                    <span>{registration.rejectReason}</span>
-                                  </div>
-                                )}
-                            </div>
-                          )}
+                              <div className="text-gray-500 text-sm">
+                                <span className="italic">已處理完畢</span>
+                                {/* 顯示拒絕原因 */}
+                                {registration.status ===
+                                  RegistrationStatus.REJECTED &&
+                                  registration.rejectReason && (
+                                    <div className="mt-1">
+                                      <span className="font-medium">
+                                        拒絕原因：
+                                      </span>
+                                      <span>{registration.rejectReason}</span>
+                                    </div>
+                                  )}
+                              </div>
+                            )}
                         </div>
                       </div>
                     )}
@@ -957,7 +950,7 @@ export default function RegistrationApprovalPage() {
                             </p>
                           </div>
                         </div>
-
+                        {/* 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                           <div>
                             <p className="text-gray-500 mb-1">
@@ -1002,82 +995,80 @@ export default function RegistrationApprovalPage() {
                               "護照",
                             )}
                           </div>
-                        </div>
+                        </div> */}
 
                         <div className="mt-5 flex flex-wrap justify-end gap-3">
                           {registration.status ===
                             RegistrationStatus.PENDING && (
-                            <>
-                              {/* 更新: 通過校友申請按鈕 */}
-                              <button
-                                onClick={() =>
-                                  handleApprove(registration.id, "alumni")
-                                }
-                                disabled={
-                                  isPending && processingId === registration.id
-                                }
-                                className={`px-4 py-1.5 ${
-                                  isPending && processingId === registration.id
-                                    ? "bg-gray-400"
-                                    : "bg-[#4CAF50] hover:bg-[#3f9142]"
-                                } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
-                              >
-                                {isPending &&
-                                processingId === registration.id ? (
-                                  <>
-                                    <svg
-                                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <circle
-                                        className="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                      />
-                                      <path
-                                        className="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                      />
-                                    </svg>
-                                    處理中...
-                                  </>
-                                ) : (
-                                  "通過"
-                                )}
-                              </button>
-                              {/* 更新: 拒絕校友申請按鈕 */}
-                              <button
-                                onClick={() =>
-                                  showRejectDialogHandler(
-                                    registration.id,
-                                    "alumni",
-                                  )
-                                }
-                                disabled={
-                                  isPending && processingId === registration.id
-                                }
-                                className={`px-4 py-1.5 ${
-                                  isPending && processingId === registration.id
-                                    ? "bg-gray-400"
-                                    : "bg-[#F44336] hover:bg-[#d32f2f]"
-                                } text-white text-sm font-medium rounded shadow-sm transition`}
-                              >
-                                拒絕
-                              </button>
-                            </>
-                          )}
+                              <>
+                                {/* 更新: 通過校友申請按鈕 */}
+                                <button
+                                  onClick={() =>
+                                    handleApprove(registration.id, "alumni")
+                                  }
+                                  disabled={
+                                    isPending && processingId === registration.id
+                                  }
+                                  className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                      ? "bg-gray-400"
+                                      : "bg-[#4CAF50] hover:bg-[#3f9142]"
+                                    } text-white text-sm font-medium rounded shadow-sm transition flex items-center`}
+                                >
+                                  {isPending &&
+                                    processingId === registration.id ? (
+                                    <>
+                                      <svg
+                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <circle
+                                          className="opacity-25"
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                          stroke="currentColor"
+                                          strokeWidth="4"
+                                        />
+                                        <path
+                                          className="opacity-75"
+                                          fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        />
+                                      </svg>
+                                      處理中...
+                                    </>
+                                  ) : (
+                                    "通過"
+                                  )}
+                                </button>
+                                {/* 更新: 拒絕校友申請按鈕 */}
+                                <button
+                                  onClick={() =>
+                                    showRejectDialogHandler(
+                                      registration.id,
+                                      "alumni",
+                                    )
+                                  }
+                                  disabled={
+                                    isPending && processingId === registration.id
+                                  }
+                                  className={`px-4 py-1.5 ${isPending && processingId === registration.id
+                                      ? "bg-gray-400"
+                                      : "bg-[#F44336] hover:bg-[#d32f2f]"
+                                    } text-white text-sm font-medium rounded shadow-sm transition`}
+                                >
+                                  拒絕
+                                </button>
+                              </>
+                            )}
                           {registration.status !==
                             RegistrationStatus.PENDING && (
-                            <span className="text-gray-500 text-sm italic">
-                              已處理完畢
-                            </span>
-                          )}
+                              <span className="text-gray-500 text-sm italic">
+                                已處理完畢
+                              </span>
+                            )}
                         </div>
                       </div>
                     )}

@@ -6,6 +6,7 @@ import JobList from "@/components/Home/JobList";
 import Link from "next/link";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import Image from "next/image";
 
 type HomePageProps = {
   jobs: any[];
@@ -80,6 +81,9 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
                 ))}
               </div>
             </div>
+          </div>
+          <div className="flex">
+            <Image src="/images/discovery.png" alt="Discovery" width={313} height={28} className="mt-14 brightness-0 invert mx-auto" />
           </div>
         </div>
       </div>
