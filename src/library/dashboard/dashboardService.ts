@@ -7,7 +7,7 @@ export async function getTotalUsers(): Promise<number> {
 }
 
 export async function getTotalCompanies(
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   return await prisma.company.count({
     where: onlyPublished ? { published: true } : undefined,
@@ -15,7 +15,7 @@ export async function getTotalCompanies(
 }
 
 export async function getTotalJobs(
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   return await prisma.job.count({
     where: {
@@ -45,7 +45,7 @@ export async function getNewUsersToday(): Promise<number> {
 }
 
 export async function getNewCompaniesToday(
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -64,7 +64,7 @@ export async function getNewCompaniesToday(
 }
 
 export async function getNewJobsToday(
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -88,7 +88,7 @@ export async function getNewJobsToday(
 // 獲取時期內的數量（用於成長率計算）
 export async function getUsersInPeriod(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): Promise<number> {
   return await prisma.user.count({
     where: {
@@ -103,7 +103,7 @@ export async function getUsersInPeriod(
 export async function getCompaniesInPeriod(
   startDate: Date,
   endDate: Date,
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   return await prisma.company.count({
     where: {
@@ -119,7 +119,7 @@ export async function getCompaniesInPeriod(
 export async function getJobsInPeriod(
   startDate: Date,
   endDate: Date,
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<number> {
   return await prisma.job.count({
     where: {
@@ -138,7 +138,7 @@ export async function getJobsInPeriod(
 // 簡化版每日統計 - 先使用基本查詢來測試
 export async function getDailyUserStats(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): Promise<Array<{ date: string; count: number }>> {
   // 先獲取所有在範圍內的用戶
   const users = await prisma.user.findMany({
@@ -156,7 +156,7 @@ export async function getDailyUserStats(
   // 手動按日期分組
   const dateGroups = new Map<string, number>();
 
-  users.forEach((user) => {
+  users.map((user) => {
     const dateStr = user.createdAt.toISOString().split("T")[0];
     dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
   });
@@ -175,7 +175,7 @@ export async function getDailyUserStats(
 export async function getDailyCompanyStats(
   startDate: Date,
   endDate: Date,
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<Array<{ date: string; count: number }>> {
   const companies = await prisma.company.findMany({
     where: {
@@ -192,7 +192,7 @@ export async function getDailyCompanyStats(
 
   const dateGroups = new Map<string, number>();
 
-  companies.forEach((company) => {
+  companies.map((company) => {
     const dateStr = company.createdAt.toISOString().split("T")[0];
     dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
   });
@@ -208,7 +208,7 @@ export async function getDailyCompanyStats(
 export async function getDailyJobStats(
   startDate: Date,
   endDate: Date,
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<Array<{ date: string; count: number }>> {
   const jobs = await prisma.job.findMany({
     where: {
@@ -228,7 +228,7 @@ export async function getDailyJobStats(
 
   const dateGroups = new Map<string, number>();
 
-  jobs.forEach((job) => {
+  jobs.map((job) => {
     const dateStr = job.createdAt.toISOString().split("T")[0];
     dateGroups.set(dateStr, (dateGroups.get(dateStr) || 0) + 1);
   });
@@ -265,7 +265,7 @@ export async function getDashboardStats(
   endDate: Date,
   previousStartDate: Date,
   previousEndDate: Date,
-  onlyPublished: boolean = false
+  onlyPublished: boolean = false,
 ): Promise<DashboardStats> {
   const [
     totalUsers,

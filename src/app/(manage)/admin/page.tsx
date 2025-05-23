@@ -1,19 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IoPeopleOutline } from "react-icons/io5";
-import { FaRegBuilding } from "react-icons/fa";
 import { CiInboxIn } from "react-icons/ci";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { FaRegBuilding } from "react-icons/fa";
+import { IoPeopleOutline } from "react-icons/io5";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 // 數據類型
 interface DashboardData {
-  users: Array<{ date: string; count: number; }>; // 累積數據用於趨勢圖
-  companies: Array<{ date: string; count: number; }>;
-  jobs: Array<{ date: string; count: number; }>;
-  dailyUsers: Array<{ date: string; count: number; }>; // 每日新增數據用於柱狀圖
-  dailyCompanies: Array<{ date: string; count: number; }>;
-  dailyJobs: Array<{ date: string; count: number; }>;
+  users: Array<{ date: string; count: number }>; // 累積數據用於趨勢圖
+  companies: Array<{ date: string; count: number }>;
+  jobs: Array<{ date: string; count: number }>;
+  dailyUsers: Array<{ date: string; count: number }>; // 每日新增數據用於柱狀圖
+  dailyCompanies: Array<{ date: string; count: number }>;
+  dailyJobs: Array<{ date: string; count: number }>;
   summary: {
     totalUsers: number;
     totalCompanies: number;
@@ -28,36 +42,35 @@ interface DashboardData {
 }
 
 // 獲取統計數據的 API 函數
-const fetchDashboardData = async (timeRange: '7d' | '30d' | '90d', onlyPublished: boolean): Promise<DashboardData> => {
+const fetchDashboardData = async (
+  timeRange: "7d" | "30d" | "90d",
+  onlyPublished: boolean,
+): Promise<DashboardData> => {
   try {
-    console.log('Fetching dashboard data for timeRange:', timeRange, 'onlyPublished:', onlyPublished);
-    const response = await fetch(`/api/dashboard?timeRange=${timeRange}&onlyPublished=${onlyPublished}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `/api/dashboard?timeRange=${timeRange}&onlyPublished=${onlyPublished}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
-
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Response error:', errorText);
+      console.error("Response error:", errorText);
       throw new Error(`Failed to fetch dashboard data: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('API Response:', result);
 
     if (!result.success) {
-      throw new Error(result.message || 'API returned unsuccessful response');
+      throw new Error(result.message || "API returned unsuccessful response");
     }
-
-    console.log('Dashboard data received:', result.data);
     return result.data;
   } catch (error) {
-    console.error('Error fetching dashboard data:', error);
+    console.error("Error fetching dashboard data:", error);
 
     // 如果 API 失敗，返回空數據結構
     return {
@@ -77,37 +90,41 @@ const fetchDashboardData = async (timeRange: '7d' | '30d' | '90d', onlyPublished
         userGrowthRate: 0,
         companyGrowthRate: 0,
         jobGrowthRate: 0,
-      }
+      },
     };
   }
 };
 
 // 顏色配置
 const COLORS = {
-  users: '#3B82F6',
-  companies: '#10B981',
-  jobs: '#F59E0B'
+  users: "#3B82F6",
+  companies: "#10B981",
+  jobs: "#F59E0B",
 };
 
 export default function DashboardPage() {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null,
+  );
+  const [selectedTimeRange, setSelectedTimeRange] = useState<
+    "7d" | "30d" | "90d"
+  >("30d");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [onlyPublished, setOnlyPublished] = useState(false); // 新增：是否只查看已發布
 
   useEffect(() => {
     const loadDashboardData = async () => {
-      console.log('Loading dashboard data...');
       setIsLoading(true);
       setError(null);
       try {
         const data = await fetchDashboardData(selectedTimeRange, onlyPublished);
-        console.log('Data loaded successfully:', data);
         setDashboardData(data);
       } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        setError(error instanceof Error ? error.message : 'Unknown error occurred');
+        console.error("Error loading dashboard data:", error);
+        setError(
+          error instanceof Error ? error.message : "Unknown error occurred",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -123,43 +140,49 @@ export default function DashboardPage() {
   };
 
   // 準備組合圖表數據（累積趨勢）
-  const combinedChartData = dashboardData?.users.map((user, index) => ({
-    date: formatDate(user.date),
-    users: user.count,
-    companies: dashboardData.companies[index]?.count || 0,
-    jobs: dashboardData.jobs[index]?.count || 0,
-  })) || [];
+  const combinedChartData =
+    dashboardData?.users.map((user, index) => ({
+      date: formatDate(user.date),
+      users: user.count,
+      companies: dashboardData.companies[index]?.count || 0,
+      jobs: dashboardData.jobs[index]?.count || 0,
+    })) || [];
 
   // 準備每日新增柱狀圖數據
-  const dailyChartData = dashboardData?.dailyUsers.map((user, index) => ({
-    date: formatDate(user.date),
-    users: user.count,
-    companies: dashboardData.dailyCompanies[index]?.count || 0,
-    jobs: dashboardData.dailyJobs[index]?.count || 0,
-  })) || [];
+  const dailyChartData =
+    dashboardData?.dailyUsers.map((user, index) => ({
+      date: formatDate(user.date),
+      users: user.count,
+      companies: dashboardData.dailyCompanies[index]?.count || 0,
+      jobs: dashboardData.dailyJobs[index]?.count || 0,
+    })) || [];
 
   // 準備餅圖數據
-  const pieData = dashboardData ? [
-    { name: '使用者', value: dashboardData.summary.totalUsers, color: COLORS.users },
-    { name: '公司', value: dashboardData.summary.totalCompanies, color: COLORS.companies },
-    { name: '工作', value: dashboardData.summary.totalJobs, color: COLORS.jobs },
-  ] : [];
-
-  console.log('Render data:', {
-    dashboardData: !!dashboardData,
-    combinedChartDataLength: combinedChartData.length,
-    dailyChartDataLength: dailyChartData.length,
-    pieDataLength: pieData.length,
-    sampleCombinedData: combinedChartData[0],
-    sampleDailyData: dailyChartData[0],
-    samplePieData: pieData[0]
-  });
+  const pieData = dashboardData
+    ? [
+        {
+          name: "使用者",
+          value: dashboardData.summary.totalUsers,
+          color: COLORS.users,
+        },
+        {
+          name: "公司",
+          value: dashboardData.summary.totalCompanies,
+          color: COLORS.companies,
+        },
+        {
+          name: "工作",
+          value: dashboardData.summary.totalJobs,
+          color: COLORS.jobs,
+        },
+      ]
+    : [];
 
   if (isLoading) {
     return (
       <div className="w-full mx-auto h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4" />
           <p className="text-gray-600">載入統計資料中...</p>
         </div>
       </div>
@@ -195,16 +218,17 @@ export default function DashboardPage() {
 
             {/* 時間範圍選擇器 */}
             <div className="flex gap-2">
-              {(['7d', '30d', '90d'] as const).map((range) => (
+              {(["7d", "30d", "90d"] as const).map((range) => (
                 <button
                   key={range}
                   onClick={() => setSelectedTimeRange(range)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${selectedTimeRange === range
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                    selectedTimeRange === range
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
                 >
-                  {range === '7d' ? '7天' : range === '30d' ? '30天' : '90天'}
+                  {range === "7d" ? "7天" : range === "30d" ? "30天" : "90天"}
                 </button>
               ))}
             </div>
@@ -212,7 +236,9 @@ export default function DashboardPage() {
 
           {/* 發布狀態篩選器 */}
           <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-            <span className="text-sm font-medium text-gray-700">篩選選項：</span>
+            <span className="text-sm font-medium text-gray-700">
+              篩選選項：
+            </span>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -285,7 +311,6 @@ export default function DashboardPage() {
             </div>
             <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
               <CiInboxIn className="text-yellow-600 h-6 w-6" />
-
             </div>
           </div>
         </div>
@@ -309,13 +334,13 @@ export default function DashboardPage() {
                 />
                 <YAxis
                   tick={{ fontSize: 12 }}
-                  domain={['dataMin - 1', 'dataMax + 1']}
+                  domain={["dataMin - 1", "dataMax + 1"]}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px'
+                    backgroundColor: "white",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
                   }}
                 />
                 <Legend />
@@ -357,7 +382,7 @@ export default function DashboardPage() {
           <h2 className="text-lg font-semibold text-blue-600 mb-4">
             數據比例分布 ({pieData.length} 筆數據)
           </h2>
-          {pieData.length > 0 && pieData.some(item => item.value > 0) ? (
+          {pieData.length > 0 && pieData.some((item) => item.value > 0) ? (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -365,7 +390,9 @@ export default function DashboardPage() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(1)}%`
+                  }
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -375,11 +402,11 @@ export default function DashboardPage() {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value) => [value.toLocaleString(), '數量']}
+                  formatter={(value) => [value.toLocaleString(), "數量"]}
                   contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px'
+                    backgroundColor: "white",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
                   }}
                 />
               </PieChart>
@@ -402,15 +429,12 @@ export default function DashboardPage() {
             <BarChart data={dailyChartData.slice(-7)}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-              <YAxis
-                tick={{ fontSize: 12 }}
-                domain={[0, 'dataMax + 1']}
-              />
+              <YAxis tick={{ fontSize: 12 }} domain={[0, "dataMax + 1"]} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px'
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
                 }}
               />
               <Legend />
@@ -429,36 +453,40 @@ export default function DashboardPage() {
       {/* 快速統計表格 */}
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
         <div className="p-4 bg-gray-50 border-b">
-          <h2 className="text-lg font-semibold text-blue-600">
-            詳細統計數據
-          </h2>
+          <h2 className="text-lg font-semibold text-blue-600">詳細統計數據</h2>
         </div>
         <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-600 mb-2">使用者成長率</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-2">
+                使用者成長率
+              </h3>
               <p className="text-2xl font-bold text-blue-600">
                 {dashboardData?.summary.userGrowthRate !== undefined
-                  ? `${dashboardData.summary.userGrowthRate >= 0 ? '+' : ''}${dashboardData.summary.userGrowthRate.toFixed(1)}%`
-                  : '--'}
+                  ? `${dashboardData.summary.userGrowthRate >= 0 ? "+" : ""}${dashboardData.summary.userGrowthRate.toFixed(1)}%`
+                  : "--"}
               </p>
               <p className="text-xs text-gray-500">相較上月</p>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-600 mb-2">公司註冊率</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-2">
+                公司註冊率
+              </h3>
               <p className="text-2xl font-bold text-green-600">
                 {dashboardData?.summary.companyGrowthRate !== undefined
-                  ? `${dashboardData.summary.companyGrowthRate >= 0 ? '+' : ''}${dashboardData.summary.companyGrowthRate.toFixed(1)}%`
-                  : '--'}
+                  ? `${dashboardData.summary.companyGrowthRate >= 0 ? "+" : ""}${dashboardData.summary.companyGrowthRate.toFixed(1)}%`
+                  : "--"}
               </p>
               <p className="text-xs text-gray-500">相較上月</p>
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-600 mb-2">工作發布率</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-2">
+                工作發布率
+              </h3>
               <p className="text-2xl font-bold text-yellow-600">
                 {dashboardData?.summary.jobGrowthRate !== undefined
-                  ? `${dashboardData.summary.jobGrowthRate >= 0 ? '+' : ''}${dashboardData.summary.jobGrowthRate.toFixed(1)}%`
-                  : '--'}
+                  ? `${dashboardData.summary.jobGrowthRate >= 0 ? "+" : ""}${dashboardData.summary.jobGrowthRate.toFixed(1)}%`
+                  : "--"}
               </p>
               <p className="text-xs text-gray-500">相較上月</p>
             </div>

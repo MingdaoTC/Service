@@ -1,6 +1,6 @@
+import { getDashboardStats } from "@/library/dashboard/dashboardService";
 // app/api/dashboard/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getDashboardStats } from "@/library/dashboard/dashboardService";
 
 // 輔助函數：獲取日期範圍
 function getDateRange(timeRange: string) {
@@ -21,7 +21,6 @@ function getDateRange(timeRange: string) {
       startDate = new Date(today);
       startDate.setDate(today.getDate() - 89); // 包含今天
       break;
-    case "30d":
     default:
       days = 30;
       startDate = new Date(today);
@@ -48,7 +47,9 @@ function calculateGrowthRate(
   currentPeriodCount: number,
   previousPeriodCount: number
 ): number {
-  if (previousPeriodCount === 0) return currentPeriodCount > 0 ? 100 : 0;
+  if (previousPeriodCount === 0) {
+    return currentPeriodCount > 0 ? 100 : 0;
+  }
   return (
     ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100
   );
@@ -85,15 +86,15 @@ export async function GET(request: NextRequest) {
     const jobStatsMap = new Map();
 
     // 處理 MongoDB 聚合查詢結果
-    (stats.dailyUserStats as any[]).forEach((stat) => {
+    (stats.dailyUserStats as any[]).map((stat) => {
       userStatsMap.set(stat.date, stat.count);
     });
 
-    (stats.dailyCompanyStats as any[]).forEach((stat) => {
+    (stats.dailyCompanyStats as any[]).map((stat) => {
       companyStatsMap.set(stat.date, stat.count);
     });
 
-    (stats.dailyJobStats as any[]).forEach((stat) => {
+    (stats.dailyJobStats as any[]).map((stat) => {
       jobStatsMap.set(stat.date, stat.count);
     });
 
@@ -187,3 +188,10 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = false;
+export const fetchCache = "auto";
+export const runtime = "nodejs";
+export const preferredRegion = "auto";
