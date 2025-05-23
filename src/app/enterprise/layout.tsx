@@ -213,7 +213,7 @@ export default function EnterpriseLayout({
   };
 
   return (
-    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-7rem)]">
+    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-15rem)]">
       {/* 手機板頂部導航欄 */}
       {isMobile && (
         <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
@@ -260,7 +260,7 @@ export default function EnterpriseLayout({
       )}
 
       {/* 主要內容區域 */}
-      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-7rem)] flex">
+      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-15rem)] flex">
         {children}
       </div>
     </div>

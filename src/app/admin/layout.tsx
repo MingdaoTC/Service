@@ -200,7 +200,7 @@ export default function AdminLayout({
   // 如果還在加載中，顯示加載界面或返回空
   if (isLoading) {
     return (
-      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-7rem)]">
+      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-15rem)]">
         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
           <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
             載入中...
@@ -211,7 +211,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-7rem)]">
+    <div className="bg-blue-50 flex flex-col md:flex-row h-[calc(100dvh-15rem)]">
       {/* 手機板頂部導航欄 */}
       {isMobile && (
         <div className="bg-white w-full shadow-sm p-3 flex items-center justify-between h-[3.5rem]">
@@ -257,7 +257,7 @@ export default function AdminLayout({
         </div>
       )}
       {/* 主內容區域 */}
-      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-7rem)] flex">
+      <div className="flex-1 p-4 overflow-auto h-[calc(100dvh-15rem)] flex">
         {children}
       </div>
     </div>

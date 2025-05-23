@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <Suspense
       fallback={
-        <div className="h-[calc(100dvh-7rem)] flex items-center justify-center">
+        <div className="h-[calc(100dvh-15rem)] flex items-center justify-center">
           載入中...
         </div>
       }

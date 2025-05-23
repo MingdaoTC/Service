@@ -108,7 +108,7 @@ export default function ShowImagePage() {
   };
 
   return (
-    <div className="h-[calc(100dvh-7rem)] bg-gray-100 py-8 overflow-auto">
+    <div className="h-[calc(100dvh-15rem)] bg-gray-100 py-8 overflow-auto">
       <div className="max-w-7xl mx-auto px-4">
         {/* 導航頭部 */}
         <div className="flex items-center justify-between mb-6">

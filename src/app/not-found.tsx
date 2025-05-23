@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center text-center p-4 h-[calc(100vh-6rem)]">
+    <div className="flex flex-col items-center justify-center text-center p-4 h-[calc(100vh-15rem)]">
       <h2 className="text-2xl font-bold mb-4">頁面未找到</h2>
       <p className="mb-6">您沒有權限訪問此頁面或此頁面不存在</p>
       <Link
