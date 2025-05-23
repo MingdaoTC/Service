@@ -35,7 +35,7 @@ const menuItems: MenuItem[] = [
     label: "網站狀態",
     icon: Activity,
     path: "/admin",
-    beta: true,
+    beta: false,
     disabled: false,
   },
   {
@@ -179,12 +179,11 @@ export default function AdminLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${
-              item.disabled
-                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
-                : activeTab === item.id
-                  ? "bg-blue-100 text-blue-600 font-medium"
-                  : "text-gray-700 hover:bg-gray-100"
+            ${item.disabled
+              ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+              : activeTab === item.id
+                ? "bg-blue-100 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}
