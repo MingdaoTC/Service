@@ -19,7 +19,7 @@ export async function createNewApplication(formData: FormData) {
   const coverLetter = formData.get("coverLetter") as string;
 
   if (!jobId || !resumeId || !companyId) {
-    return { error: "Missing required fields" };
+    return { error: "請完整填寫表單" };
   }
 
   try {
@@ -33,9 +33,8 @@ export async function createNewApplication(formData: FormData) {
       user.email,
     );
     revalidatePath(`/job/${jobId}`);
-  } catch (error) {
-    console.error("Error uploading resume:", error);
-    return { error: "Failed to upload resume" };
+  } catch (_) {
+    return { error: "應徵功能發生錯誤" };
   }
   redirect(`/job/${jobId}`);
 }

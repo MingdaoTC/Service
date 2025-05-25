@@ -24,20 +24,17 @@ export default function Info({
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleSubmit = (_formElements: HTMLFormControlsCollection) => {
-    return;
-  };
-
   return (
     <>
       {isLogin ? (
         <JobApplicationDialog
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
-          onSubmit={handleSubmit}
           jobData={{
             title: jobData.title,
             company: company.name,
+            id: jobData.id,
+            companyId: company.id,
           }}
           resumeList={resumeList}
         />
