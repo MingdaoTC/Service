@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 
 import { joinClass } from "@/library/joinClass";
-import { Company, Job } from "@/prisma/client";
+import { Company, Job, Resume } from "@/prisma/client";
 import Button from "../Global/Button/Button";
 import LoginPromptDialog from "../Global/LoginPromptDialog/LoginPromptDialog";
 import JobApplicationDialog from "./JobApplicationDialog";
@@ -14,11 +14,13 @@ export default function Info({
   company,
   isLogin,
   className,
+  resumeList,
 }: {
   jobData: Job;
   company: Company;
   isLogin: boolean;
   className?: string;
+  resumeList: Resume[];
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -37,6 +39,7 @@ export default function Info({
             title: jobData.title,
             company: company.name,
           }}
+          resumeList={resumeList}
         />
       ) : (
         <LoginPromptDialog
@@ -47,7 +50,7 @@ export default function Info({
       <div
         className={joinClass(
           "w-full bg-white shadow-md border-b py-4 sm:py-6 mb-3 sm:mb-5 px-2",
-          className,
+          className
         )}
       >
         <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
@@ -79,9 +82,8 @@ export default function Info({
             <Button
               className="flex items-center gap-1 sm:gap-2 text-sm md:text-base px-3 py-2 sm:px-4 bg-mingdao-blue"
               onClick={() => setIsDialogOpen(true)}
-              disabled
             >
-              <AiOutlineMail className="translate-y-[0.5px]" />
+              <AiOutlineMail />
               應徵
             </Button>
           </div>

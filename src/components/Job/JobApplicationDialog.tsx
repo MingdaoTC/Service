@@ -1,3 +1,4 @@
+import { Resume } from "@/prisma/client";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 type JobApplicationDialogProps = {
@@ -9,6 +10,7 @@ type JobApplicationDialogProps = {
     title: string;
     company: string;
   };
+  resumeList: Resume[];
 };
 
 const JobApplicationDialog = ({
@@ -16,6 +18,7 @@ const JobApplicationDialog = ({
   onClose,
   onSubmit,
   jobData,
+  resumeList = [],
 }: JobApplicationDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -34,7 +37,7 @@ const JobApplicationDialog = ({
   };
 
   const [recommendationText, setRecommendationText] = useState<string>(
-    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！",
+    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
   );
   const maxLength = 2000;
 
@@ -68,27 +71,16 @@ const JobApplicationDialog = ({
 
       <form onSubmit={handleSubmit} className="p-6">
         <div className="mb-6">
-          <h3 className="text-lg font-medium mb-4">上傳履歷</h3>
+          <h3 className="text-lg font-medium mb-4">選擇履歷</h3>
           <div className="border rounded-lg p-4 bg-gray-50">
-            <div className="flex items-center justify-center w-full">
-              <label
-                htmlFor="resume"
-                className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <p className="mb-2 text-sm text-gray-500">
-                    <span className="font-semibold">點擊上傳</span> 或拖放檔案
-                  </p>
-                  <p className="text-xs text-gray-500">目前僅支援 PDF</p>
-                </div>
-                <input
-                  id="resume"
-                  type="file"
-                  className="hidden"
-                  accept=".pdf,.doc,.docx"
-                />
-              </label>
-            </div>
+            <select name="resume" id="resume" className="w-full bg-transparent">
+              <option value="">請選擇履歷</option>
+              {resumeList.map((resume) => (
+                <option key={resume.id} value={resume.id}>
+                  {resume.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -97,7 +89,7 @@ const JobApplicationDialog = ({
 
           <div className="border rounded-lg p-4 bg-gray-50">
             <textarea
-              className="w-full min-h-[100px] bg-gray-50 resize-none border-none focus:ring-0"
+              className="w-full min-h-[100px] bg-gray-50 resize-none border-none focus:ring-0 outline-none"
               value={recommendationText}
               onChange={handleTextChange}
               maxLength={maxLength}
@@ -105,16 +97,6 @@ const JobApplicationDialog = ({
             <div className="text-right text-gray-500 text-sm">
               {recommendationText.length}/{maxLength}
             </div>
-          </div>
-
-          <div className="mt-4 flex items-start space-x-6">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-mingdao-blue-dark"
-              />
-              <span className="ml-2">儲存此次修改至個人資料</span>
-            </label>
           </div>
         </div>
 
