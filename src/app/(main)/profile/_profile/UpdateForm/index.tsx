@@ -58,7 +58,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     if (
       formData.get("birthday") &&
       new Date(formData.get("birthday")?.toString() as string).toString() ===
-        "Invalid Date"
+      "Invalid Date"
     ) {
       setError("生日格式不正確");
       setDialogMessage("生日格式不正確");
@@ -102,12 +102,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
   const formFields: FormField[] = [
     {
       name: "birthday",
-      type: "text",
-      placeholder: "2000/01/01",
-      title:
-        mode === "update" ? "生日" : "生日 (YYYY/MM/DD 格式，如 2000/01/01)",
+      type: "date",
+      title: "生日",
       disabled: mode === "update",
-      pattern: /^\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/gm,
       required: true,
     },
     {
@@ -173,6 +170,23 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     const value = initialData?.[field.name] ?? "";
 
     switch (field.type) {
+      case "date":
+        return (
+          <Fragment key={field.name}>
+            <label htmlFor={field.name}>{field.title}</label>
+            <input
+              key={field.name}
+              type="date"
+              name={field.name}
+              defaultValue="2000-01-01"
+              placeholder={field.placeholder}
+              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
+              disabled={field.disabled}
+              required={field.required}
+            />
+          </Fragment>
+        );
       case "textarea":
         return (
           <Fragment key={field.name}>
@@ -182,9 +196,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 h-24 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 h-24 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
             />
           </Fragment>
@@ -197,9 +210,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               key={field.name}
               name={field.name}
               defaultValue={field.options[0].value}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
             >
               {field.options.map((option) => (
@@ -220,9 +232,8 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`border border-gray-300 rounded px-4 py-2 ${field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               disabled={field.disabled}
               pattern={field.pattern?.source}
               required={field.required}
@@ -262,11 +273,10 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className={`px-4 py-2 ${
-            isPending
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
-          } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
+          className={`px-4 py-2 ${isPending
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
+            } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
         >
           {isPending
             ? mode === "update"
