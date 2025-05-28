@@ -4,7 +4,7 @@ import type { Viewport } from "next";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sig.mingdao.edu"),
+  metadataBase: new URL("https://tc.mingdao.edu.tw"),
   title: "明道人才雲",
   description: "明道人才雲是專為明道校友及校友企業打造的專業就業媒合平台。我們致力於建立強而有力的校友網絡，為畢業校友提供優質的職涯發展機會，同時協助校友企業找到最適合的人才。",
   applicationName: "明道人才雲",
