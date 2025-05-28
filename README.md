@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 明道人才雲 (MingDao Talent Cloud)
 
-## Getting Started
+## 📋 專案概述
 
-First, run the development server:
+明道人才雲是專為明道校友及校友企業打造的專業就業媒合平台。我們致力於建立強而有力的校友網絡，為畢業校友提供優質的職涯發展機會，同時協助校友企業找到最適合的人才。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ 平台特色
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🎓 專屬校友社群
+- **校友專屬** - 僅限明道大學校友使用，確保社群品質
+- **校友驗證** - 完整的身份驗證機制，建立可信賴的求職環境
+- **校友網絡** - 連結不同屆別、科系的校友，擴展人脈圈
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🏢 優質企業夥伴
+- **校友企業優先** - 明道校友創辦或經營的企業優先推薦
+- **企業認證** - 嚴格篩選合作企業，確保工作機會品質
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🛠 技術架構
 
-## Learn More
+### 前端技術
+- **框架**: Next.js 15 (React 18)
+- **樣式**: Tailwind CSS + shadcn/ui
+- **狀態管理**: Zustand
+- **表單處理**: React Hook Form + Zod
+- **UI 組件**: Radix UI + Lucide React
 
-To learn more about Next.js, take a look at the following resources:
+### 後端技術
+- **API**: Next.js API Routes
+- **資料庫**: PostgreSQL + Prisma ORM
+- **認證**: NextAuth.js
+- **檔案儲存**: AWS S3 / Cloudinary
+- **郵件服務**: Resend / SendGrid
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 開發工具
+- **語言**: TypeScript
+- **代碼品質**: ESLint + Prettier
+- **測試**: Jest + Testing Library
+- **部署**: Vercel / Docker
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 📞 聯絡我們
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **平台官網**: [https://career.mdu.edu.tw](https://career.mdu.edu.tw)
+- **技術支援**: tech-support@mdu.edu.tw
+- **業務合作**: career@mdu.edu.tw
+- **校友服務**: alumni@mdu.edu.tw
