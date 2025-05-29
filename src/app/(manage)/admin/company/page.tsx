@@ -103,78 +103,6 @@ export default function CompanyManagementPage() {
     setSelectedId(id === selectedId ? null : id);
   };
 
-  // 處理發布狀態變更
-  const handlePublishStatusChange = (company: Company, newStatus: boolean) => {
-    setPublishChanging({ company, newStatus });
-    setShowPublishDialog(true);
-  };
-
-  // 提交發布狀態變更
-  const submitPublishChange = () => {
-    if (!publishChanging) {
-      return;
-    }
-
-    setProcessingId(publishChanging.company.id);
-
-    startTransition(async () => {
-      try {
-        const response = await fetch(
-          `/api/companies/${publishChanging.company.id}/publish`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              published: publishChanging.newStatus,
-            }),
-          },
-        );
-
-        const result = await response.json();
-
-        if (result.success) {
-          // 更新本地狀態
-          setCompanies((prevCompanies) =>
-            prevCompanies.map((company) =>
-              company.id === publishChanging.company.id
-                ? { ...company, published: publishChanging.newStatus }
-                : company,
-            ),
-          );
-
-          setStatusMessage({
-            type: "success",
-            text: `${publishChanging.newStatus ? "發布" : "取消發布"}成功`,
-          });
-
-          setShowPublishDialog(false);
-        } else {
-          setStatusMessage({
-            type: "error",
-            text: `操作失敗：${result.message || "更新過程中發生錯誤"}`,
-          });
-        }
-      } catch (error) {
-        console.error("更新發布狀態時發生錯誤:", error);
-        setStatusMessage({
-          type: "error",
-          text: "系統錯誤：更新過程中發生錯誤",
-        });
-      } finally {
-        setProcessingId(null);
-        setTimeout(() => setStatusMessage(null), 3000);
-      }
-    });
-  };
-
-  // 取消發布狀態變更
-  const cancelPublishChange = () => {
-    setShowPublishDialog(false);
-    setPublishChanging(null);
-  };
-
   // 搜尋和篩選邏輯
   const filteredCompanies = companies.filter((company: any) => {
     // 發布狀態篩選
@@ -246,10 +174,11 @@ export default function CompanyManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full mx-auto h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600">載入企業資料中...</p>
+      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-3rem)]">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+            載入中...
+          </span>
         </div>
       </div>
     );
@@ -278,8 +207,8 @@ export default function CompanyManagementPage() {
       {statusMessage && (
         <div
           className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-              ? "bg-green-100 border-l-4 border-green-500"
-              : "bg-red-100 border-l-4 border-red-500"
+            ? "bg-green-100 border-l-4 border-green-500"
+            : "bg-red-100 border-l-4 border-red-500"
             } transition-all duration-500 ease-in-out`}
         >
           <div className="flex items-center">
@@ -314,91 +243,12 @@ export default function CompanyManagementPage() {
             )}
             <p
               className={`text-sm ${statusMessage.type === "success"
-                  ? "text-green-700"
-                  : "text-red-700"
+                ? "text-green-700"
+                : "text-red-700"
                 }`}
             >
               {statusMessage.text}
             </p>
-          </div>
-        </div>
-      )}
-
-      {/* 發布狀態變更對話框 */}
-      {showPublishDialog && publishChanging && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-            onClick={cancelPublishChange}
-            onKeyDown={cancelPublishChange}
-          />
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md z-10 overflow-hidden transform transition-all">
-            <div className="px-4 sm:px-6 py-4 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">
-                確認{publishChanging.newStatus ? "發布" : "取消發布"}企業
-              </h3>
-            </div>
-            <div className="p-4 sm:p-6">
-              <p className="text-gray-600 text-sm sm:text-base">
-                確定要{publishChanging.newStatus ? "發布" : "取消發布"}「
-                <span className="font-medium">
-                  {publishChanging.company.name}
-                </span>
-                」嗎？
-              </p>
-              {publishChanging.newStatus === false && (
-                <p className="text-sm text-red-600 mt-2">
-                  ⚠️ 取消發布後，該企業將不會在公開頁面顯示
-                </p>
-              )}
-            </div>
-            <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-              <button
-                onClick={cancelPublishChange}
-                disabled={isPending}
-                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
-              >
-                取消
-              </button>
-              <button
-                onClick={submitPublishChange}
-                disabled={isPending}
-                className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm font-medium text-white ${isPending
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : publishChanging.newStatus
-                      ? "bg-green-600 hover:bg-green-700"
-                      : "bg-red-600 hover:bg-red-700"
-                  } focus:outline-none focus:ring-2 focus:ring-offset-2 transition flex items-center justify-center`}
-              >
-                {isPending ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    處理中...
-                  </>
-                ) : (
-                  `確認${publishChanging.newStatus ? "發布" : "取消發布"}`
-                )}
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -574,8 +424,8 @@ export default function CompanyManagementPage() {
               <button
                 onClick={() => setPublishFilter("all")}
                 className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "all"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
               >
                 全部
@@ -583,8 +433,8 @@ export default function CompanyManagementPage() {
               <button
                 onClick={() => setPublishFilter("published")}
                 className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "published"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
               >
                 已發布
@@ -592,8 +442,8 @@ export default function CompanyManagementPage() {
               <button
                 onClick={() => setPublishFilter("unpublished")}
                 className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "unpublished"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
               >
                 未發布
@@ -615,12 +465,13 @@ export default function CompanyManagementPage() {
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
         {/* 桌面版表頭 */}
         <div className="hidden lg:block p-4 bg-gray-50 border-b">
-          <div className="grid grid-cols-6 text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-7 text-sm font-medium text-gray-600">
             <div className="col-span-2 text-left">公司名稱</div>
             <div className="col-span-1 text-center">統一編號</div>
             <div className="col-span-1 text-center">工作數</div>
             <div className="col-span-1 text-center">發布狀態</div>
             <div className="col-span-1 text-center">建立日期</div>
+            <div className="col-span-1 text-center">操作</div>
           </div>
         </div>
 
@@ -639,7 +490,7 @@ export default function CompanyManagementPage() {
             >
               {/* 桌面版顯示 */}
               <div className="hidden lg:block px-4 py-3">
-                <div className="grid grid-cols-6 text-sm items-center">
+                <div className="grid grid-cols-7 text-sm items-center">
                   <div className="col-span-2 flex items-center">
                     <div className="flex items-center">
                       {company.logoUrl ? (
@@ -682,8 +533,8 @@ export default function CompanyManagementPage() {
                   <div className="col-span-1 text-center">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${company.published
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
                         }`}
                     >
                       {company.published ? "已發布" : "未發布"}
@@ -693,6 +544,22 @@ export default function CompanyManagementPage() {
                     <span className="text-gray-500">
                       {formatDate(company.createdAt)}
                     </span>
+                  </div>
+                  <div className="col-span-1 text-center">
+                    <button
+                      onClick={() => handleView(company.id)}
+                      className="inline-flex items-center px-3 py-1 text-xs border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition"
+                    >
+                      {selectedId === company.id ? (
+                        <>
+                          收起 <ChevronUp className="ml-1 h-3 w-3" />
+                        </>
+                      ) : (
+                        <>
+                          查看 <ChevronDown className="ml-1 h-3 w-3" />
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -742,8 +609,8 @@ export default function CompanyManagementPage() {
                       <div className="flex flex-col items-end space-y-1 ml-2">
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${company.published
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
                             }`}
                         >
                           {company.published ? "已發布" : "未發布"}
@@ -891,33 +758,6 @@ export default function CompanyManagementPage() {
                         詳細資訊
                       </h3>
 
-                      {/* 聯絡人資訊 */}
-                      <div>
-                        <p className="text-gray-500 text-xs mb-1">帳號負責人</p>
-                        <div className="bg-white p-3 rounded border">
-                          <p className="font-medium text-gray-900">
-                            {company.user.displayName || company.user.username}
-                          </p>
-                          <p className="text-xs text-gray-500 break-all">
-                            @{company.user.username} • {company.user.email}
-                          </p>
-                          <span
-                            className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${company.user.status === "VERIFIED"
-                                ? "bg-green-100 text-green-800"
-                                : company.user.status === "PENDING"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                          >
-                            {company.user.status === "VERIFIED"
-                              ? "已驗證"
-                              : company.user.status === "PENDING"
-                                ? "待驗證"
-                                : "未驗證"}
-                          </span>
-                        </div>
-                      </div>
-
                       {/* 標籤 */}
                       {company.tags.length > 0 && (
                         <div>
@@ -967,8 +807,8 @@ export default function CompanyManagementPage() {
                                 </span>
                                 <span
                                   className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${job.published
-                                      ? "bg-green-100 text-green-800"
-                                      : "bg-gray-100 text-gray-800"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-100 text-gray-800"
                                     }`}
                                 >
                                   {job.published ? "已發布" : "未發布"}
@@ -1021,55 +861,12 @@ export default function CompanyManagementPage() {
                       >
                         編輯企業
                       </Link>
-                      <Link
+                      {/* <Link
                         href={`/admin/company/${company.id}/jobs`}
                         className="w-full sm:w-auto px-4 py-2 text-sm border border-green-600 text-green-600 rounded hover:bg-green-50 transition text-center"
                       >
                         管理職缺
-                      </Link>
-                      <button
-                        onClick={() =>
-                          handlePublishStatusChange(company, !company.published)
-                        }
-                        disabled={isPending && processingId === company.id}
-                        className={`w-full sm:w-auto px-4 py-2 text-sm rounded transition ${company.published
-                            ? "bg-red-600 text-white hover:bg-red-700"
-                            : "bg-green-600 text-white hover:bg-green-700"
-                          } ${isPending && processingId === company.id
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                          }`}
-                      >
-                        {isPending && processingId === company.id ? (
-                          <>
-                            <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              />
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              />
-                            </svg>
-                            處理中...
-                          </>
-                        ) : company.published ? (
-                          "取消發布"
-                        ) : (
-                          "發布企業"
-                        )}
-                      </button>
+                      </Link> */}
                     </div>
                   </div>
                 </div>

@@ -160,30 +160,31 @@ export default function DashboardPage() {
   // 準備餅圖數據
   const pieData = dashboardData
     ? [
-        {
-          name: "使用者",
-          value: dashboardData.summary.totalUsers,
-          color: COLORS.users,
-        },
-        {
-          name: "公司",
-          value: dashboardData.summary.totalCompanies,
-          color: COLORS.companies,
-        },
-        {
-          name: "工作",
-          value: dashboardData.summary.totalJobs,
-          color: COLORS.jobs,
-        },
-      ]
+      {
+        name: "使用者",
+        value: dashboardData.summary.totalUsers,
+        color: COLORS.users,
+      },
+      {
+        name: "公司",
+        value: dashboardData.summary.totalCompanies,
+        color: COLORS.companies,
+      },
+      {
+        name: "工作",
+        value: dashboardData.summary.totalJobs,
+        color: COLORS.jobs,
+      },
+    ]
     : [];
 
   if (isLoading) {
     return (
-      <div className="w-full mx-auto h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600">載入統計資料中...</p>
+      <div className="bg-blue-50 flex items-center justify-center h-[calc(100dvh-3rem)]">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+            載入中...
+          </span>
         </div>
       </div>
     );
@@ -222,11 +223,10 @@ export default function DashboardPage() {
                 <button
                   key={range}
                   onClick={() => setSelectedTimeRange(range)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                    selectedTimeRange === range
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${selectedTimeRange === range
                       ? "bg-blue-500 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   {range === "7d" ? "7天" : range === "30d" ? "30天" : "90天"}
                 </button>

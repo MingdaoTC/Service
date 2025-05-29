@@ -58,14 +58,14 @@ export default function Footer() {
         {/* 額外連結 (可選) */}
         <div className="flex justify-center space-x-4 mt-3 text-xs">
           <a
-            href="/privacy"
+            href="/privacy-policy"
             className="text-gray-600 hover:text-gray-800 transition-colors"
           >
             隱私政策
           </a>
           <span className="text-gray-400">|</span>
           <a
-            href="/tos"
+            href="/terms-of-service"
             className="text-gray-600 hover:text-gray-800 transition-colors"
           >
             服務條款
