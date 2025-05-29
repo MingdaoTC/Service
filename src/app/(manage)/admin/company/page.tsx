@@ -465,8 +465,8 @@ export default function CompanyManagementPage() {
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
         {/* 桌面版表頭 */}
         <div className="hidden lg:block p-4 bg-gray-50 border-b">
-          <div className="grid grid-cols-7 text-sm font-medium text-gray-600">
-            <div className="col-span-2 text-left">公司名稱</div>
+          <div className="grid grid-cols-8 text-sm font-medium text-gray-600">
+            <div className="col-span-3 text-left">公司名稱</div>
             <div className="col-span-1 text-center">統一編號</div>
             <div className="col-span-1 text-center">工作數</div>
             <div className="col-span-1 text-center">發布狀態</div>
@@ -490,8 +490,8 @@ export default function CompanyManagementPage() {
             >
               {/* 桌面版顯示 */}
               <div className="hidden lg:block px-4 py-3">
-                <div className="grid grid-cols-7 text-sm items-center">
-                  <div className="col-span-2 flex items-center">
+                <div className="grid grid-cols-8 text-sm items-center">
+                  <div className="col-span-3 flex items-center">
                     <div className="flex items-center">
                       {company.logoUrl ? (
                         <div className="w-10 h-10 rounded-md border p-1 flex-shrink-0">
@@ -856,7 +856,7 @@ export default function CompanyManagementPage() {
                   <div className="mt-6 pt-4 border-t">
                     <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
                       <Link
-                        href={`/admin/company/${company.id}/edit`}
+                        href={`/admin/company/${company.id}`}
                         className="w-full sm:w-auto px-4 py-2 text-sm border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition text-center"
                       >
                         編輯企業

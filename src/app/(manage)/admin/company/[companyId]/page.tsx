@@ -10,16 +10,20 @@ import { Company, CompanyCategory } from "@/prisma/client";
 import {
   getCompanyCategoryData,
   getCompanyData,
-} from "@/app/(manage)/enterprise/_enterprise/action/fetch";
+} from "@/app/(manage)/admin/company/_company/action/fetch";
 import {
   getAllCities,
   getDistrictsByCity,
-} from "@/app/(manage)/enterprise/_enterprise/action/fetchTaiwanData";
-import { handleUpdate } from "@/app/(manage)/enterprise/_enterprise/action/handleUpdate";
+} from "@/app/(manage)/admin/company/_company/action/fetchTaiwanData";
+import { handleUpdate } from "@/app/(manage)/admin/company/_company/action/handleUpdate";
 
 const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
-export default function CompanyProfilePage() {
+export default function CompanyProfilePage({
+  params,
+}: {
+  params: { companyId: string };
+}) {
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<Array<CompanyCategory>>([]);
@@ -50,7 +54,7 @@ export default function CompanyProfilePage() {
       }
       setCategories(category);
       try {
-        const company = await getCompanyData();
+        const company = await getCompanyData(params.companyId);
         if (company) {
           setCompanyData(company);
           setNewCompanyData(company);
@@ -176,6 +180,7 @@ export default function CompanyProfilePage() {
       const file = e.target.files[0];
       uploadLogo(file);
     }
+
     e.target.value = "";
   };
 
@@ -191,7 +196,7 @@ export default function CompanyProfilePage() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("/api/company/logo", {
+        const response = await fetch(`/api/company/${params.companyId}/logo`, {
           method: "POST",
           body: formData,
         });
