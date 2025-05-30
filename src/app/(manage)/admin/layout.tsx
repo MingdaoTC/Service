@@ -67,9 +67,10 @@ const menuItems: MenuItem[] = [
     label: "管理員設定",
     icon: ShieldUser,
     path: "/admin/admins",
-    beta: true,
+    beta: false,
     disabled: false,
   },
+  
   // {
   //   id: "help",
   //   label: "幫助中心",
