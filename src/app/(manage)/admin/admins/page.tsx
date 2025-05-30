@@ -224,7 +224,7 @@ export default function AdminManagementPage() {
   }
 
   return (
-    <div className="w-full mx-auto min-h-screen p-2 sm:p-4 lg:p-6">
+    <div className="w-full mx-auto h-auto p-2 sm:p-4 lg:p-6">
 
       {/* 頁面標題 */}
       <div className="mb-4 sm:mb-6 bg-white shadow-sm rounded-lg border p-3 sm:p-4">
@@ -445,9 +445,6 @@ export default function AdminManagementPage() {
           </div>
         </div>
       </div>
-
-      {/* 底部間距 */}
-      <div className="mt-6" />
     </div>
   );
 }
