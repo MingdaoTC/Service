@@ -477,14 +477,19 @@ export default function AdminManagementPage() {
             <p className="text-sm text-gray-500 mt-1">僅限超級管理員訪問</p>
           </div>
           <div className="flex items-center space-x-2">
-            <AlertTriangle className="h-5 w-5 text-red-500" />
-            <span className="text-sm text-red-600 font-medium">高權限區域</span>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+            >
+              <UserPlus className="h-5 w-5 mr-2" />
+              新增管理員
+            </button>
           </div>
         </div>
       </div>
 
       {/* 操作按鈕區域 */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-3">
+      {/* <div className="mb-6 flex flex-col sm:flex-row gap-3">
         <button
           onClick={() => setShowAddModal(true)}
           className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
@@ -492,7 +497,7 @@ export default function AdminManagementPage() {
           <UserPlus className="h-5 w-5 mr-2" />
           新增管理員
         </button>
-      </div>
+      </div> */}
 
       {/* 統計卡片 */}
       <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
