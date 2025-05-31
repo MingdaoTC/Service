@@ -6,8 +6,14 @@ import {
   Crown,
   Settings,
   AlertTriangle,
+  UserPlus,
+  UserMinus,
+  ArrowUp,
+  ArrowDown,
+  X,
+  Mail,
 } from "lucide-react";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Server Actions
 import {
@@ -16,6 +22,8 @@ import {
   demoteFromAdmin,
   promoteToSuperAdmin,
   demoteFromSuperAdmin,
+  addAdminByEmail,
+  removeAdminByEmail,
 } from "@/app/(manage)/admin/admins/_admins/action/adminAction";
 
 import { AccountStatus, UserRole, User as UserType } from "@/prisma/client";
@@ -28,11 +36,72 @@ interface AdminActionResult {
 
 export default function AdminManagementPage() {
   // 主要狀態
-  const [allAdmins, setAllAdmins] = useState<UserType[]>([]); // 儲存所有管理員資料
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [allAdmins, setAllAdmins] = useState<UserType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  // 狀態訊息 (替代 alert)
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  // 確認對話框狀態
+  const [confirmDialog, setConfirmDialog] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    confirmText: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+    type: "warning" | "danger";
+  } | null>(null);
+
+  // 模態框狀態
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+
+  // 表單狀態
+  const [addForm, setAddForm] = useState({
+    email: "",
+    role: "ADMIN" as "ADMIN" | "SUPERADMIN",
+  });
+
+  const [removeForm, setRemoveForm] = useState({
+    email: "",
+  });
+
+  // 顯示確認對話框的函數
+  const showConfirmDialog = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    type: "warning" | "danger" = "warning",
+    confirmText: string = "確認"
+  ) => {
+    setConfirmDialog({
+      show: true,
+      title,
+      message,
+      confirmText,
+      onConfirm: () => {
+        setConfirmDialog(null);
+        onConfirm();
+      },
+      onCancel: () => setConfirmDialog(null),
+      type,
+    });
+  };
+
+  // 顯示狀態訊息的函數
+  const showStatusMessage = (type: "success" | "error", text: string) => {
+    setStatusMessage({ type, text });
+    setTimeout(() => {
+      setStatusMessage(null);
+    }, 5000); // 5秒後自動隱藏
+  };
 
   // 載入管理員數據
   const loadAdmins = useCallback(async () => {
@@ -64,98 +133,172 @@ export default function AdminManagementPage() {
     }
   }, []);
 
-  // 載入數據
   useEffect(() => {
     loadAdmins();
   }, [loadAdmins]);
 
-  // 處理查看詳情
-  const handleView = (id: string) => {
-    setSelectedId(id === selectedId ? null : id);
-  };
-
   // 處理提升為管理員
   const handlePromoteToAdmin = async (userId: string) => {
-    if (!confirm("確定要將此用戶提升為管理員嗎？")) return;
-
-    setActionLoading(userId);
-    try {
-      const result = await promoteToAdmin(userId);
-      if (result.success) {
-        await loadAdmins(); // 重新載入數據
-        alert("成功提升為管理員");
-      } else {
-        alert(result.message || "操作失敗");
-      }
-    } catch (error) {
-      console.error("Error promoting to admin:", error);
-      alert("操作時發生錯誤");
-    } finally {
-      setActionLoading(null);
-    }
+    showConfirmDialog(
+      "提升為管理員",
+      "確定要將此用戶提升為管理員嗎？",
+      async () => {
+        setActionLoading(userId);
+        try {
+          const result = await promoteToAdmin(userId);
+          if (result.success) {
+            await loadAdmins();
+            showStatusMessage("success", result.message);
+          } else {
+            showStatusMessage("error", result.message || "操作失敗");
+          }
+        } catch (error) {
+          console.error("Error promoting to admin:", error);
+          showStatusMessage("error", "操作時發生錯誤");
+        } finally {
+          setActionLoading(null);
+        }
+      },
+      "warning"
+    );
   };
 
   // 處理降級管理員
   const handleDemoteFromAdmin = async (userId: string) => {
-    if (!confirm("確定要將此管理員降級為一般用戶嗎？")) return;
-
-    setActionLoading(userId);
-    try {
-      const result = await demoteFromAdmin(userId);
-      if (result.success) {
-        await loadAdmins(); // 重新載入數據
-        alert("成功降級管理員");
-      } else {
-        alert(result.message || "操作失敗");
-      }
-    } catch (error) {
-      console.error("Error demoting from admin:", error);
-      alert("操作時發生錯誤");
-    } finally {
-      setActionLoading(null);
-    }
+    showConfirmDialog(
+      "移除管理員權限",
+      "確定要將此管理員降級為一般用戶嗎？",
+      async () => {
+        setActionLoading(userId);
+        try {
+          const result = await demoteFromAdmin(userId);
+          if (result.success) {
+            await loadAdmins();
+            showStatusMessage("success", result.message);
+          } else {
+            showStatusMessage("error", result.message || "操作失敗");
+          }
+        } catch (error) {
+          console.error("Error demoting from admin:", error);
+          showStatusMessage("error", "操作時發生錯誤");
+        } finally {
+          setActionLoading(null);
+        }
+      },
+      "danger",
+      "移除權限"
+    );
   };
 
   // 處理提升為超級管理員
   const handlePromoteToSuperAdmin = async (userId: string) => {
-    if (!confirm("確定要將此管理員提升為超級管理員嗎？這將賦予最高權限！")) return;
-
-    setActionLoading(userId);
-    try {
-      const result = await promoteToSuperAdmin(userId);
-      if (result.success) {
-        await loadAdmins(); // 重新載入數據
-        alert("成功提升為超級管理員");
-      } else {
-        alert(result.message || "操作失敗");
-      }
-    } catch (error) {
-      console.error("Error promoting to super admin:", error);
-      alert("操作時發生錯誤");
-    } finally {
-      setActionLoading(null);
-    }
+    showConfirmDialog(
+      "提升為超級管理員",
+      "確定要將此管理員提升為超級管理員嗎？這將賦予最高權限！",
+      async () => {
+        setActionLoading(userId);
+        try {
+          const result = await promoteToSuperAdmin(userId);
+          if (result.success) {
+            await loadAdmins();
+            showStatusMessage("success", result.message);
+          } else {
+            showStatusMessage("error", result.message || "操作失敗");
+          }
+        } catch (error) {
+          console.error("Error promoting to super admin:", error);
+          showStatusMessage("error", "操作時發生錯誤");
+        } finally {
+          setActionLoading(null);
+        }
+      },
+      "warning"
+    );
   };
 
   // 處理降級超級管理員
   const handleDemoteFromSuperAdmin = async (userId: string) => {
-    if (!confirm("確定要將此超級管理員降級為一般管理員嗎？")) return;
+    showConfirmDialog(
+      "降級超級管理員",
+      "確定要將此超級管理員降級為一般管理員嗎？",
+      async () => {
+        setActionLoading(userId);
+        try {
+          const result = await demoteFromSuperAdmin(userId);
+          if (result.success) {
+            await loadAdmins();
+            showStatusMessage("success", result.message);
+          } else {
+            showStatusMessage("error", result.message || "操作失敗");
+          }
+        } catch (error) {
+          console.error("Error demoting from super admin:", error);
+          showStatusMessage("error", "操作時發生錯誤");
+        } finally {
+          setActionLoading(null);
+        }
+      },
+      "warning"
+    );
+  };
 
-    setActionLoading(userId);
+  // 處理新增管理員
+  const handleAddAdmin = async () => {
+    setModalLoading(true);
     try {
-      const result = await demoteFromSuperAdmin(userId);
+      const formData = new FormData();
+      formData.append("email", addForm.email);
+      formData.append("role", addForm.role);
+
+      const result = await addAdminByEmail(formData);
+
       if (result.success) {
-        await loadAdmins(); // 重新載入數據
-        alert("成功降級為管理員");
+        await loadAdmins();
+        showStatusMessage("success", result.message);
+        setShowAddModal(false);
+        setAddForm({ email: "", role: "ADMIN" });
       } else {
-        alert(result.message || "操作失敗");
+        showStatusMessage("error", result.message);
       }
     } catch (error) {
-      console.error("Error demoting from super admin:", error);
-      alert("操作時發生錯誤");
+      console.error("Error adding admin:", error);
+      showStatusMessage("error", "新增管理員時發生錯誤");
     } finally {
-      setActionLoading(null);
+      setModalLoading(false);
     }
+  };
+
+  // 處理移除管理員
+  const handleRemoveAdmin = async () => {
+    showConfirmDialog(
+      "移除管理員權限",
+      `確定要移除 ${removeForm.email} 的管理員權限嗎？`,
+      async () => {
+        setModalLoading(true);
+        try {
+          const formData = new FormData();
+          formData.append("email", removeForm.email);
+
+          const result = await removeAdminByEmail(formData);
+
+          if (result.success) {
+            await loadAdmins();
+            showStatusMessage("success", result.message);
+            setShowRemoveModal(false);
+            setRemoveForm({ email: "" });
+          } else {
+            showStatusMessage("error", result.message);
+          }
+        } catch (error) {
+          console.error("Error removing admin:", error);
+          showStatusMessage("error", "移除管理員時發生錯誤");
+        } finally {
+          setModalLoading(false);
+        }
+      },
+      "danger",
+      "移除權限"
+    );
   };
 
   // 計算統計數據
@@ -186,10 +329,6 @@ export default function AdminManagementPage() {
       month: "2-digit",
       day: "2-digit",
     });
-  };
-
-  const formatDateTime = (date: Date | string) => {
-    return new Date(date).toLocaleString("zh-TW");
   };
 
   // 載入中狀態
@@ -225,6 +364,107 @@ export default function AdminManagementPage() {
 
   return (
     <div className="w-full mx-auto h-auto p-2 sm:p-4 lg:p-6">
+      {/* 確認對話框 */}
+      {confirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center mb-4">
+                {confirmDialog.type === "danger" ? (
+                  <div className="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                  </div>
+                ) : (
+                  <div className="flex-shrink-0 w-10 h-10 mx-auto bg-yellow-100 rounded-full flex items-center justify-center">
+                    <AlertTriangle className="w-6 h-6 text-yellow-600" />
+                  </div>
+                )}
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {confirmDialog.title}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">
+                  {confirmDialog.message}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
+              <button
+                type="button"
+                onClick={confirmDialog.onConfirm}
+                className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${confirmDialog.type === "danger"
+                  ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                  : "bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+                  }`}
+              >
+                {confirmDialog.confirmText}
+              </button>
+              <button
+                type="button"
+                onClick={confirmDialog.onCancel}
+                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 狀態訊息 */}
+      {statusMessage && (
+        <div
+          className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
+            ? "bg-green-100 border-l-4 border-green-500"
+            : "bg-red-100 border-l-4 border-red-500"
+            } transition-all duration-500 ease-in-out`}
+        >
+          <div className="flex items-center">
+            {statusMessage.type === "success" ? (
+              <svg
+                className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 mr-2 sm:mr-3 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="h-5 w-5 sm:h-6 sm:w-6 text-red-500 mr-2 sm:mr-3 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            )}
+            <p
+              className={`text-sm ${statusMessage.type === "success"
+                ? "text-green-700"
+                : "text-red-700"
+                }`}
+            >
+              {statusMessage.text}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 頁面標題 */}
       <div className="mb-4 sm:mb-6 bg-white shadow-sm rounded-lg border p-3 sm:p-4">
@@ -243,9 +483,19 @@ export default function AdminManagementPage() {
         </div>
       </div>
 
+      {/* 操作按鈕區域 */}
+      <div className="mb-6 flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+        >
+          <UserPlus className="h-5 w-5 mr-2" />
+          新增管理員
+        </button>
+      </div>
+
       {/* 統計卡片 */}
       <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-
         {/* 一般管理員 */}
         <div className="bg-white shadow-sm rounded-lg border p-3 sm:p-4 lg:p-6">
           <div className="flex items-center justify-between">
@@ -291,11 +541,12 @@ export default function AdminManagementPage() {
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
         {/* 桌面版表頭 */}
         <div className="hidden lg:block p-4 bg-gray-50 border-b">
-          <div className="grid grid-cols-5 text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-6 text-sm font-medium text-gray-600">
             <div className="col-span-2 text-left">管理員資訊</div>
             <div className="col-span-1 text-center">級別</div>
             <div className="col-span-1 text-center">驗證狀態</div>
             <div className="col-span-1 text-center">加入日期</div>
+            <div className="col-span-1 text-center">操作</div>
           </div>
         </div>
 
@@ -310,16 +561,12 @@ export default function AdminManagementPage() {
 
           {/* 管理員列表項目 */}
           {allAdmins.map((admin) => (
-            <div
-              key={admin.id}
-              className="hover:bg-gray-50 transition-colors"
-            >
+            <div key={admin.id} className="hover:bg-gray-50 transition-colors">
               {/* 桌面版顯示 */}
               <div className="hidden lg:block px-4 py-3">
-                <div className="grid grid-cols-5 text-sm items-center">
+                <div className="grid grid-cols-6 text-sm items-center">
                   <div className="col-span-2 flex items-center">
                     <div className="flex items-center">
-                      {/* 頭像 */}
                       {admin.avatarUrl ? (
                         <img
                           src={admin.avatarUrl}
@@ -354,14 +601,12 @@ export default function AdminManagementPage() {
                     </span>
                   </div>
                   <div className="col-span-1 text-center">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${admin.status === "VERIFIED"
-                        ? "bg-green-100 text-green-800"
-                        : admin.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                        }`}
-                    >
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${admin.status === "VERIFIED"
+                      ? "bg-green-100 text-green-800"
+                      : admin.status === "PENDING"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                      }`}>
                       {getStatusText(admin.status)}
                     </span>
                   </div>
@@ -370,13 +615,59 @@ export default function AdminManagementPage() {
                       {formatDate(admin.createdAt)}
                     </span>
                   </div>
+                  {/* 操作按鈕欄 */}
+                  <div className="col-span-1 flex justify-center space-x-1">
+                    {admin.role === UserRole.ADMIN && (
+                      <>
+                        {/* 提升為超級管理員 */}
+                        <button
+                          onClick={() => handlePromoteToSuperAdmin(admin.id)}
+                          disabled={actionLoading === admin.id}
+                          className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-md transition-colors"
+                          title="提升為超級管理員"
+                        >
+                          <ArrowUp className="h-4 w-4" />
+                        </button>
+                        {/* 移除管理員權限 */}
+                        <button
+                          onClick={() => handleDemoteFromAdmin(admin.id)}
+                          disabled={actionLoading === admin.id}
+                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                          title="移除管理員權限"
+                        >
+                          <UserMinus className="h-4 w-4" />
+                        </button>
+                      </>
+                    )}
+                    {admin.role === UserRole.SUPERADMIN && (
+                      <>
+                        {/* 降級為一般管理員 */}
+                        <button
+                          onClick={() => handleDemoteFromSuperAdmin(admin.id)}
+                          disabled={actionLoading === admin.id}
+                          className="p-1.5 text-orange-600 hover:text-orange-800 hover:bg-orange-50 rounded-md transition-colors"
+                          title="降級為一般管理員"
+                        >
+                          <ArrowDown className="h-4 w-4" />
+                        </button>
+                        {/* 移除管理員權限 */}
+                        <button
+                          onClick={() => handleDemoteFromAdmin(admin.id)}
+                          disabled={actionLoading === admin.id}
+                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                          title="移除管理員權限"
+                        >
+                          <UserMinus className="h-4 w-4" />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {/* 手機版顯示 */}
               <div className="lg:hidden px-3 sm:px-4 py-3">
                 <div className="flex items-start space-x-3">
-                  {/* 頭像 */}
                   {admin.avatarUrl ? (
                     <div className="flex-shrink-0">
                       <img
@@ -397,7 +688,6 @@ export default function AdminManagementPage() {
                     </div>
                   )}
 
-                  {/* 內容 */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div className="min-w-0 flex-1">
@@ -408,7 +698,6 @@ export default function AdminManagementPage() {
                           {admin.email}
                         </p>
                       </div>
-                      {/* 狀態標籤 */}
                       <div className="flex flex-col items-end space-y-1 ml-2">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${admin.role === UserRole.SUPERADMIN
                           ? "bg-red-100 text-red-800"
@@ -418,6 +707,54 @@ export default function AdminManagementPage() {
                         </span>
                       </div>
                     </div>
+
+                    {/* 手機版操作按鈕 */}
+                    <div className="mt-3 flex space-x-2">
+                      {admin.role === UserRole.ADMIN && (
+                        <>
+                          {/* 提升為超級管理員 */}
+                          <button
+                            onClick={() => handlePromoteToSuperAdmin(admin.id)}
+                            disabled={actionLoading === admin.id}
+                            className="flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 transition-colors"
+                          >
+                            <ArrowUp className="h-3 w-3 mr-1" />
+                            升級
+                          </button>
+                          {/* 移除管理員權限 */}
+                          <button
+                            onClick={() => handleDemoteFromAdmin(admin.id)}
+                            disabled={actionLoading === admin.id}
+                            className="flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+                          >
+                            <UserMinus className="h-3 w-3 mr-1" />
+                            移除
+                          </button>
+                        </>
+                      )}
+                      {admin.role === UserRole.SUPERADMIN && (
+                        <>
+                          {/* 降級為一般管理員 */}
+                          <button
+                            onClick={() => handleDemoteFromSuperAdmin(admin.id)}
+                            disabled={actionLoading === admin.id}
+                            className="flex items-center px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 border border-orange-200 rounded-md hover:bg-orange-100 transition-colors"
+                          >
+                            <ArrowDown className="h-3 w-3 mr-1" />
+                            降級
+                          </button>
+                          {/* 移除管理員權限 */}
+                          <button
+                            onClick={() => handleDemoteFromAdmin(admin.id)}
+                            disabled={actionLoading === admin.id}
+                            className="flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+                          >
+                            <UserMinus className="h-3 w-3 mr-1" />
+                            移除
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -425,6 +762,174 @@ export default function AdminManagementPage() {
           ))}
         </div>
       </div>
+
+      {/* 新增管理員模態框 */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                <UserPlus className="h-5 w-5 mr-2 text-green-600" />
+                新增管理員
+              </h3>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* 電子郵件輸入 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  電子郵件地址
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={addForm.email}
+                    onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                    placeholder="請輸入電子郵件地址"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* 管理員類型選擇 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  管理員類型
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="ADMIN"
+                      checked={addForm.role === "ADMIN"}
+                      onChange={(e) => setAddForm({ ...addForm, role: e.target.value as "ADMIN" | "SUPERADMIN" })}
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                    />
+                    <div className="ml-3 flex items-center">
+                      <Shield className="h-4 w-4 text-purple-600 mr-2" />
+                      <span className="text-sm font-medium text-gray-900">一般管理員</span>
+                      <span className="ml-2 text-xs text-gray-500">基本管理權限</span>
+                    </div>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="SUPERADMIN"
+                      checked={addForm.role === "SUPERADMIN"}
+                      onChange={(e) => setAddForm({ ...addForm, role: e.target.value as "ADMIN" | "SUPERADMIN" })}
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
+                    />
+                    <div className="ml-3 flex items-center">
+                      <Crown className="h-4 w-4 text-red-600 mr-2" />
+                      <span className="text-sm font-medium text-gray-900">超級管理員</span>
+                      <span className="ml-2 text-xs text-red-500">最高權限，請謹慎授予</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 p-6 border-t bg-gray-50">
+              <button
+                onClick={() => setShowAddModal(false)}
+                disabled={modalLoading}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleAddAdmin}
+                disabled={modalLoading || !addForm.email.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {modalLoading ? "處理中..." : "新增管理員"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 移除管理員模態框 */}
+      {showRemoveModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                <UserMinus className="h-5 w-5 mr-2 text-red-600" />
+                移除管理員
+              </h3>
+              <button
+                onClick={() => setShowRemoveModal(false)}
+                className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* 電子郵件輸入 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  電子郵件地址
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={removeForm.email}
+                    onChange={(e) => setRemoveForm({ ...removeForm, email: e.target.value })}
+                    placeholder="請輸入要移除的管理員電子郵件"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+              </div>
+
+              {/* 警告提示 */}
+              <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                <div className="flex">
+                  <AlertTriangle className="h-5 w-5 text-red-400 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="text-sm font-medium text-red-800">注意事項</h4>
+                    <div className="mt-1 text-sm text-red-700">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>此操作將立即移除該用戶的管理員權限</li>
+                        <li>如果是超級管理員，將先降級為一般管理員再移除</li>
+                        <li>系統需保留至少一個超級管理員</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 p-6 border-t bg-gray-50">
+              <button
+                onClick={() => setShowRemoveModal(false)}
+                disabled={modalLoading}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleRemoveAdmin}
+                disabled={modalLoading || !removeForm.email.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {modalLoading ? "處理中..." : "移除管理員"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 警告提示 */}
       <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">

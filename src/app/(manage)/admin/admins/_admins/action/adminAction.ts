@@ -141,6 +141,273 @@ export async function getAdminsData(formData: FormData): Promise<ActionResult> {
   }
 }
 
+// 根據電子郵件新增管理員
+export async function addAdminByEmail(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    // 驗證權限
+    const validation = await validateSuperAdmin();
+    if (!validation.success) {
+      return {
+        success: false,
+        message: validation.message || "權限驗證失敗",
+      };
+    }
+
+    const currentUserId = validation.userId!;
+    const email = formData.get("email") as string;
+    const role = formData.get("role") as string;
+
+    // 驗證輸入
+    if (!email || !email.trim()) {
+      return {
+        success: false,
+        message: "請輸入電子郵件地址",
+      };
+    }
+
+    if (!email.includes("@")) {
+      return {
+        success: false,
+        message: "請輸入有效的電子郵件地址",
+      };
+    }
+
+    if (!role || (role !== "ADMIN" && role !== "SUPERADMIN")) {
+      return {
+        success: false,
+        message: "請選擇有效的管理員類型",
+      };
+    }
+
+    // 查找用戶
+    const targetUser = await prisma.user.findUnique({
+      where: { email: email.trim().toLowerCase() },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    });
+
+    if (!targetUser) {
+      return {
+        success: false,
+        message: "找不到該電子郵件對應的用戶，請確認用戶已註冊",
+      };
+    }
+
+    // 檢查用戶狀態
+    if (targetUser.status !== AccountStatus.VERIFIED) {
+      return {
+        success: false,
+        message: "只能提升已驗證的用戶為管理員",
+      };
+    }
+
+    // 檢查是否已經是管理員或更高權限
+    if (
+      targetUser.role === UserRole.ADMIN ||
+      targetUser.role === UserRole.SUPERADMIN
+    ) {
+      return {
+        success: false,
+        message: "該用戶已經是管理員或更高權限",
+      };
+    }
+
+    // 更新用戶角色
+    const updatedUser = await prisma.user.update({
+      where: { id: targetUser.id },
+      data: {
+        role: role as UserRole,
+        updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        avatarUrl: true,
+        displayName: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // 記錄操作日誌
+    await prisma.adminLog
+      .create({
+        data: {
+          adminId: currentUserId,
+          action: role === "SUPERADMIN" ? "ADD_SUPERADMIN" : "ADD_ADMIN",
+          targetUserId: targetUser.id,
+          details: `新增${role === "SUPERADMIN" ? "超級管理員" : "管理員"} ${
+            targetUser.username
+          } (${targetUser.email})`,
+          createdAt: new Date(),
+        },
+      })
+      .catch(() => {
+        // 如果沒有 adminLog 表，忽略錯誤
+      });
+
+    // 重新驗證相關頁面
+    revalidatePath("/admin/admins");
+    revalidatePath("/admin/users");
+
+    return {
+      success: true,
+      message: `成功新增${role === "SUPERADMIN" ? "超級管理員" : "管理員"}`,
+      data: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error adding admin by email:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "新增管理員失敗",
+    };
+  }
+}
+
+// 根據電子郵件移除管理員
+export async function removeAdminByEmail(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    // 驗證權限
+    const validation = await validateSuperAdmin();
+    if (!validation.success) {
+      return {
+        success: false,
+        message: validation.message || "權限驗證失敗",
+      };
+    }
+
+    const currentUserId = validation.userId!;
+    const email = formData.get("email") as string;
+
+    // 驗證輸入
+    if (!email || !email.trim()) {
+      return {
+        success: false,
+        message: "請輸入電子郵件地址",
+      };
+    }
+
+    if (!email.includes("@")) {
+      return {
+        success: false,
+        message: "請輸入有效的電子郵件地址",
+      };
+    }
+
+    // 查找要移除的管理員
+    const targetAdmin = await prisma.user.findUnique({
+      where: {
+        email: email.trim().toLowerCase(),
+        role: {
+          in: [UserRole.ADMIN, UserRole.SUPERADMIN],
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    if (!targetAdmin) {
+      return {
+        success: false,
+        message: "找不到該電子郵件對應的管理員",
+      };
+    }
+
+    // 防止自己移除自己
+    if (targetAdmin.id === currentUserId) {
+      return {
+        success: false,
+        message: "不能移除自己的管理員權限",
+      };
+    }
+
+    // 如果是超級管理員，檢查系統中是否還有其他超級管理員
+    if (targetAdmin.role === UserRole.SUPERADMIN) {
+      const otherSuperAdminCount = await prisma.user.count({
+        where: {
+          role: UserRole.SUPERADMIN,
+          status: AccountStatus.VERIFIED,
+          id: { not: targetAdmin.id },
+        },
+      });
+
+      if (otherSuperAdminCount === 0) {
+        return {
+          success: false,
+          message: "系統至少需要保留一個超級管理員",
+        };
+      }
+    }
+
+    // 更新用戶角色為校友（或根據業務邏輯決定降級後的角色）
+    const updatedUser = await prisma.user.update({
+      where: { id: targetAdmin.id },
+      data: {
+        role: UserRole.ALUMNI, // 或其他適當的角色
+        updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        avatarUrl: true,
+        displayName: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // 記錄操作日誌
+    await prisma.adminLog
+      .create({
+        data: {
+          adminId: currentUserId,
+          action: "REMOVE_ADMIN",
+          targetUserId: targetAdmin.id,
+          details: `移除管理員 ${targetAdmin.username} (${targetAdmin.email}) 的權限`,
+          createdAt: new Date(),
+        },
+      })
+      .catch(() => {
+        // 如果沒有 adminLog 表，忽略錯誤
+      });
+
+    // 重新驗證相關頁面
+    revalidatePath("/admin/admins");
+    revalidatePath("/admin/users");
+
+    return {
+      success: true,
+      message: `成功移除 ${targetAdmin.username} 的管理員權限`,
+      data: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error removing admin by email:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "移除管理員失敗",
+    };
+  }
+}
+
 // 提升為管理員
 export async function promoteToAdmin(userId: string): Promise<ActionResult> {
   try {
@@ -462,7 +729,7 @@ export async function promoteToSuperAdmin(
           adminId: currentUserId,
           action: "PROMOTE_TO_SUPERADMIN",
           targetUserId: userId,
-          details: `提升管理員 ${targetUser.username} (${targetUser.email}) 為超級管理員`,
+          details: `提升管理員 ${targetUser.email} (${targetUser.id}) 為超級管理員`,
           createdAt: new Date(),
         },
       })
@@ -476,7 +743,7 @@ export async function promoteToSuperAdmin(
 
     return {
       success: true,
-      message: `成功將 ${targetUser.username} 提升為超級管理員`,
+      message: `成功將 ${targetUser.email} 提升為超級管理員`,
       data: updatedUser,
     };
   } catch (error) {
