@@ -37,16 +37,16 @@ export default function CompanyManagementPage() {
   const [searchType, setSearchType] = useState<SearchType>("all");
 
   // 操作相關狀態
-  const [isPending, startTransition] = useTransition();
-  const [processingId, setProcessingId] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState<{
+  const [_isPending, _startTransition] = useTransition();
+  const [_processingId, _setProcessingId] = useState<string | null>(null);
+  const [statusMessage, _setStatusMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
 
   // 對話框狀態
-  const [showPublishDialog, setShowPublishDialog] = useState(false);
-  const [publishChanging, setPublishChanging] = useState<{
+  const [_showPublishDialog, _setShowPublishDialog] = useState(false);
+  const [_publishChanging, _setPublishChanging] = useState<{
     company: Company;
     newStatus: boolean;
   } | null>(null);
@@ -206,10 +206,11 @@ export default function CompanyManagementPage() {
       {/* 狀態訊息 */}
       {statusMessage && (
         <div
-          className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-            ? "bg-green-100 border-l-4 border-green-500"
-            : "bg-red-100 border-l-4 border-red-500"
-            } transition-all duration-500 ease-in-out`}
+          className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${
+            statusMessage.type === "success"
+              ? "bg-green-100 border-l-4 border-green-500"
+              : "bg-red-100 border-l-4 border-red-500"
+          } transition-all duration-500 ease-in-out`}
         >
           <div className="flex items-center">
             {statusMessage.type === "success" ? (
@@ -242,10 +243,11 @@ export default function CompanyManagementPage() {
               </svg>
             )}
             <p
-              className={`text-sm ${statusMessage.type === "success"
-                ? "text-green-700"
-                : "text-red-700"
-                }`}
+              className={`text-sm ${
+                statusMessage.type === "success"
+                  ? "text-green-700"
+                  : "text-red-700"
+              }`}
             >
               {statusMessage.text}
             </p>
@@ -423,28 +425,31 @@ export default function CompanyManagementPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setPublishFilter("all")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "all"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  publishFilter === "all"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 全部
               </button>
               <button
                 onClick={() => setPublishFilter("published")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "published"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  publishFilter === "published"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 已發布
               </button>
               <button
                 onClick={() => setPublishFilter("unpublished")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${publishFilter === "unpublished"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  publishFilter === "unpublished"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 未發布
               </button>
@@ -532,10 +537,11 @@ export default function CompanyManagementPage() {
                   </div>
                   <div className="col-span-1 text-center">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${company.published
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
-                        }`}
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        company.published
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
                     >
                       {company.published ? "已發布" : "未發布"}
                     </span>
@@ -608,10 +614,11 @@ export default function CompanyManagementPage() {
                       {/* 狀態標籤 */}
                       <div className="flex flex-col items-end space-y-1 ml-2">
                         <span
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${company.published
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                            }`}
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            company.published
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                         >
                           {company.published ? "已發布" : "未發布"}
                         </span>
@@ -806,10 +813,11 @@ export default function CompanyManagementPage() {
                                   {job.title}
                                 </span>
                                 <span
-                                  className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${job.published
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-gray-100 text-gray-800"
-                                    }`}
+                                  className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${
+                                    job.published
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-gray-100 text-gray-800"
+                                  }`}
                                 >
                                   {job.published ? "已發布" : "未發布"}
                                 </span>

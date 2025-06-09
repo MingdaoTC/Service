@@ -40,7 +40,7 @@ const JobApplicationDialog = ({
       setSuccessMessage("");
       setIsPending(false);
       setRecommendationText(
-        "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
+        "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！",
       );
     }
   }, [isOpen]);
@@ -69,7 +69,7 @@ const JobApplicationDialog = ({
   };
 
   const [recommendationText, setRecommendationText] = useState<string>(
-    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！"
+    "您好，我叫[姓名]，近日得知貴公司在徵人，希望能有參加面試的機會，謝謝！",
   );
   const maxLength = 2000;
 

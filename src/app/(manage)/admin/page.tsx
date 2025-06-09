@@ -160,22 +160,22 @@ export default function DashboardPage() {
   // 準備餅圖數據
   const pieData = dashboardData
     ? [
-      {
-        name: "使用者",
-        value: dashboardData.summary.totalUsers,
-        color: COLORS.users,
-      },
-      {
-        name: "公司",
-        value: dashboardData.summary.totalCompanies,
-        color: COLORS.companies,
-      },
-      {
-        name: "工作",
-        value: dashboardData.summary.totalJobs,
-        color: COLORS.jobs,
-      },
-    ]
+        {
+          name: "使用者",
+          value: dashboardData.summary.totalUsers,
+          color: COLORS.users,
+        },
+        {
+          name: "公司",
+          value: dashboardData.summary.totalCompanies,
+          color: COLORS.companies,
+        },
+        {
+          name: "工作",
+          value: dashboardData.summary.totalJobs,
+          color: COLORS.jobs,
+        },
+      ]
     : [];
 
   if (isLoading) {
@@ -223,10 +223,11 @@ export default function DashboardPage() {
                 <button
                   key={range}
                   onClick={() => setSelectedTimeRange(range)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${selectedTimeRange === range
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                    selectedTimeRange === range
                       ? "bg-blue-500 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                  }`}
                 >
                   {range === "7d" ? "7天" : range === "30d" ? "30天" : "90天"}
                 </button>

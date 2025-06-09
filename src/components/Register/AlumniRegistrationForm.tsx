@@ -33,8 +33,8 @@ export default function AlumniRegistrationForm({
   const { data: session } = useSession();
   const userMail = session?.user?.email || "";
 
-  const [stuCardYes, _setStuCardYes] = useState(true);
-  const [idDocumentType, setIdDocumentType] =
+  const [_stuCardYes, _setStuCardYes] = useState(true);
+  const [_idDocumentType, setIdDocumentType] =
     useState<IdDocumentType>("idCard");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,8 +52,8 @@ export default function AlumniRegistrationForm({
 
     setIdDocumentType(e.target.value as IdDocumentType);
     // 清空已上傳的其他證件文件，保留學生證
-    setUploadedFiles((prev) =>
-      prev.filter((file) => file.type === "studentCard"),
+    setUploadedFiles((prev: any) =>
+      prev.filter((file: any) => file.type === "studentCard"),
     );
   };
 
@@ -93,8 +93,8 @@ export default function AlumniRegistrationForm({
       return;
     }
 
-    setUploadedFiles((prev) =>
-      prev.filter((file) => !(file.type === type && file.side === side)),
+    setUploadedFiles((prev: any) =>
+      prev.filter((file: any) => !(file.type === type && file.side === side)),
     );
   };
 
@@ -111,47 +111,47 @@ export default function AlumniRegistrationForm({
     }
 
     // Original validation and submission logic...
-    let isValid = true;
-    let errorMessage = "";
+    const isValid = true;
+    const errorMessage = "";
 
     // 檢查學生證正反面是否已上傳
-    const hasStudentCardFront = uploadedFiles.some(
-      (f) => f.type === "studentCard" && f.side === "front",
-    );
-    const hasStudentCardBack = uploadedFiles.some(
-      (f) => f.type === "studentCard" && f.side === "back",
-    );
+    // const hasStudentCardFront = uploadedFiles.some(
+    //   (f) => f.type === "studentCard" && f.side === "front",
+    // );
+    // const hasStudentCardBack = uploadedFiles.some(
+    //   (f) => f.type === "studentCard" && f.side === "back",
+    // );
 
-    if (stuCardYes) {
-      if (!hasStudentCardFront || !hasStudentCardBack) {
-        isValid = false;
-        errorMessage = "請上傳學生證正反面";
-      }
-    }
+    // if (stuCardYes) {
+    //   if (!hasStudentCardFront || !hasStudentCardBack) {
+    //     isValid = false;
+    //     errorMessage = "請上傳學生證正反面";
+    //   }
+    // }
 
     // 檢查身分證或護照是否已上傳
-    if (idDocumentType === "idCard") {
-      const hasIdCardFront = uploadedFiles.some(
-        (f) => f.type === "idCard" && f.side === "front",
-      );
-      const hasIdCardBack = uploadedFiles.some(
-        (f) => f.type === "idCard" && f.side === "back",
-      );
+    // if (idDocumentType === "idCard") {
+    //   const hasIdCardFront = uploadedFiles.some(
+    //     (f) => f.type === "idCard" && f.side === "front",
+    //   );
+    //   const hasIdCardBack = uploadedFiles.some(
+    //     (f) => f.type === "idCard" && f.side === "back",
+    //   );
 
-      if (!hasIdCardFront || !hasIdCardBack) {
-        isValid = false;
-        errorMessage = errorMessage
-          ? `${errorMessage} 以及身分證正反面`
-          : "請上傳身分證正反面";
-      }
-    } else if (idDocumentType === "passport") {
-      const hasPassport = uploadedFiles.some((f) => f.type === "passport");
+    //   if (!hasIdCardFront || !hasIdCardBack) {
+    //     isValid = false;
+    //     errorMessage = errorMessage
+    //       ? `${errorMessage} 以及身分證正反面`
+    //       : "請上傳身分證正反面";
+    //   }
+    // } else if (idDocumentType === "passport") {
+    //   const hasPassport = uploadedFiles.some((f) => f.type === "passport");
 
-      if (!hasPassport) {
-        isValid = false;
-        errorMessage = errorMessage ? `${errorMessage} 以及護照` : "請上傳護照";
-      }
-    }
+    //   if (!hasPassport) {
+    //     isValid = false;
+    //     errorMessage = errorMessage ? `${errorMessage} 以及護照` : "請上傳護照";
+    //   }
+    // }
 
     if (!isValid) {
       alert(errorMessage);

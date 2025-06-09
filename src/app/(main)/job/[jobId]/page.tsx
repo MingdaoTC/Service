@@ -1,14 +1,14 @@
 import { auth } from "@/library/auth";
-import { Company, Job, User, Resume } from "@/prisma/client";
+import { Company, Job, Resume, User } from "@/prisma/client";
 
 // import Other from "@/components/Global/Object/Other";
 // Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
+import { getResumeListByUserEmail } from "@/library/actions/getResumeList";
 import { notFound } from "next/navigation";
 import { getCompanyById } from "./_job/actions/getCompany";
 import { getJobById } from "./_job/actions/getJob";
-import { getResumeListByUserEmail } from "@/library/actions/getResumeList";
 
 export default async function JobPage({
   params,

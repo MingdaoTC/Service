@@ -78,7 +78,7 @@ export default function CompanyProfilePage({
       }
       setIsLoading(false);
     })();
-  }, []);
+  }, [params.companyId]);
 
   // 處理表單變更
   const handleInputChange = (
@@ -171,7 +171,7 @@ export default function CompanyProfilePage({
     }
     setNewCompanyData({
       ...newCompanyData,
-      tags: newCompanyData.tags.filter((tag) => tag !== tagToRemove),
+      tags: newCompanyData.tags.filter((tag: any) => tag !== tagToRemove),
     });
   };
 
@@ -285,10 +285,11 @@ export default function CompanyProfilePage({
         {/* 狀態訊息 */}
         {statusMessage && (
           <div
-            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-              ? "bg-green-100 border-l-4 border-green-500"
-              : "bg-red-100 border-l-4 border-red-500"
-              } transition-all duration-500 ease-in-out`}
+            className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg ${
+              statusMessage.type === "success"
+                ? "bg-green-100 border-l-4 border-green-500"
+                : "bg-red-100 border-l-4 border-red-500"
+            } transition-all duration-500 ease-in-out`}
           >
             <div className="flex items-center">
               {statusMessage.type === "success" ? (
@@ -541,7 +542,7 @@ export default function CompanyProfilePage({
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
                       >
                         <option value="">請選擇公司類別</option>
-                        {categories.map((category) => (
+                        {categories.map((category: any) => (
                           <option key={category.id} value={category.id}>
                             {category.name}
                           </option>
@@ -599,7 +600,7 @@ export default function CompanyProfilePage({
                       公司標籤
                     </label>
                     <div className="flex flex-wrap gap-2 mb-2">
-                      {newCompanyData.tags.map((tag, index) => (
+                      {newCompanyData.tags.map((tag: any, index: any) => (
                         <div
                           key={index}
                           className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm flex items-center"
@@ -824,10 +825,11 @@ export default function CompanyProfilePage({
               <button
                 type="submit"
                 disabled={isPending}
-                className={`px-6 py-2 ${isPending
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-                  } text-white rounded-md transition-colors flex items-center`}
+                className={`px-6 py-2 ${
+                  isPending
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } text-white rounded-md transition-colors flex items-center`}
               >
                 {isPending ? (
                   <>

@@ -47,7 +47,7 @@ export default function Info({
       <div
         className={joinClass(
           "w-full bg-white shadow-md border-b py-4 sm:py-6 mb-3 sm:mb-5 px-2",
-          className
+          className,
         )}
       >
         <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">

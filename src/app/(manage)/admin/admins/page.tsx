@@ -1,38 +1,32 @@
 "use client";
 
 import {
+  AlertTriangle,
+  ArrowDown,
+  ArrowUp,
+  Crown,
+  Mail,
+  Settings,
   Shield,
   UserCheck,
-  Crown,
-  Settings,
-  AlertTriangle,
-  UserPlus,
   UserMinus,
-  ArrowUp,
-  ArrowDown,
+  UserPlus,
   X,
-  Mail,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 // Server Actions
 import {
+  addAdminByEmail,
+  demoteFromAdmin,
+  demoteFromSuperAdmin,
   getAdminsData,
   promoteToAdmin,
-  demoteFromAdmin,
   promoteToSuperAdmin,
-  demoteFromSuperAdmin,
-  addAdminByEmail,
   removeAdminByEmail,
 } from "@/app/(manage)/admin/admins/_admins/action/adminAction";
 
-import { AccountStatus, UserRole, User as UserType } from "@/prisma/client";
-
-interface AdminActionResult {
-  success: boolean;
-  message: string;
-  data?: UserType[];
-}
+import { UserRole, User as UserType } from "@/prisma/client";
 
 export default function AdminManagementPage() {
   // 主要狀態
@@ -79,7 +73,7 @@ export default function AdminManagementPage() {
     message: string,
     onConfirm: () => void,
     type: "warning" | "danger" = "warning",
-    confirmText: string = "確認"
+    confirmText: string = "確認",
   ) => {
     setConfirmDialog({
       show: true,
@@ -117,9 +111,12 @@ export default function AdminManagementPage() {
       const result = await getAdminsData(formData);
 
       if (result.success && result.data) {
-        const dataArray = Array.isArray(result.data) ? result.data : [result.data];
+        const dataArray = Array.isArray(result.data)
+          ? result.data
+          : [result.data];
         const adminUsers = dataArray.filter(
-          (user: UserType) => user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN
+          (user: UserType) =>
+            user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN,
         );
         setAllAdmins(adminUsers);
       } else {
@@ -138,7 +135,7 @@ export default function AdminManagementPage() {
   }, [loadAdmins]);
 
   // 處理提升為管理員
-  const handlePromoteToAdmin = async (userId: string) => {
+  const _handlePromoteToAdmin = async (userId: string) => {
     showConfirmDialog(
       "提升為管理員",
       "確定要將此用戶提升為管理員嗎？",
@@ -159,7 +156,7 @@ export default function AdminManagementPage() {
           setActionLoading(null);
         }
       },
-      "warning"
+      "warning",
     );
   };
 
@@ -186,7 +183,7 @@ export default function AdminManagementPage() {
         }
       },
       "danger",
-      "移除權限"
+      "移除權限",
     );
   };
 
@@ -212,7 +209,7 @@ export default function AdminManagementPage() {
           setActionLoading(null);
         }
       },
-      "warning"
+      "warning",
     );
   };
 
@@ -238,7 +235,7 @@ export default function AdminManagementPage() {
           setActionLoading(null);
         }
       },
-      "warning"
+      "warning",
     );
   };
 
@@ -297,29 +294,40 @@ export default function AdminManagementPage() {
         }
       },
       "danger",
-      "移除權限"
+      "移除權限",
     );
   };
 
   // 計算統計數據
-  const superAdmins = allAdmins.filter((u) => u.role === UserRole.SUPERADMIN).length;
-  const regularAdmins = allAdmins.filter((u) => u.role === UserRole.ADMIN).length;
+  const superAdmins = allAdmins.filter(
+    (u: any) => u.role === UserRole.SUPERADMIN,
+  ).length;
+  const regularAdmins = allAdmins.filter(
+    (u: any) => u.role === UserRole.ADMIN,
+  ).length;
 
   // 輔助函數
   const getStatusText = (status: string) => {
     switch (status) {
-      case "VERIFIED": return "已驗證";
-      case "PENDING": return "待驗證";
-      case "UNVERIFIED": return "未驗證";
-      default: return status;
+      case "VERIFIED":
+        return "已驗證";
+      case "PENDING":
+        return "待驗證";
+      case "UNVERIFIED":
+        return "未驗證";
+      default:
+        return status;
     }
   };
 
   const getRoleText = (role: string) => {
     switch (role) {
-      case "SUPERADMIN": return "超級管理員";
-      case "ADMIN": return "管理員";
-      default: return role;
+      case "SUPERADMIN":
+        return "超級管理員";
+      case "ADMIN":
+        return "管理員";
+      default:
+        return role;
     }
   };
 
@@ -387,9 +395,7 @@ export default function AdminManagementPage() {
               </div>
 
               <div className="mt-2">
-                <p className="text-sm text-gray-500">
-                  {confirmDialog.message}
-                </p>
+                <p className="text-sm text-gray-500">{confirmDialog.message}</p>
               </div>
             </div>
 
@@ -397,10 +403,11 @@ export default function AdminManagementPage() {
               <button
                 type="button"
                 onClick={confirmDialog.onConfirm}
-                className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${confirmDialog.type === "danger"
-                  ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
-                  : "bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
-                  }`}
+                className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
+                  confirmDialog.type === "danger"
+                    ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                    : "bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+                }`}
               >
                 {confirmDialog.confirmText}
               </button>
@@ -419,10 +426,11 @@ export default function AdminManagementPage() {
       {/* 狀態訊息 */}
       {statusMessage && (
         <div
-          className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${statusMessage.type === "success"
-            ? "bg-green-100 border-l-4 border-green-500"
-            : "bg-red-100 border-l-4 border-red-500"
-            } transition-all duration-500 ease-in-out`}
+          className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md p-3 sm:p-4 rounded-lg shadow-lg ${
+            statusMessage.type === "success"
+              ? "bg-green-100 border-l-4 border-green-500"
+              : "bg-red-100 border-l-4 border-red-500"
+          } transition-all duration-500 ease-in-out`}
         >
           <div className="flex items-center">
             {statusMessage.type === "success" ? (
@@ -455,10 +463,11 @@ export default function AdminManagementPage() {
               </svg>
             )}
             <p
-              className={`text-sm ${statusMessage.type === "success"
-                ? "text-green-700"
-                : "text-red-700"
-                }`}
+              className={`text-sm ${
+                statusMessage.type === "success"
+                  ? "text-green-700"
+                  : "text-red-700"
+              }`}
             >
               {statusMessage.text}
             </p>
@@ -511,9 +520,7 @@ export default function AdminManagementPage() {
               <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-purple-600">
                 {regularAdmins.toLocaleString()}
               </p>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                管理權限
-              </p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">管理權限</p>
             </div>
             <div className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 ml-2">
               <UserCheck className="text-purple-600 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
@@ -531,9 +538,7 @@ export default function AdminManagementPage() {
               <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-red-600">
                 {superAdmins.toLocaleString()}
               </p>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                最高權限
-              </p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">最高權限</p>
             </div>
             <div className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 ml-2">
               <Crown className="text-red-600 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
@@ -565,7 +570,7 @@ export default function AdminManagementPage() {
           )}
 
           {/* 管理員列表項目 */}
-          {allAdmins.map((admin) => (
+          {allAdmins.map((admin: any) => (
             <div key={admin.id} className="hover:bg-gray-50 transition-colors">
               {/* 桌面版顯示 */}
               <div className="hidden lg:block px-4 py-3">
@@ -598,20 +603,26 @@ export default function AdminManagementPage() {
                     </div>
                   </div>
                   <div className="col-span-1 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${admin.role === UserRole.SUPERADMIN
-                      ? "bg-red-100 text-red-800"
-                      : "bg-purple-100 text-purple-800"
-                      }`}>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        admin.role === UserRole.SUPERADMIN
+                          ? "bg-red-100 text-red-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
                       {getRoleText(admin.role)}
                     </span>
                   </div>
                   <div className="col-span-1 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${admin.status === "VERIFIED"
-                      ? "bg-green-100 text-green-800"
-                      : admin.status === "PENDING"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                      }`}>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        admin.status === "VERIFIED"
+                          ? "bg-green-100 text-green-800"
+                          : admin.status === "PENDING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                      }`}
+                    >
                       {getStatusText(admin.status)}
                     </span>
                   </div>
@@ -704,10 +715,13 @@ export default function AdminManagementPage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end space-y-1 ml-2">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${admin.role === UserRole.SUPERADMIN
-                          ? "bg-red-100 text-red-800"
-                          : "bg-purple-100 text-purple-800"
-                          }`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            admin.role === UserRole.SUPERADMIN
+                              ? "bg-red-100 text-red-800"
+                              : "bg-purple-100 text-purple-800"
+                          }`}
+                        >
                           {getRoleText(admin.role)}
                         </span>
                       </div>
@@ -788,15 +802,21 @@ export default function AdminManagementPage() {
             <div className="p-6 space-y-4">
               {/* 電子郵件輸入 */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                  htmlFor="add-admin-email"
+                >
                   電子郵件地址
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
+                    name="add-admin-email"
                     type="email"
                     value={addForm.email}
-                    onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, email: e.target.value })
+                    }
                     placeholder="請輸入電子郵件地址"
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
@@ -805,7 +825,10 @@ export default function AdminManagementPage() {
 
               {/* 管理員類型選擇 */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                  htmlFor="role"
+                >
                   管理員類型
                 </label>
                 <div className="space-y-2">
@@ -815,13 +838,22 @@ export default function AdminManagementPage() {
                       name="role"
                       value="ADMIN"
                       checked={addForm.role === "ADMIN"}
-                      onChange={(e) => setAddForm({ ...addForm, role: e.target.value as "ADMIN" | "SUPERADMIN" })}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          role: e.target.value as "ADMIN" | "SUPERADMIN",
+                        })
+                      }
                       className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
                     />
                     <div className="ml-3 flex items-center">
                       <Shield className="h-4 w-4 text-purple-600 mr-2" />
-                      <span className="text-sm font-medium text-gray-900">一般管理員</span>
-                      <span className="ml-2 text-xs text-gray-500">基本管理權限</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        一般管理員
+                      </span>
+                      <span className="ml-2 text-xs text-gray-500">
+                        基本管理權限
+                      </span>
                     </div>
                   </label>
                   <label className="flex items-center">
@@ -830,13 +862,22 @@ export default function AdminManagementPage() {
                       name="role"
                       value="SUPERADMIN"
                       checked={addForm.role === "SUPERADMIN"}
-                      onChange={(e) => setAddForm({ ...addForm, role: e.target.value as "ADMIN" | "SUPERADMIN" })}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          role: e.target.value as "ADMIN" | "SUPERADMIN",
+                        })
+                      }
                       className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                     />
                     <div className="ml-3 flex items-center">
                       <Crown className="h-4 w-4 text-red-600 mr-2" />
-                      <span className="text-sm font-medium text-gray-900">超級管理員</span>
-                      <span className="ml-2 text-xs text-red-500">最高權限，請謹慎授予</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        超級管理員
+                      </span>
+                      <span className="ml-2 text-xs text-red-500">
+                        最高權限，請謹慎授予
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -883,7 +924,10 @@ export default function AdminManagementPage() {
             <div className="p-6 space-y-4">
               {/* 電子郵件輸入 */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                  htmlFor="email"
+                >
                   電子郵件地址
                 </label>
                 <div className="relative">
@@ -891,7 +935,9 @@ export default function AdminManagementPage() {
                   <input
                     type="email"
                     value={removeForm.email}
-                    onChange={(e) => setRemoveForm({ ...removeForm, email: e.target.value })}
+                    onChange={(e) =>
+                      setRemoveForm({ ...removeForm, email: e.target.value })
+                    }
                     placeholder="請輸入要移除的管理員電子郵件"
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
@@ -903,7 +949,9 @@ export default function AdminManagementPage() {
                 <div className="flex">
                   <AlertTriangle className="h-5 w-5 text-red-400 mr-2 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-medium text-red-800">注意事項</h4>
+                    <h4 className="text-sm font-medium text-red-800">
+                      注意事項
+                    </h4>
                     <div className="mt-1 text-sm text-red-700">
                       <ul className="list-disc pl-4 space-y-1">
                         <li>此操作將立即移除該用戶的管理員權限</li>

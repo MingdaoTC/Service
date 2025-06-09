@@ -70,7 +70,7 @@ const menuItems: MenuItem[] = [
     beta: false,
     disabled: false,
   },
-  
+
   // {
   //   id: "help",
   //   label: "幫助中心",
@@ -107,16 +107,20 @@ export default function AdminLayout({
     // 如果沒有完全匹配，嘗試前綴匹配
     // 找到所有可能的匹配項，選擇路徑最長的那個（最具體的匹配）
     const prefixMatches = menuItems.filter((item) => {
-      if (!item.path) return false;
+      if (!item.path) {
+        return false;
+      }
       // 確保路徑以 item.path 開頭，並且下一個字符是 '/' 或者已經結束
-      return path.startsWith(item.path) &&
-        (path.length === item.path.length || path[item.path.length] === '/');
+      return (
+        path.startsWith(item.path) &&
+        (path.length === item.path.length || path[item.path.length] === "/")
+      );
     });
 
     if (prefixMatches.length > 0) {
       // 選擇路徑最長的匹配項（最具體的匹配）
       const bestMatch = prefixMatches.reduce((prev, current) =>
-        (current.path?.length || 0) > (prev.path?.length || 0) ? current : prev
+        (current.path?.length || 0) > (prev.path?.length || 0) ? current : prev,
       );
       return bestMatch.id;
     }
@@ -198,11 +202,12 @@ export default function AdminLayout({
           disabled={item.disabled}
           className={`
             flex items-center w-full px-4 py-3 rounded-lg text-left 
-            ${item.disabled
-              ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
-              : activeTab === item.id
-                ? "bg-blue-100 text-blue-600 font-medium"
-                : "text-gray-700 hover:bg-gray-100"
+            ${
+              item.disabled
+                ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
+                : activeTab === item.id
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}

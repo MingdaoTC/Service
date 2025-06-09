@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/library/prisma";
 import { auth } from "@/library/auth";
-import { UserRole, AccountStatus, User } from "@/prisma/client";
+import { prisma } from "@/library/prisma";
+import { AccountStatus, User, UserRole } from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 
 // 返回類型定義
@@ -143,7 +143,7 @@ export async function getAdminsData(formData: FormData): Promise<ActionResult> {
 
 // 根據電子郵件新增管理員
 export async function addAdminByEmail(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   try {
     // 驗證權限
@@ -155,7 +155,12 @@ export async function addAdminByEmail(
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      // Handle the case where userId is missing
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
     const email = formData.get("email") as string;
     const role = formData.get("role") as string;
 
@@ -276,7 +281,7 @@ export async function addAdminByEmail(
 
 // 根據電子郵件移除管理員
 export async function removeAdminByEmail(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   try {
     // 驗證權限
@@ -288,7 +293,11 @@ export async function removeAdminByEmail(
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
     const email = formData.get("email") as string;
 
     // 驗證輸入
@@ -420,7 +429,11 @@ export async function promoteToAdmin(userId: string): Promise<ActionResult> {
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
 
     if (!userId) {
       return {
@@ -532,7 +545,11 @@ export async function demoteFromAdmin(userId: string): Promise<ActionResult> {
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
 
     if (!userId) {
       return {
@@ -646,7 +663,7 @@ export async function demoteFromAdmin(userId: string): Promise<ActionResult> {
 
 // 提升為超級管理員
 export async function promoteToSuperAdmin(
-  userId: string
+  userId: string,
 ): Promise<ActionResult> {
   try {
     // 驗證權限
@@ -658,7 +675,11 @@ export async function promoteToSuperAdmin(
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
 
     if (!userId) {
       return {
@@ -757,7 +778,7 @@ export async function promoteToSuperAdmin(
 
 // 降級超級管理員
 export async function demoteFromSuperAdmin(
-  userId: string
+  userId: string,
 ): Promise<ActionResult> {
   try {
     // 驗證權限
@@ -769,7 +790,11 @@ export async function demoteFromSuperAdmin(
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
 
     if (!userId) {
       return {
@@ -883,7 +908,7 @@ export async function demoteFromSuperAdmin(
 
 // 批量操作：提升多個用戶為管理員
 export async function batchPromoteToAdmin(
-  userIds: string[]
+  userIds: string[],
 ): Promise<ActionResult> {
   try {
     // 驗證權限
@@ -895,7 +920,11 @@ export async function batchPromoteToAdmin(
       };
     }
 
-    const currentUserId = validation.userId!;
+    if (!validation.userId) {
+      return { success: false, message: "User ID is required" };
+    }
+
+    const currentUserId = validation.userId;
 
     if (!userIds || userIds.length === 0) {
       return {

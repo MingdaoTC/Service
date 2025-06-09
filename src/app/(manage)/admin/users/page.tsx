@@ -10,20 +10,18 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdPending } from "react-icons/md";
 
 // Server Actions
-import {
-  getUsersData,
-} from "@/app/(manage)/admin/users/_users/action/userAction";
+import { getUsersData } from "@/app/(manage)/admin/users/_users/action/userAction";
 
 import { AccountStatus, UserRole, User as UserType } from "@/prisma/client";
 
 // 篩選類型
 type StatusFilter = "all" | AccountStatus;
 type RoleFilter = "all" | Partial<UserRole>;
-type SearchType = "all" | UserType;
+// type SearchType = "all" | UserType;
 
 export default function UserManagementPage() {
   // 主要狀態
@@ -45,8 +43,8 @@ export default function UserManagementPage() {
     try {
       const formData = new FormData();
       formData.append("statusFilter", "all"); // 固定抓取所有狀態的使用者
-      formData.append("roleFilter", "all");   // 固定抓取所有角色的使用者
-      formData.append("searchQuery", "");     // 不傳送搜尋關鍵字到後端
+      formData.append("roleFilter", "all"); // 固定抓取所有角色的使用者
+      formData.append("searchQuery", ""); // 不傳送搜尋關鍵字到後端
 
       const result = await getUsersData(formData);
 
@@ -77,19 +75,19 @@ export default function UserManagementPage() {
   const filteredUsers = useMemo(() => {
     return allUsers.filter((user: UserType) => {
       // 狀態篩選
-      const matchesStatus = statusFilter === "all" || user.status === statusFilter.toUpperCase();
+      const matchesStatus =
+        statusFilter === "all" || user.status === statusFilter.toUpperCase();
 
       // 角色篩選
       const matchesRole = roleFilter === "all" || user.role === roleFilter;
 
       // 搜尋篩選
-      const matchesSearch = searchQuery.trim() === ""
-        ? true
-        : (
-          user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (user.displayName && user.displayName.toLowerCase().includes(searchQuery.toLowerCase()))
-        );
+      const matchesSearch =
+        searchQuery.trim() === ""
+          ? true
+          : user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.displayName?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesStatus && matchesRole && matchesSearch;
     });
@@ -99,26 +97,38 @@ export default function UserManagementPage() {
   const totalUsers = allUsers.length;
   const verifiedUsers = allUsers.filter((u) => u.status === "VERIFIED").length;
   const pendingUsers = allUsers.filter((u) => u.status === "PENDING").length;
-  const unverifiedUsers = allUsers.filter((u) => u.status === "UNVERIFIED").length;
+  const unverifiedUsers = allUsers.filter(
+    (u) => u.status === "UNVERIFIED",
+  ).length;
 
   // 輔助函數
   const getStatusText = (status: string) => {
     switch (status) {
-      case "VERIFIED": return "已驗證";
-      case "PENDING": return "待驗證";
-      case "UNVERIFIED": return "未驗證";
-      default: return status;
+      case "VERIFIED":
+        return "已驗證";
+      case "PENDING":
+        return "待驗證";
+      case "UNVERIFIED":
+        return "未驗證";
+      default:
+        return status;
     }
   };
 
   const getRoleText = (role: string) => {
     switch (role) {
-      case "GUEST": return "訪客";
-      case "ALUMNI": return "校友";
-      case "COMPANY": return "企業";
-      case "ADMIN": return "管理員";
-      case "SUPERADMIN": return "超級管理員";
-      default: return role;
+      case "GUEST":
+        return "訪客";
+      case "ALUMNI":
+        return "校友";
+      case "COMPANY":
+        return "企業";
+      case "ADMIN":
+        return "管理員";
+      case "SUPERADMIN":
+        return "超級管理員";
+      default:
+        return role;
     }
   };
 
@@ -167,7 +177,6 @@ export default function UserManagementPage() {
 
   return (
     <div className="w-full mx-auto min-h-screen p-2 sm:p-4 lg:p-6">
-
       {/* 頁面標題 */}
       <div className="mb-4 sm:mb-6 bg-white shadow-sm rounded-lg border p-3 sm:p-4">
         <h1 className="text-xl sm:text-2xl font-semibold text-blue-600">
@@ -207,7 +216,10 @@ export default function UserManagementPage() {
               <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-yellow-600">
                 {pendingUsers.toLocaleString()}
               </p>
-              <Link className="text-xs sm:text-sm text-blue-500 mt-1" href={"/admin/registration"}>
+              <Link
+                className="text-xs sm:text-sm text-blue-500 mt-1"
+                href={"/admin/registration"}
+              >
                 點擊審核用戶
               </Link>
             </div>
@@ -309,37 +321,41 @@ export default function UserManagementPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setStatusFilter("all")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${statusFilter === "all"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  statusFilter === "all"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 全部
               </button>
               <button
                 onClick={() => setStatusFilter(AccountStatus.VERIFIED)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${statusFilter === AccountStatus.VERIFIED
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  statusFilter === AccountStatus.VERIFIED
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 已驗證
               </button>
               <button
                 onClick={() => setStatusFilter(AccountStatus.PENDING)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${statusFilter === AccountStatus.PENDING
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  statusFilter === AccountStatus.PENDING
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 待驗證
               </button>
               <button
                 onClick={() => setStatusFilter(AccountStatus.UNVERIFIED)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${statusFilter === AccountStatus.UNVERIFIED
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  statusFilter === AccountStatus.UNVERIFIED
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 未驗證
               </button>
@@ -352,55 +368,61 @@ export default function UserManagementPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setRoleFilter("all")}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === "all"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === "all"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 全部
               </button>
               <button
                 onClick={() => setRoleFilter(UserRole.GUEST)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === UserRole.GUEST
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === UserRole.GUEST
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 訪客
               </button>
               <button
                 onClick={() => setRoleFilter(UserRole.ALUMNI)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === UserRole.ALUMNI
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === UserRole.ALUMNI
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 校友
               </button>
               <button
                 onClick={() => setRoleFilter(UserRole.COMPANY)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === UserRole.COMPANY
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === UserRole.COMPANY
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 企業
               </button>
               <button
                 onClick={() => setRoleFilter(UserRole.ADMIN)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === UserRole.ADMIN
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === UserRole.ADMIN
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 管理員
               </button>
               <button
                 onClick={() => setRoleFilter(UserRole.SUPERADMIN)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition ${roleFilter === UserRole.SUPERADMIN
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                  roleFilter === UserRole.SUPERADMIN
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 超級管理員
               </button>
@@ -440,10 +462,7 @@ export default function UserManagementPage() {
 
           {/* 使用者列表項目 */}
           {filteredUsers.map((user) => (
-            <div
-              key={user.id}
-              className="hover:bg-gray-50 transition-colors"
-            >
+            <div key={user.id} className="hover:bg-gray-50 transition-colors">
               {/* 桌面版顯示 */}
               <div className="hidden lg:block px-4 py-3">
                 <div className="grid grid-cols-5 text-sm items-center">
@@ -472,23 +491,27 @@ export default function UserManagementPage() {
                     </div>
                   </div>
                   <div className="col-span-1 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.role === "SUPERADMIN"
-                      ? "bg-red-100 text-red-800"
-                      : user.role === "ADMIN"
-                        ? "bg-purple-100 text-purple-800"
-                        : "bg-blue-100 text-blue-800"
-                      }`}>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        user.role === "SUPERADMIN"
+                          ? "bg-red-100 text-red-800"
+                          : user.role === "ADMIN"
+                            ? "bg-purple-100 text-purple-800"
+                            : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
                       {getRoleText(user.role)}
                     </span>
                   </div>
                   <div className="col-span-1 text-center">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.status === "VERIFIED"
-                        ? "bg-green-100 text-green-800"
-                        : user.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                        }`}
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        user.status === "VERIFIED"
+                          ? "bg-green-100 text-green-800"
+                          : user.status === "PENDING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                      }`}
                     >
                       {getStatusText(user.status)}
                     </span>
@@ -505,23 +528,21 @@ export default function UserManagementPage() {
               <div className="lg:hidden px-3 sm:px-4 py-3">
                 <div className="flex items-start space-x-3">
                   {/* 頭像 */}
-                  {
-                    user.avatarUrl ? (
-                      <div className="flex-shrink-0">
-                        <img
-                          src={user.avatarUrl}
-                          alt={`${user.displayName || user.username} 的頭像`}
-                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
-                        />
+                  {user.avatarUrl ? (
+                    <div className="flex-shrink-0">
+                      <img
+                        src={user.avatarUrl}
+                        alt={`${user.displayName || user.username} 的頭像`}
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-200 flex items-center justify-center">
+                        <User className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400" />
                       </div>
-                    ) : (
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-200 flex items-center justify-center">
-                          <User className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400" />
-                        </div>
-                      </div>
-                    )
-                  }
+                    </div>
+                  )}
 
                   {/* 內容 */}
                   <div className="flex-1 min-w-0">
@@ -538,12 +559,13 @@ export default function UserManagementPage() {
                       {/* 狀態標籤 */}
                       <div className="flex flex-col items-end space-y-1 ml-2">
                         <span
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${user.status === "VERIFIED"
-                            ? "bg-green-100 text-green-800"
-                            : user.status === "PENDING"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
-                            }`}
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            user.status === "VERIFIED"
+                              ? "bg-green-100 text-green-800"
+                              : user.status === "PENDING"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-red-100 text-red-800"
+                          }`}
                         >
                           {getStatusText(user.status)}
                         </span>
@@ -586,7 +608,9 @@ export default function UserManagementPage() {
                           <Mail className="h-4 w-4 text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
                           <div className="min-w-0">
                             <p className="text-gray-500 text-xs">電子郵件</p>
-                            <p className="text-gray-900 break-all">{user.email}</p>
+                            <p className="text-gray-900 break-all">
+                              {user.email}
+                            </p>
                           </div>
                         </div>
 
@@ -603,7 +627,9 @@ export default function UserManagementPage() {
                             <User className="h-4 w-4 text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
                             <div>
                               <p className="text-gray-500 text-xs">顯示名稱</p>
-                              <p className="text-gray-900">{user.displayName}</p>
+                              <p className="text-gray-900">
+                                {user.displayName}
+                              </p>
                             </div>
                           </div>
                         )}
@@ -613,12 +639,15 @@ export default function UserManagementPage() {
                           <div>
                             <p className="text-gray-500 text-xs">用戶角色</p>
                             <div className="flex items-center">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.role === "SUPERADMIN"
-                                ? "bg-red-100 text-red-800"
-                                : user.role === "ADMIN"
-                                  ? "bg-purple-100 text-purple-800"
-                                  : "bg-blue-100 text-blue-800"
-                                }`}>
+                              <span
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  user.role === "SUPERADMIN"
+                                    ? "bg-red-100 text-red-800"
+                                    : user.role === "ADMIN"
+                                      ? "bg-purple-100 text-purple-800"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
                                 {getRoleText(user.role)}
                               </span>
                             </div>
@@ -655,8 +684,7 @@ export default function UserManagementPage() {
 
                   {/* 操作按鈕 */}
                   <div className="mt-6 pt-4 border-t">
-                    <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                    </div>
+                    <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3" />
                   </div>
                 </div>
               )}

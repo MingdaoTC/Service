@@ -206,8 +206,8 @@ export default function EnterpriseLayout({
               item.disabled
                 ? "opacity-50 cursor-not-allowed hover:cursor-not-allowed bg-transparent hover:bg-transparent text-gray-500"
                 : activeTab === item.id
-                ? "bg-blue-100 text-blue-600 font-medium"
-                : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "text-gray-700 hover:bg-gray-100"
             }
             transition-colors duration-150
           `}

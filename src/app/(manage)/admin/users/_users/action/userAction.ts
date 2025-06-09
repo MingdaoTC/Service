@@ -2,10 +2,10 @@
 "use server";
 
 import { auth } from "@/library/auth";
-import { User, UserRole, AccountStatus } from "@/prisma/client";
+import { findManyUser } from "@/library/prisma/user/findMany";
 import { findUniqueUser } from "@/library/prisma/user/findUnique";
 import { updateUser } from "@/library/prisma/user/update";
-import { findManyUser } from "@/library/prisma/user/findMany";
+import { AccountStatus, User, UserRole } from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -182,7 +182,7 @@ export async function updateUserStatus(formData: FormData) {
       {
         status,
         updatedAt: new Date(),
-      }
+      },
     );
 
     // 重新驗證路徑
@@ -281,7 +281,7 @@ export async function updateUserRole(formData: FormData) {
       {
         role,
         updatedAt: new Date(),
-      }
+      },
     );
 
     // 重新驗證路徑
@@ -367,7 +367,7 @@ export async function updateUserActiveStatus(formData: FormData) {
       { id: userId },
       {
         updatedAt: new Date(),
-      }
+      },
     );
 
     // 重新驗證路徑
