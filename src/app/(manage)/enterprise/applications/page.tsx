@@ -1,19 +1,36 @@
-import { getApplicationList } from "@/library/actions/getApplicationList";
+import { getApplicationListByCompanyUser } from "@/library/actions/getApplicationList";
 import { getResumeListByUserEmail } from "@/library/actions/getResumeList";
 import ExpandableRow from "./_application/ExpandableRow";
+import { redirect } from "next/navigation";
+import { Resume } from "@/prisma/client";
 
 export default async function ApplicationListPage() {
-  const applications = await getApplicationList();
+  const applications = await getApplicationListByCompanyUser();
 
-  // 取得所有應徵者的履歷資訊
-  const resumeMap: Record<string, any> = {};
-  for (const app of applications) {
-    if (app.email && !resumeMap[app.email]) {
-      const resumes = await getResumeListByUserEmail(app.email);
-      if (resumes && resumes.length > 0) {
-        resumeMap[app.email] = resumes[0];
-      }
-    }
+  if (!Array.isArray(applications) && applications?.error) {
+    redirect("/");
+  }
+
+  // Build a resume map: { [email: string]: Resume | undefined }
+  let resumeMap: Record<string, Resume | undefined> = {};
+  if (Array.isArray(applications) && applications.length > 0) {
+    // Fetch resumes for all applicant emails in parallel
+    const emails = applications.map((app) => app.email);
+    const resumeResults = await Promise.all(
+      emails.map(async (email) => {
+        try {
+          const resumes = await getResumeListByUserEmail(email);
+          // If multiple resumes, pick the latest (by createdAt) or just the first
+          return { email, resume: resumes?.[0] };
+        } catch {
+          return { email, resume: undefined };
+        }
+      })
+    );
+    resumeMap = resumeResults.reduce((acc, { email, resume }) => {
+      acc[email] = resume;
+      return acc;
+    }, {} as Record<string, Resume | undefined>);
   }
 
   return (
@@ -37,18 +54,19 @@ export default async function ApplicationListPage() {
           </div>
         </div>
         <div className="divide-y">
-          {applications.length === 0 && (
+          {Array.isArray(applications) && applications.length === 0 && (
             <div className="px-4 py-6 text-center text-gray-500">
               無應徵資料
             </div>
           )}
-          {applications.map((app: any) => (
-            <ExpandableRow
-              key={app.id}
-              app={app}
-              resume={resumeMap[app.email]}
-            />
-          ))}
+          {Array.isArray(applications) &&
+            applications.map((app: any) => (
+              <ExpandableRow
+                key={app.id}
+                app={app}
+                resume={resumeMap[app.email] ?? null}
+              />
+            ))}
         </div>
       </div>
     </div>

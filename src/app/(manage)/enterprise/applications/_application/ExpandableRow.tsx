@@ -1,20 +1,21 @@
 "use client";
 import { getDownloadPresignedUrl } from "@/library/storage/preSign";
+import { Application, Resume, User } from "@/prisma/client";
 import { useState } from "react";
 
 export default function ExpandableRow({
   app,
   resume,
 }: {
-  app: any;
-  resume: any;
+  app: Application & { user: User };
+  resume?: Resume | null; // Accept undefined or null
 }) {
   const [open, setOpen] = useState(false);
   return (
     <div>
       <div className="grid grid-cols-6 items-center text-sm px-4 py-3">
         <div className="col-span-2 break-words">{app.email}</div>
-        <div className="col-span-1">{app.user?.name || "-"}</div>
+        <div className="col-span-1">{app.user?.displayName || "-"}</div>
         <div className="col-span-1">{app.status}</div>
         <div className="col-span-1">
           {new Date(app.createdAt).toLocaleString()}
