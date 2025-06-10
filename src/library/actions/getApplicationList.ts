@@ -1,11 +1,11 @@
 "use server";
 
 import { auth } from "@/library/auth";
-import { User } from "next-auth";
 import { findManyApplication } from "@/library/prisma/application/findMany";
-import { findUniqueUser } from "../prisma/user/findUnique";
-import { Application, UserRole, User as PrismaUser } from "@/prisma/client";
+import { Application, User as PrismaUser, UserRole } from "@/prisma/client";
+import { User } from "next-auth";
 import { findUniqueCompany } from "../prisma/company/findUnique";
+import { findUniqueUser } from "../prisma/user/findUnique";
 
 export async function getApplicationListByCompanyUser(): Promise<
   (Application & { user: PrismaUser })[] | { error: string }

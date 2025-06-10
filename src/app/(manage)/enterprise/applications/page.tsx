@@ -1,8 +1,9 @@
 import { getApplicationListByCompanyUser } from "@/library/actions/getApplicationList";
+import { getJobInfo } from "@/library/actions/getJobInfo";
 import { getResumeListByUserEmail } from "@/library/actions/getResumeList";
-import ExpandableRow from "./_application/ExpandableRow";
+import { Job, Resume } from "@/prisma/client";
 import { redirect } from "next/navigation";
-import { Resume } from "@/prisma/client";
+import ExpandableRow from "./_application/ExpandableRow";
 
 export default async function ApplicationListPage() {
   const applications = await getApplicationListByCompanyUser();
@@ -25,12 +26,40 @@ export default async function ApplicationListPage() {
         } catch {
           return { email, resume: undefined };
         }
-      })
+      }),
     );
-    resumeMap = resumeResults.reduce((acc, { email, resume }) => {
-      acc[email] = resume;
-      return acc;
-    }, {} as Record<string, Resume | undefined>);
+    resumeMap = resumeResults.reduce(
+      (acc, { email, resume }) => {
+        acc[email] = resume;
+        return acc;
+      },
+      {} as Record<string, Resume | undefined>,
+    );
+  }
+
+  let jobMap: Record<string, Job> = {};
+  if (Array.isArray(applications) && applications.length > 0) {
+    const jobIds = applications.map((app) => app.jobId);
+    const jobResults = await Promise.all(
+      jobIds.map(async (jobId) => {
+        try {
+          const job = await getJobInfo(jobId);
+          return { jobId, job };
+        } catch {
+          return { jobId, job: undefined };
+        }
+      }),
+    );
+    jobMap = jobResults.reduce(
+      (acc, { jobId, job }) => {
+        if (!job) {
+          return acc;
+        }
+        acc[jobId] = job;
+        return acc;
+      },
+      {} as Record<string, Job>,
+    );
   }
 
   return (
@@ -45,11 +74,12 @@ export default async function ApplicationListPage() {
       </div>
       <div className="bg-white shadow-sm rounded-lg border overflow-hidden mb-8 text-center">
         <div className="p-4 bg-gray-50 border-b text-center">
-          <div className="grid grid-cols-6 text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-7 text-sm font-medium text-gray-600">
             <div className="col-span-2">應徵者 Email</div>
             <div className="col-span-1">姓名</div>
             <div className="col-span-1">狀態</div>
             <div className="col-span-1">應徵時間</div>
+            <div className="col-span-1">職缺</div>
             <div className="col-span-1">操作</div>
           </div>
         </div>
@@ -65,6 +95,7 @@ export default async function ApplicationListPage() {
                 key={app.id}
                 app={app}
                 resume={resumeMap[app.email] ?? null}
+                job={jobMap[app.jobId] ?? null}
               />
             ))}
         </div>

@@ -1,24 +1,33 @@
 "use client";
 import { getDownloadPresignedUrl } from "@/library/storage/preSign";
-import { Application, Resume, User } from "@/prisma/client";
+import { Application, Job, Resume, User } from "@/prisma/client";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ExpandableRow({
   app,
   resume,
+  job,
 }: {
   app: Application & { user: User };
   resume?: Resume | null; // Accept undefined or null
+  job: Job;
 }) {
   const [open, setOpen] = useState(false);
+
   return (
     <div>
-      <div className="grid grid-cols-6 items-center text-sm px-4 py-3">
+      <div className="grid grid-cols-7 items-center text-sm px-4 py-3">
         <div className="col-span-2 break-words">{app.email}</div>
         <div className="col-span-1">{app.user?.displayName || "-"}</div>
         <div className="col-span-1">{app.status}</div>
         <div className="col-span-1">
-          {new Date(app.createdAt).toLocaleString()}
+          {new Date(app.createdAt).toLocaleDateString()}
+        </div>
+        <div className="col-span-1">
+          <Link href={`/job/${job.id}`} className="underline text-mingdao-blue">
+            {job.title}
+          </Link>
         </div>
         <div className="col-span-1 flex justify-center">
           <button
