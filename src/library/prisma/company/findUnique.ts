@@ -29,7 +29,11 @@ export async function findUniqueCompanyWithPublished(param: Partial<Company>) {
       published: true,
     },
     include: {
-      jobs: true,
+      jobs: {
+        where: {
+          published: true,
+        },
+      },
     },
   });
 }
