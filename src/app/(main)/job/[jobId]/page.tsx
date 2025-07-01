@@ -29,7 +29,7 @@ export default async function JobPage({
   }
 
   const company = (await getCompanyById(job.companyId)) as Company;
-  const resumeList = user.email
+  const resumeList = user?.email
     ? ((await getResumeListByUserEmail(user.email)) as Resume[])
     : [];
 
