@@ -123,6 +123,8 @@ export default function EnhancedSearch(props: TProps) {
         <Button
           onClick={() => setIsExpanded(!isExpanded)}
           className="whitespace-nowrap text-xs sm:text-sm px-3 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all shadow"
+          aria-expanded={isExpanded}
+          aria-controls="advanced-search"
         >
           {isExpanded ? "簡易搜尋" : "進階搜尋"}
         </Button>
@@ -141,73 +143,89 @@ export default function EnhancedSearch(props: TProps) {
         搜尋
       </Button>
 
-      {/* 進階搜尋選項 */}
-      {isExpanded && (
-        <div className="flex flex-col sm:flex-row gap-2 mt-3 pt-3 border-t border-slate-200">
-          {/* 職業類別選擇 */}
-          <div className="flex-1">
-            <label className="block text-xs text-slate-700 mb-1" htmlFor="category">
-              職業類別
-            </label>
-            <select
-              title="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white"
-              disabled={isLoading}
-            >
-              <option value="">所有職業類別</option>
-              {jobCategories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 地區選擇 */}
-          <div className="flex-1 flex flex-col sm:flex-row gap-2">
+      {/* 進階搜尋選項（絲滑展開） */}
+      <div
+        id="advanced-search"
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${isExpanded ? "grid-rows-[1fr] mt-3" : "grid-rows-[0fr] mt-0"
+          }`}
+        aria-hidden={!isExpanded}
+      >
+        <div
+          className={`overflow-hidden border-t ${isExpanded ? "border-slate-200 pt-3" : "border-transparent pt-0"
+            }`}
+        >
+          <div
+            className={`flex flex-col sm:flex-row gap-2 ${isExpanded
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-1 pointer-events-none"
+              } transition-all duration-300`}
+          >
+            {/* 職業類別選擇 */}
             <div className="flex-1">
-              <label className="block text-xs text-slate-700 mb-1" htmlFor="city">
-                縣市
+              <label className="block text-xs text-slate-700 mb-1" htmlFor="category">
+                職業類別
               </label>
               <select
-                title="city"
-                value={cityChoose}
-                onChange={handleCityChange}
+                title="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white"
+                disabled={isLoading}
               >
-                <option value="">所有縣市</option>
-                {taiwanCityList.map((city: string) => (
-                  <option key={city} value={city}>
-                    {city}
+                <option value="">所有職業類別</option>
+                {jobCategories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="flex-1">
-              <label className="block text-xs text-slate-700 mb-1" htmlFor="district">
-                地區
-              </label>
-              <select
-                title="district"
-                value={districtChoose}
-                onChange={(e) => setDistrictChoose(e.target.value)}
-                className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white disabled:bg-slate-50"
-                disabled={!cityChoose}
-              >
-                <option value="">所有地區</option>
-                {taiwanDistrictList.map((district: any) => (
-                  <option key={district.name} value={district.name}>
-                    {district.name}
-                  </option>
-                ))}
-              </select>
+            {/* 地區選擇 */}
+            <div className="flex-1 flex flex-col sm:flex-row gap-2">
+              <div className="flex-1">
+                <label className="block text-xs text-slate-700 mb-1" htmlFor="city">
+                  縣市
+                </label>
+                <select
+                  title="city"
+                  value={cityChoose}
+                  onChange={handleCityChange}
+                  className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white"
+                >
+                  <option value="">所有縣市</option>
+                  {taiwanCityList.map((city: string) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex-1">
+                <label className="block text-xs text-slate-700 mb-1" htmlFor="district">
+                  地區
+                </label>
+                <select
+                  title="district"
+                  value={districtChoose}
+                  onChange={(e) => setDistrictChoose(e.target.value)}
+                  className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white disabled:bg-slate-50"
+                  disabled={!cityChoose}
+                >
+                  <option value="">所有地區</option>
+                  {taiwanDistrictList.map((district: any) => (
+                    <option key={district.name} value={district.name}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
+      {/* /進階搜尋選項 */}
     </div>
   );
 }
