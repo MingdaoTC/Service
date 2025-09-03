@@ -18,49 +18,43 @@ export default function Job({
       return (
         <div
           className={joinClass(
-            "px-5 py-4 border bg-white rounded-lg flex border-1 border-black border-opacity-20 transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md",
+            "px-5 py-4 bg-white rounded-2xl ring-1 ring-slate-200 flex transition-all duration-300 hover:-translate-y-1 hover:bg-blue-50/40 hover:shadow-lg",
             className,
           )}
         >
           <div className="flex-grow">
             <Link href={`/job/${data.id}`}>
-              <h2 className="text-lg text-mingdao-blue-dark font-extrabold line-clamp-1">
+              <h2 className="text-lg text-slate-800 font-extrabold line-clamp-1">
                 {data.title}
               </h2>
             </Link>
             <div className="py-2">
               <Link
-                className="text-mingdao-blue-dark font-bold text-sm"
+                className="text-blue-700 font-semibold text-sm"
                 href={`/company/${data.company?.id}`}
               >
                 {data.company.name}
               </Link>
-              <div className="flex flex-wrap text-sm">
-                <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
+              <div className="flex flex-wrap text-sm text-slate-700">
+                <p className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300">
                   {data.address}
                 </p>
-                <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
+                <p className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300">
                   {data.experience}
                 </p>
-                <p className="text-black font-bold pl-2">{data.education}</p>
+                <p>{data.education}</p>
               </div>
             </div>
-            <p className="text-mingdao-blue font-semibold text-sm">
+            <p className="text-blue-600 font-semibold text-sm">
               月薪 {data.salaryMin} ~ {data.salaryMax} 元
             </p>
           </div>
           <div className="flex flex-col gap-2">
-            {/* <Button
-              type="secondary"
-              className="flex items-center gap-1 text-sm py-1 px-3"
-            >
+            {/* <Button type="secondary" className="flex items-center gap-1 text-sm py-1 px-3">
               <BiBookmark className="translate-y-[1px]" />
               儲存
             </Button> */}
-            <Button
-              className="flex items-center gap-1 text-sm py-1 px-3"
-              disabled
-            >
+            <Button className="flex items-center gap-1 text-sm py-1 px-3" disabled>
               <AiOutlineMail className="translate-y-[0.5px]" />
               應徵
             </Button>
@@ -70,64 +64,66 @@ export default function Job({
 
     case "sm":
       return (
-        <div
-          className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}
-        >
-          <Link href={`/job/${data.id}`}>
-            <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
+        <Link href={`/job/${data.id}`} className="cursor-pointer">
+          <div
+            className={`px-4 py-3 bg-white rounded-xl ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-50/40 hover:shadow-lg ${className}`}
+          >
+
+            <h2 className="text-base text-slate-800 font-extrabold line-clamp-1">
               {data.title}
             </h2>
-          </Link>
-          <div className="py-2">
-            <Link
-              className="text-mingdao-blue-dark font-bold text-sm"
-              href={`/company/${data.company.id}`}
-            >
-              {data.company.name}
-            </Link>
-            <div className="flex flex-wrap text-xs">
-              <p className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.company.address}
-              </p>
-              <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
-                {data.experience}
-              </p>
-              <p className="text-black font-bold pl-2">{data.education}</p>
+            <div className="py-2">
+              <Link
+                className="text-blue-700 font-semibold text-sm"
+                href={`/company/${data.company.id}`}
+              >
+                {data.company.name}
+              </Link>
+              <div className="flex flex-wrap text-xs text-slate-700">
+                <p className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300">
+                  {data.company.address}
+                </p>
+                <p className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300">
+                  {data.experience}
+                </p>
+                <p>{data.education}</p>
+              </div>
             </div>
+            <p className="text-blue-600 font-semibold text-xs">
+              月薪 {data.salaryMin} ~ {data.salaryMax} 元
+            </p>
           </div>
-          <p className="text-mingdao-blue font-semibold text-xs">
-            月薪 {data.salaryMin} ~ {data.salaryMax} 元
-          </p>
-        </div>
+        </Link>
       );
+
     default:
       return (
         <div
-          className={`px-4 py-3 border bg-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-md ${className}`}
+          className={`px-4 py-3 bg-white rounded-xl ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-50/40 hover:shadow-lg ${className}`}
         >
           <Link href={`/job/${data.id}`}>
-            <h2 className="text-base text-mingdao-blue-dark font-extrabold line-clamp-1">
+            <h2 className="text-base text-slate-800 font-extrabold line-clamp-1">
               {data.title}
             </h2>
           </Link>
           <div className="py-2">
-            <p className="text-mingdao-blue-dark font-bold text-sm">
+            <p className="text-blue-700 font-semibold text-sm">
               {data.company.name}
             </p>
-            <div className="flex flex-wrap text-xs">
+            <div className="flex flex-wrap text-xs text-slate-700">
               <Link
-                className="text-black font-bold pr-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light"
+                className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300"
                 href={`/company/${data.company.id}`}
               >
                 {data.company.address}
               </Link>
-              <p className="text-black font-bold px-2 after:content-['|'] after:relative after:-right-2 after:text-mingdao-blue-light">
+              <p className="pr-2 after:content-['|'] after:mx-2 after:text-slate-300">
                 {data.experience}
               </p>
-              <p className="text-black font-bold pl-2">{data.education}</p>
+              <p>{data.education}</p>
             </div>
           </div>
-          <p className="text-mingdao-blue font-semibold text-xs">
+          <p className="text-blue-600 font-semibold text-xs">
             月薪 {data.salaryMin} ~ {data.salaryMax} 元
           </p>
         </div>

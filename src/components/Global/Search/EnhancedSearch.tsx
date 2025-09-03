@@ -32,10 +32,7 @@ export default function EnhancedSearch(props: TProps) {
 
   // 當展開狀態改變時，通知父組件
   useEffect(() => {
-    // 如果提供了 onExpandChange 屬性，則調用它
-    if (props.onExpandChange) {
-      props.onExpandChange(isExpanded);
-    }
+    if (props.onExpandChange) props.onExpandChange(isExpanded);
   }, [isExpanded, props]);
 
   const searchParams = useSearchParams();
@@ -50,40 +47,27 @@ export default function EnhancedSearch(props: TProps) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // 獲取工作類別
         const categories = await getJobCategory();
-        if (categories) {
-          setJobCategories(categories);
-        }
+        if (categories) setJobCategories(categories);
 
-        // 如果在搜尋頁面，從URL更新搜尋條件
         if (pathname === "/search") {
           const query = searchParams.get("q");
           const categoryParam = searchParams.get("category");
           const cityParam = searchParams.get("city");
           const districtParam = searchParams.get("district");
 
-          if (query) {
-            setKeyword(query);
-          }
-          if (categoryParam) {
-            setCategory(categoryParam);
-          }
+          if (query) setKeyword(query);
+          if (categoryParam) setCategory(categoryParam);
 
           if (cityParam) {
             setCityChoose(cityParam);
             const districts = getDistrictsByCity(cityParam);
             setTaiwanDistrictList(districts);
 
-            if (districtParam) {
-              setDistrictChoose(districtParam);
-            }
+            if (districtParam) setDistrictChoose(districtParam);
           }
 
-          // 如果有任何高級搜尋參數，展開高級搜尋
-          if (categoryParam || cityParam || districtParam) {
-            setIsExpanded(true);
-          }
+          if (categoryParam || cityParam || districtParam) setIsExpanded(true);
         }
       } catch (error) {
         console.error("載入搜尋資料時發生錯誤:", error);
@@ -111,55 +95,41 @@ export default function EnhancedSearch(props: TProps) {
 
   // 執行搜尋
   const handleSearch = () => {
-    // 構建查詢參數
     const params = new URLSearchParams();
-    if (keyword) {
-      params.set("q", keyword);
-    }
-    if (category) {
-      params.set("category", category);
-    }
+    if (keyword) params.set("q", keyword);
+    if (category) params.set("category", category);
     if (cityChoose) {
       params.set("city", cityChoose);
-      if (districtChoose) {
-        params.set("district", districtChoose);
-      }
+      if (districtChoose) params.set("district", districtChoose);
     }
-
-    // 導航到搜尋頁面
     router.push(`/search?${params.toString()}`);
   };
 
   return (
-    <div
-      className="flex flex-col rounded-lg p-2 backdrop-blur-md border border-mingdao-blue"
-      style={{ background: "rgba(255, 255, 255, 0.7)" }}
-    >
+    <div className="flex flex-col rounded-2xl p-3 md:p-4 bg-white/95 backdrop-blur ring-1 ring-slate-200 shadow-md transition-all">
       {/* 主要搜尋欄 */}
-      <div className="flex flex-row items-center justify-start gap-1">
+      <div className="flex flex-row items-center justify-start gap-2">
         <input
           type="text"
-          className="text-gray-900 text-xs sm:text-sm w-full p-2 outline-none bg-transparent"
+          className="flex-1 text-slate-800 text-sm md:text-base px-3 py-2 rounded-lg border border-slate-200 bg-white/70 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-blue-300"
           placeholder="關鍵字 (例如: 軟體工程師、明道中學)"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
+            if (e.key === "Enter") handleSearch();
           }}
         />
 
         <Button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="whitespace-nowrap rounded-md text-xs sm:text-sm px-2 py-1.5 bg-gray-100 text-gray-700"
+          className="whitespace-nowrap rounded-lg text-xs sm:text-sm px-3 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
         >
           {isExpanded ? "簡易搜尋" : "進階搜尋"}
         </Button>
 
         <Button
           onClick={handleSearch}
-          className="whitespace-nowrap rounded-md text-xs sm:text-sm px-3 sm:px-6 py-1.5"
+          className="whitespace-nowrap rounded-lg text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold hover:opacity-90 transition-all shadow"
         >
           搜尋
         </Button>
@@ -167,20 +137,17 @@ export default function EnhancedSearch(props: TProps) {
 
       {/* 進階搜尋選項 */}
       {isExpanded && (
-        <div className="flex flex-col sm:flex-row gap-2 mt-2 pt-2 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row gap-2 mt-3 pt-3 border-t border-slate-200">
           {/* 職業類別選擇 */}
           <div className="flex-1">
-            <label
-              className="block text-xs text-gray-700 mb-1"
-              htmlFor="category"
-            >
+            <label className="block text-xs text-slate-700 mb-1" htmlFor="category">
               職業類別
             </label>
             <select
               title="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full text-xs sm:text-sm p-2 border rounded-md bg-white"
+              className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white"
               disabled={isLoading}
             >
               <option value="">所有職業類別</option>
@@ -195,17 +162,14 @@ export default function EnhancedSearch(props: TProps) {
           {/* 地區選擇 */}
           <div className="flex-1 flex flex-col sm:flex-row gap-2">
             <div className="flex-1">
-              <label
-                className="block text-xs text-gray-700 mb-1"
-                htmlFor="city"
-              >
+              <label className="block text-xs text-slate-700 mb-1" htmlFor="city">
                 縣市
               </label>
               <select
                 title="city"
                 value={cityChoose}
                 onChange={handleCityChange}
-                className="w-full text-xs sm:text-sm p-2 border rounded-md bg-white"
+                className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white"
               >
                 <option value="">所有縣市</option>
                 {taiwanCityList.map((city: string) => (
@@ -217,17 +181,14 @@ export default function EnhancedSearch(props: TProps) {
             </div>
 
             <div className="flex-1">
-              <label
-                className="block text-xs text-gray-700 mb-1"
-                htmlFor="district"
-              >
+              <label className="block text-xs text-slate-700 mb-1" htmlFor="district">
                 地區
               </label>
               <select
                 title="district"
                 value={districtChoose}
                 onChange={(e) => setDistrictChoose(e.target.value)}
-                className="w-full text-xs sm:text-sm p-2 border rounded-md bg-white"
+                className="w-full text-xs sm:text-sm p-2 border border-slate-200 rounded-md bg-white disabled:bg-slate-50"
                 disabled={!cityChoose}
               >
                 <option value="">所有地區</option>
