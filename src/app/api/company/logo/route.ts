@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { status: 403, message: "您沒有權限查看內容" },
-      { status: 403 },
+      { status: 403 }
     );
   }
 
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { success: false, message: "缺少必要參數" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -58,7 +58,8 @@ export async function POST(request: NextRequest) {
       .resize({ height: 256 })
       .webp({ quality: 50 })
       .toBuffer();
-    const blob = new Blob([webpImage], { type: "image/webp" });
+    const uint8Array = new Uint8Array(webpImage);
+    const blob = new Blob([uint8Array], { type: "image/webp" });
     const uploadResult = await upload(blob, filename, blob.type, {
       bucketName: process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_NAME,
     });
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
         { email },
         {
           logoUrl: filename,
-        },
+        }
       );
 
       return NextResponse.json({
@@ -81,12 +82,12 @@ export async function POST(request: NextRequest) {
       { email },
       {
         logoUrl: "",
-      },
+      }
     );
 
     return NextResponse.json(
       { success: false, message: "Logo 上傳失敗" },
-      { status: 500 },
+      { status: 500 }
     );
   } catch (error) {
     console.error("Error uploading logo:", error);
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
         message:
           error instanceof Error ? error.message : "上傳過程發生未知錯誤",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
