@@ -1,30 +1,24 @@
 import Button from "@/components/Global/Button/Button";
-// Components
 import SimpleButton from "@/components/Global/Button/SimpleButton";
 import UserDropdown from "@/components/Global/Header/UserDropdown";
 
-// Third-Party Library
 import Link from "next/link";
 
-// Lib
 import { auth } from "@/library/auth";
 import { handleSignIn } from "@/library/auth/auth-actions";
 
-// Type
 import { User } from "@/prisma/client";
-
-// Config
 import { navConfig } from "@/config/header";
 
 export default async function HeaderBar() {
   const session = await auth();
-  //@ts-ignore
+  // @ts-ignore
   const user: User = session?.user;
 
   return (
-    <header className="w-full shadow-sm">
-      <div className="flex flex-row items-center justify-between py-2 px-4 sm:px-6 md:px-8 w-full h-12 border-b">
-        <Link href={"/"} className="logo select-none outline-0 ">
+    <header className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 shadow-sm">
+      <div className="max-w-6xl mx-auto flex items-center justify-between h-14 px-4 sm:px-6 md:px-8">
+        <Link href={"/"} className="logo select-none outline-0">
           <img
             src="/images/logo.png"
             width="100%"
@@ -34,15 +28,18 @@ export default async function HeaderBar() {
           />
         </Link>
 
-        <div className="flex flex-row items-center gap-6">
-          <nav className="flex items-center space-x-5">
-            {navConfig.buttons.map((e: any, index) => {
+        <div className="flex items-center gap-3 sm:gap-4">
+          <nav className="flex items-center gap-2 sm:gap-3">
+            {navConfig.buttons.map((e: any, index: number) => {
               if (e.label === "login") {
                 return user ? (
                   <UserDropdown user={user} key={index} />
                 ) : (
-                  <form action={handleSignIn}>
-                    <SimpleButton type="secondary" key={index}>
+                  <form action={handleSignIn} key={index}>
+                    <SimpleButton
+                      type="secondary"
+                      className="rounded-lg ring-1 ring-slate-200 bg-white text-slate-700 hover:bg-slate-50 px-3 py-1.5"
+                    >
                       {e.text}
                     </SimpleButton>
                   </form>
@@ -53,7 +50,7 @@ export default async function HeaderBar() {
                     key={index}
                     type={e?.type}
                     href={e.href}
-                    className="flex items-center gap-3 ml-4"
+                    className="ml-1 sm:ml-2"
                   >
                     {e.text}
                   </Button>

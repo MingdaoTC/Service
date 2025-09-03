@@ -10,7 +10,7 @@ import sharp from "sharp";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { companyId: string } },
+  { params }: { params: { companyId: string } }
 ) {
   const session = await auth();
   const user: User = session?.user as User;
@@ -18,7 +18,7 @@ export async function POST(
   if (!user) {
     return NextResponse.json(
       { status: 403, message: "您沒有權限查看內容" },
-      { status: 403 },
+      { status: 403 }
     );
   }
 
@@ -27,7 +27,7 @@ export async function POST(
   if (!companyId) {
     return NextResponse.json(
       { status: 400, message: "缺少公司 ID 參數" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -36,7 +36,7 @@ export async function POST(
   if (!company) {
     return NextResponse.json(
       { status: 404, message: "找不到指定的公司" },
-      { status: 404 },
+      { status: 404 }
     );
   }
 
@@ -47,7 +47,7 @@ export async function POST(
   ) {
     return NextResponse.json(
       { status: 403, message: "您沒有權限操作此公司" },
-      { status: 403 },
+      { status: 403 }
     );
   }
 
@@ -58,7 +58,7 @@ export async function POST(
     if (!file) {
       return NextResponse.json(
         { success: false, message: "缺少必要參數" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -82,7 +82,8 @@ export async function POST(
       .resize({ height: 256 })
       .webp({ quality: 50 })
       .toBuffer();
-    const blob = new Blob([webpImage], { type: "image/webp" });
+    const uint8Array = new Uint8Array(webpImage);
+    const blob = new Blob([uint8Array], { type: "image/webp" });
     const uploadResult = await upload(blob, filename, blob.type, {
       bucketName: process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_NAME,
     });
@@ -92,7 +93,7 @@ export async function POST(
         { id: companyId },
         {
           logoUrl: filename,
-        },
+        }
       );
 
       return NextResponse.json({
@@ -106,12 +107,12 @@ export async function POST(
       { id: companyId },
       {
         logoUrl: "",
-      },
+      }
     );
 
     return NextResponse.json(
       { success: false, message: "Logo 上傳失敗" },
-      { status: 500 },
+      { status: 500 }
     );
   } catch (error) {
     console.error("Error uploading logo:", error);
@@ -122,7 +123,7 @@ export async function POST(
         message:
           error instanceof Error ? error.message : "上傳過程發生未知錯誤",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

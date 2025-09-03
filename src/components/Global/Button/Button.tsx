@@ -1,5 +1,4 @@
 import Link from "next/link";
-// Third-Party Library
 import React from "react";
 
 type TProps = {
@@ -16,38 +15,34 @@ export default function Button({
   type = "primary",
   href,
   onClick,
-  className,
+  className = "",
   disabled,
 }: TProps) {
-  const styles = {
-    default:
-      "px-4 py-2 rounded-md hover:rounded-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+  const base =
+    "rounded-md hover:rounded-sm inline-flex items-center justify-center px-4 py-2 font-semibold transition-all " +
+    "shadow-sm ring-1 ring-slate-200 disabled:opacity-60 disabled:cursor-not-allowed";
+
+  const variants: Record<NonNullable<TProps["type"]>, string> = {
     primary:
-      "bg-mingdao-blue text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+      "bg-gradient-to-r from-blue-600 to-blue-600 text-white focus-visible:outline-none focus-visible:ring-0",
     secondary:
-      "bg-transparent text-mingdao-blue border border-mingdao-blue disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+      "bg-white text-slate-800 hover:bg-blue-50/60",
     danger:
-      "bg-red-500 text-white disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:rounded-md",
+      "bg-red-500 text-white hover:bg-red-600",
   };
+
+  const cls = `${base} ${variants[type]} ${className} select-none`;
+
+  if (href) {
+    return (
+      <Link href={href} className={cls}>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <>
-      {href ? (
-        <Link
-          href={href}
-          className={`${styles[type]} ${styles.default} ${className} select-none`}
-        >
-          {children}
-        </Link>
-      ) : (
-        <button
-          className={`${styles[type]} ${styles.default} ${className} select-none`}
-          onClick={onClick}
-          disabled={disabled}
-          type="button"
-        >
-          {children}
-        </button>
-      )}
-    </>
+    <button className={cls} onClick={onClick} disabled={disabled} type="button">
+      {children}
+    </button>
   );
 }

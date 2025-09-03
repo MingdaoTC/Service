@@ -1,189 +1,152 @@
 "use client";
 
-// Modules
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
-// Components
 import SimpleButton from "@/components/Global/Button/SimpleButton";
-
-// Libraries
 import { handleSignOut } from "@/library/auth/auth-actions";
-
-// Types
 import { AccountStatus, User, UserRole } from "@/prisma/client";
 
 function UserDropdown({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
   const role = {
     [UserRole.ADMIN]: "管理員",
     [UserRole.SUPERADMIN]: "超級管理員",
     [UserRole.GUEST]: "訪客",
     [UserRole.ALUMNI]: "校友",
     [UserRole.COMPANY]: "企業",
-  };
+  } as const;
 
   const status = {
-    [AccountStatus.VERIFIED]: {
-      text: "已驗證",
-      color: "text-green-500",
-    },
-    [AccountStatus.INACTIVE]: {
-      text: "已停用",
-      color: "text-gray-500",
-    },
-    [AccountStatus.PENDING]: {
-      text: "審核中",
-      color: "text-yellow-500",
-    },
-    [AccountStatus.UNVERIFIED]: {
-      text: "未驗證",
-      color: "text-red-500",
-    },
-    [AccountStatus.BANNED]: {
-      text: "永久封禁",
-      color: "text-red-500",
-    },
-  };
+    [AccountStatus.VERIFIED]: { text: "已驗證", color: "text-green-500" },
+    [AccountStatus.INACTIVE]: { text: "已停用", color: "text-gray-500" },
+    [AccountStatus.PENDING]: { text: "審核中", color: "text-yellow-500" },
+    [AccountStatus.UNVERIFIED]: { text: "未驗證", color: "text-red-500" },
+    [AccountStatus.BANNED]: { text: "永久封禁", color: "text-red-500" },
+  } as const;
 
-  // 處理點擊事件 - 切換下拉選單
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => setIsOpen((v) => !v);
 
-  // 處理點擊外部關閉下拉選單
   useEffect(() => {
     function handleClickOutside(event: any) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div className="relative" ref={dropdownRef}>
       <SimpleButton
         onClick={toggleDropdown}
-        className="flex items-center gap-1"
+        className="flex items-center gap-1 rounded-lg ring-1 ring-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"
       >
         {user?.displayName}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </SimpleButton>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-auto rounded-md shadow-xl bg-white ring-1 ring-black ring-opacity-20 !z-[10000000]">
-          <div className="py-2">
+        <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 z-[10000000]">
+          <div className="py-3">
             <div className="flex px-4">
               <div className="w-12 h-12 mr-2">
                 <img
                   src={user?.avatarUrl || "/images/default-avatar.png"}
                   alt="User Avatar"
-                  className="rounded-full"
+                  className="rounded-full w-12 h-12 object-cover"
                 />
               </div>
-              <div className="flex flex-col justify-center">
-                <h3 className="text-md font-semibold truncate">
+              <div className="flex flex-col justify-center min-w-0">
+                <h3 className="text-sm font-semibold text-slate-800 truncate">
                   {user.displayName}
                 </h3>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className="text-xs text-slate-500 truncate">{user.email}</p>
               </div>
             </div>
-            <hr className="border-gray-300 my-2" />
-            <div className="px-4 gap-1 flex flex-col">
+
+            <hr className="border-slate-200 my-3" />
+
+            <div className="px-4 gap-1 flex flex-col text-slate-700 text-sm">
               <p>
                 登入身分：
-                <span className="text-mingdao-blue-dark font-medium">
+                <span className="text-blue-500 font-medium">
                   {role[user.role as keyof typeof role]}
                 </span>
               </p>
               <p>
                 驗證身分：
-                <span
-                  className={`font-medium ${
-                    status[user.status as keyof typeof status].color
-                  }`}
-                >
+                <span className={`font-medium ${status[user.status as keyof typeof status].color}`}>
                   {status[user.status as keyof typeof status].text}
                 </span>
               </p>
             </div>
-            {(user.role === UserRole.ADMIN ||
-              user.role === UserRole.SUPERADMIN) && (
+
+            {(user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN) && (
               <>
-                <hr className="border-gray-300 my-2" />
+                <hr className="border-slate-200 my-3" />
                 <div className="px-4 flex flex-col gap-1">
                   <Link
                     href="/admin"
-                    className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                    className="w-full text-left text-slate-700 hover:text-blue-500"
                   >
                     管理員後台
                   </Link>
                 </div>
               </>
             )}
-            {(user.role === UserRole.SUPERADMIN ||
-              user.status !== AccountStatus.PENDING) && (
-              <hr className="border-gray-300 my-2" />
+
+            {(user.role === UserRole.SUPERADMIN || user.status !== AccountStatus.PENDING) && (
+              <hr className="border-slate-200 my-3" />
             )}
+
             <div className="flex flex-col px-4 gap-1">
-              {(user.status === AccountStatus.UNVERIFIED ||
-                user.role === UserRole.SUPERADMIN) && (
+              {(user.status === AccountStatus.UNVERIFIED || user.role === UserRole.SUPERADMIN) && (
                 <Link
                   href="/register"
-                  className="w-full text-left text-md text-black hover:text-mingdao-blue"
+                  className="w-full text-left text-slate-700 hover:text-blue-500"
                 >
                   申請驗證
                 </Link>
               )}
 
-              {((user.status === AccountStatus.VERIFIED &&
-                user.role === UserRole.ALUMNI) ||
+              {((user.status === AccountStatus.VERIFIED && user.role === UserRole.ALUMNI) ||
                 user.role === UserRole.SUPERADMIN) && (
-                <Link
-                  href="/profile"
-                  className="w-full text-left text-md text-black hover:text-mingdao-blue"
-                >
-                  我的檔案
-                </Link>
-              )}
-              {((user.status === AccountStatus.VERIFIED &&
-                user.role === UserRole.COMPANY) ||
+                  <Link
+                    href="/profile"
+                    className="w-full text-left text-slate-700 hover:text-blue-500"
+                  >
+                    我的檔案
+                  </Link>
+                )}
+
+              {((user.status === AccountStatus.VERIFIED && user.role === UserRole.COMPANY) ||
                 user.role === UserRole.SUPERADMIN) && (
-                <Link
-                  href="/enterprise"
-                  className="w-full text-left text-md text-black hover:text-mingdao-blue"
-                >
-                  企業後台
-                </Link>
-              )}
+                  <Link
+                    href="/enterprise"
+                    className="w-full text-left text-slate-700 hover:text-blue-500"
+                  >
+                    企業後台
+                  </Link>
+                )}
             </div>
 
-            <hr className="border-gray-300 my-2" />
-            <form action={handleSignOut} className="px-4">
+            <hr className="border-slate-200 my-3" />
+
+            <form action={handleSignOut} className="px-4 pb-1">
               <button
                 type="submit"
-                className="w-full text-left text-md text-black hover:text-red-500"
+                className="w-full text-left text-slate-700 hover:text-red-500"
               >
                 登出
               </button>

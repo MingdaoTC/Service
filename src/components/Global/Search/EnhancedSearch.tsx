@@ -122,14 +122,14 @@ export default function EnhancedSearch(props: TProps) {
 
         <Button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="whitespace-nowrap rounded-lg text-xs sm:text-sm px-3 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+          className="whitespace-nowrap text-xs sm:text-sm px-3 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all shadow"
         >
           {isExpanded ? "簡易搜尋" : "進階搜尋"}
         </Button>
 
         <Button
           onClick={handleSearch}
-          className="whitespace-nowrap rounded-lg text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold hover:opacity-90 transition-all shadow"
+          className="whitespace-nowrap text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold transition-all shadow"
         >
           搜尋
         </Button>
