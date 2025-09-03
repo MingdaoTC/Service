@@ -48,7 +48,7 @@ export default function Footer() {
         </div>
 
         {/* 分隔線 */}
-        <div className="border-t border-slate-200 my-4" />
+        <div className="border-t border-slate-200 my-4 w-80 mx-auto" />
 
         {/* 版權資訊 */}
         <div className="text-center">
