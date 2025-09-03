@@ -129,11 +129,17 @@ export default function EnhancedSearch(props: TProps) {
 
         <Button
           onClick={handleSearch}
-          className="whitespace-nowrap text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold transition-all shadow"
+          className="whitespace-nowrap text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold transition-all shadow max-md:hidden"
         >
           搜尋
         </Button>
       </div>
+      <Button
+        onClick={handleSearch}
+        className="whitespace-nowrap text-xs sm:text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-500 text-white font-bold transition-all shadow md:hidden mt-2"
+      >
+        搜尋
+      </Button>
 
       {/* 進階搜尋選項 */}
       {isExpanded && (
