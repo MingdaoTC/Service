@@ -15,17 +15,18 @@ export default function ResumeItem({
     const filename = encodeURIComponent(`${resumeName}.pdf`);
     const apiUrl = `/api/download-resume?url=${encodedUrl}&filename=${filename}`;
 
-    // 直接開啟下載連結
     window.open(apiUrl, "_blank");
   };
 
   return (
-    <div className="flex items-center justify-between py-2 px-4 bg-gray-100 border rounded-lg border-gray-300">
-      <p className="text-lg font-bold text-mingdao-blue-dark">{resumeName}</p>
+    <div className="flex items-center justify-between gap-3 px-4 py-3 bg-white rounded-xl ring-1 ring-slate-200 shadow-sm hover:shadow-md transition">
+      <p className="text-base md:text-lg font-semibold text-slate-800">
+        {resumeName}
+      </p>
 
       <button
         onClick={handleDownload}
-        className="px-4 py-2 bg-mingdao-blue text-white rounded-md transition hover:bg-transparent hover:text-mingdao-blue border border-mingdao-blue"
+        className="inline-flex items-center justify-center px-3 md:px-4 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:opacity-90 shadow-sm ring-1 ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 transition-all hover:rounded-none"
       >
         下載履歷
       </button>

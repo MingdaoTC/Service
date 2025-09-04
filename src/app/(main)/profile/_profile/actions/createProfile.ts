@@ -37,7 +37,8 @@ export async function createProfile(formData: FormData) {
     // @ts-ignore
     await createUserProfile(user.email, data);
     revalidatePath("/profile");
-  } catch (_) {
+  } catch (error) {
+    console.log(error);
     return { error: "Failed to create profile" };
   }
   redirect("/profile");
