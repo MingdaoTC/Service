@@ -1,5 +1,7 @@
-// components/Modal.tsx
-import React from "react";
+"use client";
+
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,23 +22,100 @@ const Modal: React.FC<ModalProps> = ({
   children,
   buttons,
 }) => {
-  if (!isOpen) {
-    return null;
-  }
+  const [mounted, setMounted] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">{title}</h3>
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    lastFocusedRef.current = document.activeElement as HTMLElement | null;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const t = requestAnimationFrame(() => setAnimateIn(true));
+
+    const focusables = getFocusable(dialogRef.current);
+    if (focusables.length) focusables[0].focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === "Tab") {
+        trapFocus(e, dialogRef.current);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+      cancelAnimationFrame(t);
+      setAnimateIn(false);
+      lastFocusedRef.current?.focus?.();
+    };
+  }, [isOpen, onClose]);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === backdropRef.current) onClose();
+  };
+
+  const portalTarget = useMemo(
+    () => (mounted ? document.body : null),
+    [mounted]
+  );
+
+  if (!isOpen || !mounted || !portalTarget) return null;
+
+  const panelBase =
+    // 亮色系卡片 + 品牌描邊 + 柔陰影
+    "bg-white rounded-2xl ring-1 ring-slate-200 shadow-xl w-full max-w-lg mx-4 overflow-hidden";
+  const panelAnim = animateIn
+    ? "opacity-100 translate-y-0 scale-100"
+    : "opacity-0 translate-y-1 scale-95";
+  const backdropAnim = animateIn ? "opacity-100" : "opacity-0";
+
+  return createPortal(
+    <div
+      ref={backdropRef}
+      className={`fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-200 ease-out bg-slate-900/30 backdrop-blur-sm ${backdropAnim}`}
+      onMouseDown={handleBackdropClick}
+      aria-hidden={false}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className={`${panelBase} transition-all duration-200 ease-out ${panelAnim}`}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        {/* Brand top bar */}
+        <div className="h-1 w-full bg-mingdao-blue"></div>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200/80">
+          <h3
+            id="modal-title"
+            className="text-lg md:text-xl font-bold text-slate-800"
+          >
+            {title}
+          </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mingdao-blue/50 transition"
+            aria-label="Close"
           >
             <svg
               className="h-6 w-6"
-              fill="none"
               viewBox="0 0 24 24"
+              fill="none"
               stroke="currentColor"
             >
               <path
@@ -49,88 +128,69 @@ const Modal: React.FC<ModalProps> = ({
           </button>
         </div>
 
-        <div className="mb-6">{children}</div>
+        {/* Body */}
+        <div className="px-5 py-4 text-slate-700">{children}</div>
 
-        <div className="flex justify-end space-x-2">
-          {buttons.map((button, index) => {
-            let buttonClass =
-              "px-4 py-2 rounded-md font-medium focus:outline-none transition-colors";
-
-            switch (button.variant) {
-              case "primary":
-                buttonClass += " bg-blue-600 hover:bg-blue-700 text-white";
-                break;
-              case "danger":
-                buttonClass += " bg-red-600 hover:bg-red-700 text-white";
-                break;
-              default:
-                buttonClass += " bg-gray-200 hover:bg-gray-300 text-gray-800";
-                break;
-            }
-
-            return (
-              <button
-                key={index}
-                onClick={button.onClick}
-                className={buttonClass}
-              >
-                {button.label}
-              </button>
-            );
-          })}
+        {/* Footer */}
+        <div className="flex justify-end gap-2 px-5 pb-5">
+          {buttons.map((button, i) => (
+            <button
+              key={i}
+              onClick={button.onClick}
+              className={`${btnBase} ${variantClass(button.variant)}`}
+            >
+              {button.label}
+            </button>
+          ))}
         </div>
       </div>
-    </div>
+    </div>,
+    portalTarget
   );
 };
 
 export default Modal;
 
-// Example Usage:
-// components/ExampleModalUsage.tsx
-// import { useState } from 'react';
-// import Modal from './Modal';
+/* ========== Styles ========== */
+const btnBase =
+  "inline-flex items-center justify-center px-4 py-2 rounded-xl font-semibold transition shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mingdao-blue/50";
 
-// export default function ExampleModalUsage() {
-//     const [isModalOpen, setIsModalOpen] = useState(false);
+function variantClass(variant?: "primary" | "secondary" | "danger") {
+  switch (variant) {
+    case "primary":
+      // 品牌主色：mingdao-blue
+      return "text-white bg-mingdao-blue hover:bg-mingdao-blue-dark";
+    case "danger":
+      return "text-white bg-red-500 hover:bg-red-600";
+    default:
+      // 次要：白底 + 品牌描邊
+      return "bg-white text-mingdao-blue ring-1 ring-mingdao-blue hover:bg-mingdao-blue-light";
+  }
+}
 
-//     const openModal = () => setIsModalOpen(true);
-//     const closeModal = () => setIsModalOpen(false);
+/* ========== A11y helpers ========== */
+function getFocusable(root: HTMLElement | null): HTMLElement[] {
+  if (!root) return [];
+  const selectors =
+    'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable=true]';
+  return Array.from(root.querySelectorAll<HTMLElement>(selectors)).filter(
+    (el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement
+  );
+}
 
-//     const handleConfirm = () => {
-//         // Do something when confirm is clicked
-//         console.log('Confirmed!');
-//         closeModal();
-//     };
+function trapFocus(e: KeyboardEvent, root: HTMLElement | null) {
+  const focusables = getFocusable(root);
+  if (focusables.length === 0) return;
 
-//     return (
-//         <div className="p-6">
-//             <button
-//                 onClick={openModal}
-//                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-//             >
-//                 打開彈跳視窗
-//             </button>
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement as HTMLElement;
 
-//             <Modal
-//                 isOpen={isModalOpen}
-//                 onClose={closeModal}
-//                 title="確認操作"
-//                 buttons={[
-//                     {
-//                         label: '取消',
-//                         onClick: closeModal,
-//                         variant: 'secondary'
-//                     },
-//                     {
-//                         label: '確認',
-//                         onClick: handleConfirm,
-//                         variant: 'primary'
-//                     }
-//                 ]}
-//             >
-//                 <p>您確定要執行此操作嗎？</p>
-//             </Modal>
-//         </div>
-//     );
-// }
+  if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  } else if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  }
+}

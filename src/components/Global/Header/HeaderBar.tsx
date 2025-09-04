@@ -16,7 +16,7 @@ export default async function HeaderBar() {
   const user: User = session?.user;
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 shadow-sm">
+    <header className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 shadow-sm z-[2000]">
       <div className="max-w-6xl mx-auto flex items-center justify-between h-14 px-4 sm:px-6 md:px-8">
         <Link href={"/"} className="logo select-none outline-0">
           <img

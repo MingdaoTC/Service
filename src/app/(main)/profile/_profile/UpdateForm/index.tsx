@@ -58,7 +58,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     if (
       formData.get("birthday") &&
       new Date(formData.get("birthday")?.toString() as string).toString() ===
-        "Invalid Date"
+      "Invalid Date"
     ) {
       setError("生日格式不正確");
       setDialogMessage("生日格式不正確");
@@ -166,6 +166,12 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     },
   ];
 
+  const labelCls =
+    "block text-sm font-medium text-slate-600 mb-1";
+  const inputBase =
+    "w-full rounded-lg ring-1 ring-slate-200 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition";
+  const disabledCls = "bg-slate-100 text-slate-400 cursor-not-allowed";
+
   const renderField = (field: FormField) => {
     const value = initialData?.[field.name] ?? "";
 
@@ -173,16 +179,16 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       case "date":
         return (
           <Fragment key={field.name}>
-            <label htmlFor={field.name}>{field.title}</label>
+            <label htmlFor={field.name} className={labelCls}>
+              {field.title}
+            </label>
             <input
               key={field.name}
               type="date"
               name={field.name}
               defaultValue="2000-01-01"
               placeholder={field.placeholder}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`${inputBase} ${field.disabled ? disabledCls : ""}`}
               disabled={field.disabled}
               required={field.required}
             />
@@ -191,15 +197,15 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       case "textarea":
         return (
           <Fragment key={field.name}>
-            <label htmlFor={field.name}>{field.title}</label>
+            <label htmlFor={field.name} className={labelCls}>
+              {field.title}
+            </label>
             <textarea
               key={field.name}
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 h-24 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`${inputBase} h-28 ${field.disabled ? disabledCls : ""}`}
               disabled={field.disabled}
             />
           </Fragment>
@@ -207,14 +213,14 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       case "select":
         return (
           <Fragment key={field.name}>
-            <label htmlFor={field.name}>{field.title}</label>
+            <label htmlFor={field.name} className={labelCls}>
+              {field.title}
+            </label>
             <select
               key={field.name}
               name={field.name}
               defaultValue={field.options[0].value}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`${inputBase} ${field.disabled ? disabledCls : ""}`}
               disabled={field.disabled}
             >
               {field.options.map((option) => (
@@ -228,16 +234,16 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       default:
         return (
           <Fragment key={field.name}>
-            <label htmlFor={field.name}>{field.title}</label>
+            <label htmlFor={field.name} className={labelCls}>
+              {field.title}
+            </label>
             <input
               key={field.name}
               type={field.type}
               name={field.name}
               placeholder={field.placeholder}
               defaultValue={value as string}
-              className={`border border-gray-300 rounded px-4 py-2 ${
-                field.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`${inputBase} ${field.disabled ? disabledCls : ""}`}
               disabled={field.disabled}
               pattern={field.pattern?.source}
               required={field.required}
@@ -257,31 +263,35 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
       <form
         ref={formRef}
         onSubmit={(e) => {
-          e.preventDefault(); // 防止默認的表單提交行為
+          e.preventDefault();
           const formData = new FormData(formRef.current as HTMLFormElement);
           handleSubmit(formData);
         }}
         className="flex flex-col gap-4 w-full"
       >
         {mode === "create" ? (
-          <h1 className="text-2xl text-gray-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800">
             你還沒有創建個人檔案，馬上來創建吧！
           </h1>
         ) : (
-          <h1 className="text-3xl">更新個人檔案</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800">
+            更新個人檔案
+          </h1>
         )}
-        {error && <p className="text-red-500">{error}</p>}
 
-        {formFields.map(renderField)}
+        {error && (
+          <p className="rounded-lg bg-red-50 text-red-700 border border-red-200 px-3 py-2">
+            {error}
+          </p>
+        )}
+
+        {/* 欄位們 */}
+        <div className="grid grid-cols-1 gap-3">{formFields.map(renderField)}</div>
 
         <button
           type="submit"
           disabled={isPending}
-          className={`px-4 py-2 ${
-            isPending
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-mingdao-blue hover:bg-transparent hover:text-mingdao-blue"
-          } text-white rounded border-mingdao-blue border transition duration-300 ease-in-out`}
+          className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:opacity-90 transition shadow-sm disabled:opacity-60 disabled:cursor-not-allowed hover:rounded-none transition-all"
         >
           {isPending
             ? mode === "update"

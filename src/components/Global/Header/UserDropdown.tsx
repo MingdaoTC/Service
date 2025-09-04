@@ -39,7 +39,7 @@ function UserDropdown({ user }: { user: User }) {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative z-[2000]" ref={dropdownRef}>
       <SimpleButton
         onClick={toggleDropdown}
         className="flex items-center gap-1 rounded-lg ring-1 ring-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"
@@ -57,7 +57,7 @@ function UserDropdown({ user }: { user: User }) {
       </SimpleButton>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-auto rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 z-[10000000]">
+        <div className="absolute right-0 mt-2 w-auto rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 z-[2000]">
           <div className="py-3">
             <div className="flex px-4">
               <div className="w-12 h-12 mr-2">
