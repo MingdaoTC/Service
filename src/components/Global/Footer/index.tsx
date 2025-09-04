@@ -9,7 +9,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-auto w-full bg-white/90 backdrop-blur border-t border-slate-200 text-slate-700 py-8">
+    <footer className="mt-auto w-full bg-white/50 backdrop-blur border-t border-slate-200 text-slate-700 py-8">
       <div className="w-[98%] sm:w-[95%] max-w-6xl mx-auto px-2 sm:px-0">
         <div className="mb-6">
           <h3 className="text-base font-semibold text-slate-500 mb-3 text-center tracking-wide">
