@@ -1,8 +1,6 @@
 import { auth } from "@/library/auth";
 import { Company, Job, Resume, User } from "@/prisma/client";
 
-// import Other from "@/components/Global/Object/Other";
-// Components
 import Content from "@/components/Job/Content";
 import Info from "@/components/Job/Info";
 import { getResumeListByUserEmail } from "@/library/actions/getResumeList";
@@ -34,18 +32,23 @@ export default async function JobPage({
     : [];
 
   return (
-    <div className="">
+    <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-b from-blue-50 via-white to-teal-50">
       <Info
         isLogin={!!user}
         jobData={job}
         company={company}
         resumeList={resumeList}
       />
-      <div className="w-[98%] sm:w-[95%] max-w-5xl mx-auto my-3 md:my-4">
-        <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
-          <div className="w-full flex flex-col gap-3 md:gap-4">
-            <Content data={job} className="w-full" />
+
+      <div className="w-full max-w-6xl mx-auto my-4 md:my-6 px-4">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+          <div className="w-full flex flex-col gap-4 md:gap-6">
+            <Content
+              data={job}
+              className="w-full bg-white rounded-2xl ring-1 ring-slate-200 shadow-md"
+            />
           </div>
+
           {/* <div className="w-full lg:w-1/4">
             <Other<Job>
               title="適合你的其他職缺"

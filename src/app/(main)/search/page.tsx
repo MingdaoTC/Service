@@ -213,7 +213,7 @@ export default function SearchPage() {
     !employmentTypes.length
   ) {
     return (
-      <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center bg-gradient-to-b from-blue-50 via-white to-teal-50">
+      <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center bg-gradient-to-b from-blue-50 via-white to-blue-50">
         <div className="animate-spin h-10 w-10 border-b-2 border-blue-600 rounded-full" />
       </div>
     );
