@@ -24,10 +24,10 @@ export default async function companyID({
   }
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-b from-blue-50 via-white to-teal-50">
+    <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-b from-blue-50 via-white to-blue-50">
       <Info data={companyData} />
 
-      <div className="w-full max-w-6xl mx-auto my-4 md:my-6 px-4">
+      <div className="w-full max-w-6xl mx-auto mt-4 md:mt-6 px-4 pb-6">
         <div className="flex flex-col lg:flex-row gap-4 md:gap-6 mb-6">
           <div className="w-full">
             <Content data={companyData} className="w-full" />
