@@ -32,7 +32,7 @@ export default async function JobPage({
     : [];
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-b from-blue-50 via-white to-teal-50">
+    <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-b from-blue-50 via-white to-blue-50">
       <Info
         isLogin={!!user}
         jobData={job}
@@ -40,7 +40,7 @@ export default async function JobPage({
         resumeList={resumeList}
       />
 
-      <div className="w-full max-w-6xl mx-auto my-4 md:my-6 px-4">
+      <div className="w-full max-w-6xl mx-auto mt-4 md:mt-6 px-4 pb-4">
         <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
           <div className="w-full flex flex-col gap-4 md:gap-6">
             <Content
