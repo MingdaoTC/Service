@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 // modules
-import { UserRole } from "@/prisma/client";
+import { UserRole } from "@/types/user";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 

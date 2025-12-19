@@ -11,7 +11,7 @@ import {
 import EnhancedSearch from "@/components/Global/Search/EnhancedSearch";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   FaBriefcase,
   FaBuilding,
@@ -22,7 +22,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [results, setResults] = useState<any>({
@@ -109,17 +109,39 @@ export default function SearchPage() {
 
         // 計算活躍的篩選器
         const filters: string[] = [];
-        if (params.query) filters.push("query");
-        if (params.category) filters.push("category");
-        if (params.location) filters.push("location");
-        if (params.employmentType) filters.push("employmentType");
-        if (params.salaryMin || params.salaryMax) filters.push("salary");
-        if (params.negotiable) filters.push("negotiable");
-        if (params.experience) filters.push("experience");
-        if (params.education) filters.push("education");
-        if (params.skills) filters.push("skills");
-        if (params.city) filters.push("city");
-        if (params.district) filters.push("district");
+        if (params.query) {
+          filters.push("query");
+        }
+        if (params.category) {
+          filters.push("category");
+        }
+        if (params.location) {
+          filters.push("location");
+        }
+        if (params.employmentType) {
+          filters.push("employmentType");
+        }
+        if (params.salaryMin || params.salaryMax) {
+          filters.push("salary");
+        }
+        if (params.negotiable) {
+          filters.push("negotiable");
+        }
+        if (params.experience) {
+          filters.push("experience");
+        }
+        if (params.education) {
+          filters.push("education");
+        }
+        if (params.skills) {
+          filters.push("skills");
+        }
+        if (params.city) {
+          filters.push("city");
+        }
+        if (params.district) {
+          filters.push("district");
+        }
 
         setActiveFilters(filters);
       } catch (error) {
@@ -137,21 +159,29 @@ export default function SearchPage() {
   const formatLocation = () => {
     const city = searchParams.get("city");
     const district = searchParams.get("district");
-    if (!city) return "所有地區";
-    if (district) return `${city} ${district}`;
+    if (!city) {
+      return "所有地區";
+    }
+    if (district) {
+      return `${city} ${district}`;
+    }
     return city;
   };
 
   const _formatEmploymentType = () => {
     const type = searchParams.get("employmentType");
-    if (!type) return "所有工作類型";
+    if (!type) {
+      return "所有工作類型";
+    }
     const empType = employmentTypes.find((t) => t.value === type);
     return empType ? empType.label : "所有工作類型";
   };
 
   const getCategoryName = () => {
     const categoryId = searchParams.get("category");
-    if (!categoryId) return "所有職業類別";
+    if (!categoryId) {
+      return "所有職業類別";
+    }
     const category = categories.find((c) => c.id === categoryId);
     return category ? category.name : "所有職業類別";
   };
@@ -159,15 +189,23 @@ export default function SearchPage() {
   const formatSalaryRange = () => {
     const min = searchParams.get("salaryMin");
     const max = searchParams.get("salaryMax");
-    if (min && max) return `${Number.parseInt(min) / 1000}K - ${Number.parseInt(max) / 1000}K`;
-    if (min) return `${Number.parseInt(min) / 1000}K 以上`;
-    if (max) return `${Number.parseInt(max) / 1000}K 以下`;
+    if (min && max) {
+      return `${Number.parseInt(min) / 1000}K - ${Number.parseInt(max) / 1000}K`;
+    }
+    if (min) {
+      return `${Number.parseInt(min) / 1000}K 以上`;
+    }
+    if (max) {
+      return `${Number.parseInt(max) / 1000}K 以下`;
+    }
     return "所有薪資範圍";
   };
 
   const formatExperience = () => {
     const exp = searchParams.get("experience");
-    if (!exp) return "所有經驗";
+    if (!exp) {
+      return "所有經驗";
+    }
     const expLevel = experienceLevels.find((e) => e.value === exp);
     return expLevel ? expLevel.label : "所有經驗";
   };
@@ -176,10 +214,15 @@ export default function SearchPage() {
   const updateSearchParams = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(updates).map(([key, value]) => {
-      if (value === null) params.delete(key);
-      else params.set(key, value);
+      if (value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
     });
-    if (!Object.hasOwn(updates, "page")) params.set("page", "1");
+    if (!Object.hasOwn(updates, "page")) {
+      params.set("page", "1");
+    }
     router.push(`/search?${params.toString()}`);
   };
 
@@ -188,22 +231,47 @@ export default function SearchPage() {
   const clearFilter = (filter: string) => {
     const updates: Record<string, string | null> = {};
     switch (filter) {
-      case "query": updates.q = null; break;
-      case "category": updates.category = null; break;
-      case "location": updates.location = null; break;
-      case "city": updates.city = null; updates.district = null; break;
-      case "district": updates.district = null; break;
-      case "employmentType": updates.employmentType = null; break;
-      case "salary": updates.salaryMin = null; updates.salaryMax = null; break;
-      case "negotiable": updates.negotiable = null; break;
-      case "experience": updates.experience = null; break;
-      case "education": updates.education = null; break;
-      case "skills": updates.skills = null; break;
+      case "query":
+        updates.q = null;
+        break;
+      case "category":
+        updates.category = null;
+        break;
+      case "location":
+        updates.location = null;
+        break;
+      case "city":
+        updates.city = null;
+        updates.district = null;
+        break;
+      case "district":
+        updates.district = null;
+        break;
+      case "employmentType":
+        updates.employmentType = null;
+        break;
+      case "salary":
+        updates.salaryMin = null;
+        updates.salaryMax = null;
+        break;
+      case "negotiable":
+        updates.negotiable = null;
+        break;
+      case "experience":
+        updates.experience = null;
+        break;
+      case "education":
+        updates.education = null;
+        break;
+      case "skills":
+        updates.skills = null;
+        break;
     }
     updateSearchParams(updates);
   };
 
-  const handlePageChange = (page: number) => updateSearchParams({ page: page.toString() });
+  const handlePageChange = (page: number) =>
+    updateSearchParams({ page: page.toString() });
 
   // 載入支援選項時的 loading
   if (
@@ -223,8 +291,9 @@ export default function SearchPage() {
     <div className="min-h-[calc(100vh-7rem)] bg-gradient-to-b from-blue-50 via-white to-blue-50">
       {/* 搜尋區域（亮色漸層） */}
       <div
-        className={`relative p-4 md:p-8 flex justify-center items-start bg-gradient-to-r from-blue-50 via-white to-blue-50 ${isSearchExpanded ? "min-h-[12rem]" : "min-h-[8rem]"
-          }`}
+        className={`relative p-4 md:p-8 flex justify-center items-start bg-gradient-to-r from-blue-50 via-white to-blue-50 ${
+          isSearchExpanded ? "min-h-[12rem]" : "min-h-[8rem]"
+        }`}
       >
         <div className="w-full max-w-3xl mx-auto relative z-10">
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-xl ring-1 ring-slate-200 p-4 md:p-5">
@@ -381,10 +450,12 @@ export default function SearchPage() {
                         name="salary"
                         className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                         checked={
-                          (searchParams.get("salaryMin") === String(range.min) &&
+                          (searchParams.get("salaryMin") ===
+                            String(range.min) &&
                             (range.max === null
                               ? true
-                              : searchParams.get("salaryMax") === String(range.max))) ||
+                              : searchParams.get("salaryMax") ===
+                                String(range.max))) ||
                           (!searchParams.get("salaryMin") &&
                             !searchParams.get("salaryMax") &&
                             index === 0)
@@ -396,7 +467,10 @@ export default function SearchPage() {
                           });
                         }}
                       />
-                      <label htmlFor={`salary-${index}`} className="ml-2 text-sm text-slate-700">
+                      <label
+                        htmlFor={`salary-${index}`}
+                        className="ml-2 text-sm text-slate-700"
+                      >
                         {range.label}
                       </label>
                     </div>
@@ -408,10 +482,15 @@ export default function SearchPage() {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-600 rounded"
                       checked={searchParams.get("negotiable") === "true"}
                       onChange={(e) => {
-                        updateSearchParams({ negotiable: e.target.checked ? "true" : null });
+                        updateSearchParams({
+                          negotiable: e.target.checked ? "true" : null,
+                        });
                       }}
                     />
-                    <label htmlFor="negotiable-option" className="ml-2 text-sm text-slate-700">
+                    <label
+                      htmlFor="negotiable-option"
+                      className="ml-2 text-sm text-slate-700"
+                    >
                       僅顯示薪資可議職位
                     </label>
                   </div>
@@ -429,9 +508,14 @@ export default function SearchPage() {
                       name="employmentType"
                       className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                       checked={!searchParams.get("employmentType")}
-                      onChange={() => updateSearchParams({ employmentType: null })}
+                      onChange={() =>
+                        updateSearchParams({ employmentType: null })
+                      }
                     />
-                    <label htmlFor="emp-all" className="ml-2 text-sm text-slate-700">
+                    <label
+                      htmlFor="emp-all"
+                      className="ml-2 text-sm text-slate-700"
+                    >
                       所有工作類型
                     </label>
                   </div>
@@ -443,10 +527,17 @@ export default function SearchPage() {
                         id={`emp-${type.value}`}
                         name="employmentType"
                         className="h-4 w-4 text-blue-600 focus:ring-blue-600"
-                        checked={searchParams.get("employmentType") === type.value}
-                        onChange={() => updateSearchParams({ employmentType: type.value })}
+                        checked={
+                          searchParams.get("employmentType") === type.value
+                        }
+                        onChange={() =>
+                          updateSearchParams({ employmentType: type.value })
+                        }
                       />
-                      <label htmlFor={`emp-${type.value}`} className="ml-2 text-sm text-slate-700">
+                      <label
+                        htmlFor={`emp-${type.value}`}
+                        className="ml-2 text-sm text-slate-700"
+                      >
                         {type.label}
                       </label>
                     </div>
@@ -467,7 +558,10 @@ export default function SearchPage() {
                       checked={!searchParams.get("experience")}
                       onChange={() => updateSearchParams({ experience: null })}
                     />
-                    <label htmlFor="exp-all" className="ml-2 text-sm text-slate-700">
+                    <label
+                      htmlFor="exp-all"
+                      className="ml-2 text-sm text-slate-700"
+                    >
                       所有經驗
                     </label>
                   </div>
@@ -480,9 +574,14 @@ export default function SearchPage() {
                         name="experience"
                         className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                         checked={searchParams.get("experience") === exp.value}
-                        onChange={() => updateSearchParams({ experience: exp.value })}
+                        onChange={() =>
+                          updateSearchParams({ experience: exp.value })
+                        }
                       />
-                      <label htmlFor={`exp-${exp.value}`} className="ml-2 text-sm text-slate-700">
+                      <label
+                        htmlFor={`exp-${exp.value}`}
+                        className="ml-2 text-sm text-slate-700"
+                      >
                         {exp.label}
                       </label>
                     </div>
@@ -503,7 +602,10 @@ export default function SearchPage() {
                       checked={!searchParams.get("education")}
                       onChange={() => updateSearchParams({ education: null })}
                     />
-                    <label htmlFor="edu-all" className="ml-2 text-sm text-slate-700">
+                    <label
+                      htmlFor="edu-all"
+                      className="ml-2 text-sm text-slate-700"
+                    >
                       所有學歷
                     </label>
                   </div>
@@ -516,9 +618,14 @@ export default function SearchPage() {
                         name="education"
                         className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                         checked={searchParams.get("education") === edu.value}
-                        onChange={() => updateSearchParams({ education: edu.value })}
+                        onChange={() =>
+                          updateSearchParams({ education: edu.value })
+                        }
                       />
-                      <label htmlFor={`edu-${edu.value}`} className="ml-2 text-sm text-slate-700">
+                      <label
+                        htmlFor={`edu-${edu.value}`}
+                        className="ml-2 text-sm text-slate-700"
+                      >
                         {edu.label}
                       </label>
                     </div>
@@ -535,12 +642,16 @@ export default function SearchPage() {
                     id="skills"
                     name="skills"
                     value={searchParams.get("skills") || ""}
-                    onChange={(e) => updateSearchParams({ skills: e.target.value || null })}
+                    onChange={(e) =>
+                      updateSearchParams({ skills: e.target.value || null })
+                    }
                     className="flex-1 px-3 py-2 bg-white rounded-md ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
                     placeholder="輸入技能關鍵字，如：React, Python"
                   />
                 </div>
-                <p className="mt-1 text-xs text-slate-500">多個技能請用逗號分隔</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  多個技能請用逗號分隔
+                </p>
               </div>
             </div>
           </div>
@@ -560,7 +671,10 @@ export default function SearchPage() {
                   <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200 overflow-hidden mb-6">
                     <ul className="divide-y divide-slate-200">
                       {results.jobs.map((job: any) => (
-                        <li key={job.id} className="hover:bg-blue-50/40 transition-colors">
+                        <li
+                          key={job.id}
+                          className="hover:bg-blue-50/40 transition-colors"
+                        >
                           <Link href={`/job/${job.id}`} className="block p-4">
                             <div className="flex items-start">
                               {/* 公司 Logo */}
@@ -568,7 +682,8 @@ export default function SearchPage() {
                                 {job.company?.logoUrl ? (
                                   <img
                                     src={
-                                      process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL +
+                                      process.env
+                                        .NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL +
                                       job.company.logoUrl
                                     }
                                     alt={job.company.name}
@@ -589,7 +704,9 @@ export default function SearchPage() {
                                   </h2>
                                   <div className="text-sm text-slate-500">
                                     刊登日期:{" "}
-                                    {new Date(job.createdAt).toLocaleDateString("zh-TW")}
+                                    {new Date(job.createdAt).toLocaleDateString(
+                                      "zh-TW",
+                                    )}
                                   </div>
                                 </div>
 
@@ -599,13 +716,19 @@ export default function SearchPage() {
                                   </span>
                                   {job.location && (
                                     <span className="ml-2 inline-flex items-center text-slate-500">
-                                      <FaMapMarkerAlt className="mr-1" size={12} />
+                                      <FaMapMarkerAlt
+                                        className="mr-1"
+                                        size={12}
+                                      />
                                       {job.address}
                                     </span>
                                   )}
                                   {job.location && (
                                     <span className="ml-2 inline-flex items-center text-slate-500">
-                                      <FaMapMarkerAlt className="mr-1" size={12} />
+                                      <FaMapMarkerAlt
+                                        className="mr-1"
+                                        size={12}
+                                      />
                                       {job.location === "REMOTE" && "遠端工作"}
                                       {job.location === "ONSITE" && "現場工作"}
                                     </span>
@@ -620,11 +743,15 @@ export default function SearchPage() {
                                   )}
 
                                   <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-teal-50 text-teal-700">
-                                    {job.employmentType === "FULL_TIME" && "全職"}
-                                    {job.employmentType === "PART_TIME" && "兼職"}
-                                    {job.employmentType === "CONTRACT" && "約聘"}
+                                    {job.employmentType === "FULL_TIME" &&
+                                      "全職"}
+                                    {job.employmentType === "PART_TIME" &&
+                                      "兼職"}
+                                    {job.employmentType === "CONTRACT" &&
+                                      "約聘"}
                                     {job.employmentType === "INTERN" && "實習"}
-                                    {job.employmentType === "TEMPORARY" && "臨時工"}
+                                    {job.employmentType === "TEMPORARY" &&
+                                      "臨時工"}
                                   </span>
 
                                   {job.experience && (
@@ -641,16 +768,19 @@ export default function SearchPage() {
 
                                   {job.salaryMin > 0 && job.salaryMax > 0 && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700">
-                                      {Math.floor(job.salaryMin / 1000)}K - {Math.floor(job.salaryMax / 1000)}K
+                                      {Math.floor(job.salaryMin / 1000)}K -{" "}
+                                      {Math.floor(job.salaryMax / 1000)}K
                                       {job.negotiable && " (可面議)"}
                                     </span>
                                   )}
 
-                                  {job.salaryMin === 0 && job.salaryMax === 0 && job.negotiable && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700">
-                                      薪資面議
-                                    </span>
-                                  )}
+                                  {job.salaryMin === 0 &&
+                                    job.salaryMax === 0 &&
+                                    job.negotiable && (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700">
+                                        薪資面議
+                                      </span>
+                                    )}
                                 </div>
 
                                 <p className="mt-2 text-sm text-slate-600 line-clamp-2">
@@ -664,117 +794,170 @@ export default function SearchPage() {
                     </ul>
 
                     {/* 分頁 */}
-                    {results.pagination && results.pagination.totalPages > 1 && (
-                      <div className="px-4 py-3 flex items-center justify-between border-t border-slate-200">
-                        <div className="flex-1 flex justify-between sm:hidden">
-                          <button
-                            onClick={() => handlePageChange(Math.max(1, results.pagination.page - 1))}
-                            disabled={results.pagination.page <= 1}
-                            className={`relative inline-flex items-center px-4 py-2 rounded-md ring-1 ring-slate-200 text-sm font-medium ${results.pagination.page <= 1 ? "text-slate-400 bg-slate-100" : "text-slate-700 bg-white hover:bg-slate-50"
+                    {results.pagination &&
+                      results.pagination.totalPages > 1 && (
+                        <div className="px-4 py-3 flex items-center justify-between border-t border-slate-200">
+                          <div className="flex-1 flex justify-between sm:hidden">
+                            <button
+                              onClick={() =>
+                                handlePageChange(
+                                  Math.max(1, results.pagination.page - 1),
+                                )
+                              }
+                              disabled={results.pagination.page <= 1}
+                              className={`relative inline-flex items-center px-4 py-2 rounded-md ring-1 ring-slate-200 text-sm font-medium ${
+                                results.pagination.page <= 1
+                                  ? "text-slate-400 bg-slate-100"
+                                  : "text-slate-700 bg-white hover:bg-slate-50"
                               }`}
-                          >
-                            上一頁
-                          </button>
-                          <button
-                            onClick={() =>
-                              handlePageChange(
-                                Math.min(results.pagination.totalPages, results.pagination.page + 1)
-                              )
-                            }
-                            disabled={results.pagination.page >= results.pagination.totalPages}
-                            className={`ml-3 relative inline-flex items-center px-4 py-2 rounded-md ring-1 ring-slate-200 text-sm font-medium ${results.pagination.page >= results.pagination.totalPages
-                              ? "text-slate-400 bg-slate-100"
-                              : "text-slate-700 bg-white hover:bg-slate-50"
+                            >
+                              上一頁
+                            </button>
+                            <button
+                              onClick={() =>
+                                handlePageChange(
+                                  Math.min(
+                                    results.pagination.totalPages,
+                                    results.pagination.page + 1,
+                                  ),
+                                )
+                              }
+                              disabled={
+                                results.pagination.page >=
+                                results.pagination.totalPages
+                              }
+                              className={`ml-3 relative inline-flex items-center px-4 py-2 rounded-md ring-1 ring-slate-200 text-sm font-medium ${
+                                results.pagination.page >=
+                                results.pagination.totalPages
+                                  ? "text-slate-400 bg-slate-100"
+                                  : "text-slate-700 bg-white hover:bg-slate-50"
                               }`}
-                          >
-                            下一頁
-                          </button>
-                        </div>
-
-                        <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                          <div>
-                            <p className="text-sm text-slate-700">
-                              顯示第{" "}
-                              <span className="font-medium">
-                                {(results.pagination.page - 1) * results.pagination.limit + 1}
-                              </span>{" "}
-                              至
-                              <span className="font-medium">
-                                {Math.min(
-                                  results.pagination.page * results.pagination.limit,
-                                  results.pagination.total
-                                )}
-                              </span>{" "}
-                              筆， 共{" "}
-                              <span className="font-medium">{results.pagination.total}</span>{" "}
-                              筆結果
-                            </p>
+                            >
+                              下一頁
+                            </button>
                           </div>
-                          <div>
-                            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                              <button
-                                onClick={() => handlePageChange(Math.max(1, results.pagination.page - 1))}
-                                disabled={results.pagination.page <= 1}
-                                className={`relative inline-flex items-center px-2 py-2 rounded-l-md ring-1 ring-slate-200 bg-white text-sm font-medium ${results.pagination.page <= 1 ? "text-slate-400" : "text-slate-500 hover:bg-slate-50"
-                                  }`}
+
+                          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                              <p className="text-sm text-slate-700">
+                                顯示第{" "}
+                                <span className="font-medium">
+                                  {(results.pagination.page - 1) *
+                                    results.pagination.limit +
+                                    1}
+                                </span>{" "}
+                                至
+                                <span className="font-medium">
+                                  {Math.min(
+                                    results.pagination.page *
+                                      results.pagination.limit,
+                                    results.pagination.total,
+                                  )}
+                                </span>{" "}
+                                筆， 共{" "}
+                                <span className="font-medium">
+                                  {results.pagination.total}
+                                </span>{" "}
+                                筆結果
+                              </p>
+                            </div>
+                            <div>
+                              <nav
+                                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                aria-label="Pagination"
                               >
-                                <span className="sr-only">上一頁</span>
-                                <FaChevronUp className="h-5 w-5 rotate-90" />
-                              </button>
+                                <button
+                                  onClick={() =>
+                                    handlePageChange(
+                                      Math.max(1, results.pagination.page - 1),
+                                    )
+                                  }
+                                  disabled={results.pagination.page <= 1}
+                                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md ring-1 ring-slate-200 bg-white text-sm font-medium ${
+                                    results.pagination.page <= 1
+                                      ? "text-slate-400"
+                                      : "text-slate-500 hover:bg-slate-50"
+                                  }`}
+                                >
+                                  <span className="sr-only">上一頁</span>
+                                  <FaChevronUp className="h-5 w-5 rotate-90" />
+                                </button>
 
-                              {/* 頁碼 */}
-                              {Array.from({ length: Math.min(5, results.pagination.totalPages) }).map((_, i) => {
-                                let pageNum: number;
-                                if (results.pagination.totalPages <= 5) {
-                                  pageNum = i + 1;
-                                } else if (results.pagination.page <= 3) {
-                                  pageNum = i + 1;
-                                } else if (results.pagination.page >= results.pagination.totalPages - 2) {
-                                  pageNum = results.pagination.totalPages - 4 + i;
-                                } else {
-                                  pageNum = results.pagination.page - 2 + i;
-                                }
+                                {/* 頁碼 */}
+                                {Array.from({
+                                  length: Math.min(
+                                    5,
+                                    results.pagination.totalPages,
+                                  ),
+                                }).map((_, i) => {
+                                  let pageNum: number;
+                                  if (results.pagination.totalPages <= 5) {
+                                    pageNum = i + 1;
+                                  } else if (results.pagination.page <= 3) {
+                                    pageNum = i + 1;
+                                  } else if (
+                                    results.pagination.page >=
+                                    results.pagination.totalPages - 2
+                                  ) {
+                                    pageNum =
+                                      results.pagination.totalPages - 4 + i;
+                                  } else {
+                                    pageNum = results.pagination.page - 2 + i;
+                                  }
 
-                                return (
-                                  <button
-                                    key={i}
-                                    onClick={() => handlePageChange(pageNum)}
-                                    className={`relative inline-flex items-center px-4 py-2 ring-1 text-sm font-medium ${pageNum === results.pagination.page
-                                      ? "z-10 bg-blue-600 text-white ring-blue-600"
-                                      : "bg-white ring-slate-200 text-slate-500 hover:bg-slate-50"
+                                  return (
+                                    <button
+                                      key={i}
+                                      onClick={() => handlePageChange(pageNum)}
+                                      className={`relative inline-flex items-center px-4 py-2 ring-1 text-sm font-medium ${
+                                        pageNum === results.pagination.page
+                                          ? "z-10 bg-blue-600 text-white ring-blue-600"
+                                          : "bg-white ring-slate-200 text-slate-500 hover:bg-slate-50"
                                       }`}
-                                  >
-                                    {pageNum}
-                                  </button>
-                                );
-                              })}
+                                    >
+                                      {pageNum}
+                                    </button>
+                                  );
+                                })}
 
-                              <button
-                                onClick={() =>
-                                  handlePageChange(
-                                    Math.min(results.pagination.totalPages, results.pagination.page + 1)
-                                  )
-                                }
-                                disabled={results.pagination.page >= results.pagination.totalPages}
-                                className={`relative inline-flex items-center px-2 py-2 rounded-r-md ring-1 ring-slate-200 bg-white text-sm font-medium ${results.pagination.page >= results.pagination.totalPages
-                                  ? "text-slate-400"
-                                  : "text-slate-500 hover:bg-slate-50"
+                                <button
+                                  onClick={() =>
+                                    handlePageChange(
+                                      Math.min(
+                                        results.pagination.totalPages,
+                                        results.pagination.page + 1,
+                                      ),
+                                    )
+                                  }
+                                  disabled={
+                                    results.pagination.page >=
+                                    results.pagination.totalPages
+                                  }
+                                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md ring-1 ring-slate-200 bg-white text-sm font-medium ${
+                                    results.pagination.page >=
+                                    results.pagination.totalPages
+                                      ? "text-slate-400"
+                                      : "text-slate-500 hover:bg-slate-50"
                                   }`}
-                              >
-                                <span className="sr-only">下一頁</span>
-                                <FaChevronDown className="h-5 w-5 rotate-90" />
-                              </button>
-                            </nav>
+                                >
+                                  <span className="sr-only">下一頁</span>
+                                  <FaChevronDown className="h-5 w-5 rotate-90" />
+                                </button>
+                              </nav>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 ) : (
                   <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200 p-8 text-center">
                     <FaBriefcase className="mx-auto h-12 w-12 text-slate-400" />
-                    <h3 className="mt-2 text-lg font-medium text-slate-900">沒有找到符合條件的職位</h3>
-                    <p className="mt-1 text-sm text-slate-600">請嘗試調整搜尋條件或清除篩選器</p>
+                    <h3 className="mt-2 text-lg font-medium text-slate-900">
+                      沒有找到符合條件的職位
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-600">
+                      請嘗試調整搜尋條件或清除篩選器
+                    </p>
                     <div className="mt-6">
                       <button
                         onClick={clearAllFilters}
@@ -802,14 +985,23 @@ export default function SearchPage() {
                 </div>
                 <ul className="divide-y divide-slate-200">
                   {results.companies.slice(0, 4).map((company: any) => (
-                    <li key={company.id} className="hover:bg-blue-50/40 transition-colors">
-                      <Link href={`/company/${company.id}`} className="block p-3">
+                    <li
+                      key={company.id}
+                      className="hover:bg-blue-50/40 transition-colors"
+                    >
+                      <Link
+                        href={`/company/${company.id}`}
+                        className="block p-3"
+                      >
                         <div className="flex items-center">
                           {/* 公司 Logo */}
                           <div className="w-10 h-10 flex-shrink-0 bg-slate-100 rounded overflow-hidden mr-3 ring-1 ring-slate-200">
                             {company.logoUrl ? (
                               <img
-                                src={process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL + company.logoUrl}
+                                src={
+                                  process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL +
+                                  company.logoUrl
+                                }
                                 alt={company.name}
                                 className="w-full h-full object-contain"
                               />
@@ -822,14 +1014,23 @@ export default function SearchPage() {
 
                           {/* 公司資訊 */}
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-slate-900 truncate">{company.name}</h4>
-                            <p className="text-xs text-slate-500 mt-1">{company._count?.jobs || 0} 個職缺</p>
+                            <h4 className="text-sm font-medium text-slate-900 truncate">
+                              {company.name}
+                            </h4>
+                            <p className="text-xs text-slate-500 mt-1">
+                              {company._count?.jobs || 0} 個職缺
+                            </p>
                             <div className="mt-1 flex flex-wrap gap-1">
-                              {company.tags?.slice(0, 2).map((tag: string, index: number) => (
-                                <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700">
-                                  {tag}
-                                </span>
-                              ))}
+                              {company.tags
+                                ?.slice(0, 2)
+                                .map((tag: string, index: number) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                             </div>
                           </div>
                         </div>
@@ -839,7 +1040,10 @@ export default function SearchPage() {
                 </ul>
                 {results.companies.length > 4 && (
                   <div className="px-4 py-3 bg-slate-50 text-center">
-                    <Link href="/companies" className="text-sm text-blue-700 hover:text-blue-800 font-medium">
+                    <Link
+                      href="/companies"
+                      className="text-sm text-blue-700 hover:text-blue-800 font-medium"
+                    >
                       查看更多企業
                     </Link>
                   </div>
@@ -850,13 +1054,19 @@ export default function SearchPage() {
             {/* 搜尋小提醒 */}
             <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200 overflow-hidden mb-6">
               <div className="px-4 py-3 border-b border-slate-200 bg-blue-50">
-                <h3 className="text-lg font-medium text-slate-800">搜尋小提醒</h3>
+                <h3 className="text-lg font-medium text-slate-800">
+                  搜尋小提醒
+                </h3>
               </div>
               <div className="p-4">
                 <ul className="space-y-3 text-sm text-slate-600">
                   <li className="flex items-start">
                     <div className="flex-shrink-0 h-5 w-5 text-green-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -865,12 +1075,17 @@ export default function SearchPage() {
                       </svg>
                     </div>
                     <p className="ml-2">
-                      使用關鍵字，例如「<span className="text-blue-700">前端、React、遠端</span>」
+                      使用關鍵字，例如「
+                      <span className="text-blue-700">前端、React、遠端</span>」
                     </p>
                   </li>
                   <li className="flex items-start">
                     <div className="flex-shrink-0 h-5 w-5 text-green-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -882,7 +1097,11 @@ export default function SearchPage() {
                   </li>
                   <li className="flex items-start">
                     <div className="flex-shrink-0 h-5 w-5 text-green-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -894,7 +1113,11 @@ export default function SearchPage() {
                   </li>
                   <li className="flex items-start">
                     <div className="flex-shrink-0 h-5 w-5 text-green-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -913,5 +1136,20 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-slate-600">載入中...</p>
+        </div>
+      </div>
+    }>
+      <SearchPageContent />
+    </Suspense>
   );
 }

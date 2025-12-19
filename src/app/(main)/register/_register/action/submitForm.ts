@@ -9,9 +9,9 @@ import { cookies } from "next/headers";
 /**
  * 獲取當前的主機URL，用於構建API請求地址
  */
-function getBaseUrl() {
+async function getBaseUrl() {
   // 獲取請求頭
-  const headersList = headers();
+  const headersList = await headers();
   // 獲取主機名
   const host = headersList.get("host") || "localhost:3000";
   // 確定協議（如果有X-Forwarded-Proto使用它，否則預設為https）
@@ -100,11 +100,11 @@ export async function handleAlumniRegister(formData: FormData) {
     };
 
     // 獲取完整的API URL
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     const apiUrl = `${baseUrl}/api/registration/alumni`;
 
     // 獲取所有 cookies 以保留身份驗證信息
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const allCookies = cookieStore.getAll();
     const cookieHeader = allCookies
       .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -173,11 +173,11 @@ export async function handleCorporateRegister(formData: FormData) {
     };
 
     // 獲取完整的API URL
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     const apiUrl = `${baseUrl}/api/registration/company`;
 
     // 獲取所有 cookies 以保留身份驗證信息
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const allCookies = cookieStore.getAll();
     const cookieHeader = allCookies
       .map((cookie) => `${cookie.name}=${cookie.value}`)

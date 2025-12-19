@@ -58,7 +58,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     if (
       formData.get("birthday") &&
       new Date(formData.get("birthday")?.toString() as string).toString() ===
-      "Invalid Date"
+        "Invalid Date"
     ) {
       setError("生日格式不正確");
       setDialogMessage("生日格式不正確");
@@ -166,8 +166,7 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
     },
   ];
 
-  const labelCls =
-    "block text-sm font-medium text-slate-600 mb-1";
+  const labelCls = "block text-sm font-medium text-slate-600 mb-1";
   const inputBase =
     "w-full rounded-lg ring-1 ring-slate-200 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition";
   const disabledCls = "bg-slate-100 text-slate-400 cursor-not-allowed";
@@ -286,7 +285,9 @@ export default function UpdateForm({ initialData, mode }: ProfileFormProps) {
         )}
 
         {/* 欄位們 */}
-        <div className="grid grid-cols-1 gap-3">{formFields.map(renderField)}</div>
+        <div className="grid grid-cols-1 gap-3">
+          {formFields.map(renderField)}
+        </div>
 
         <button
           type="submit"

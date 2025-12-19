@@ -7,8 +7,8 @@ import Link from "next/link";
 import { auth } from "@/library/auth";
 import { handleSignIn } from "@/library/auth/auth-actions";
 
-import { User } from "@/prisma/client";
 import { navConfig } from "@/config/header";
+import { User } from "@/prisma/client";
 
 export default async function HeaderBar() {
   const session = await auth();

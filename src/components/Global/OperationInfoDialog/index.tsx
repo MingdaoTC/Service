@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const ANIM_MS = 180;
 
@@ -21,10 +21,14 @@ export default function OperationInfoDialog({
   // 控制開關與進/退場動畫
   useEffect(() => {
     const el = dialogRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
 
     if (isOpen) {
-      if (!el.open) el.showModal();
+      if (!el.open) {
+        el.showModal();
+      }
       // 等下一幀避免一開始跳動
       requestAnimationFrame(() => setAnimateIn(true));
       // 鎖捲動
@@ -35,7 +39,9 @@ export default function OperationInfoDialog({
       const t = setTimeout(() => {
         try {
           el.close();
-        } catch { }
+        } catch {
+          // Ignore close errors if dialog was already closed
+        }
         document.body.style.overflow = "";
       }, ANIM_MS);
       return () => clearTimeout(t);
@@ -50,7 +56,9 @@ export default function OperationInfoDialog({
   // Esc 關閉（<dialog> cancel 事件）
   useEffect(() => {
     const el = dialogRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
     const onCancel = (e: Event) => {
       e.preventDefault(); // 攔截預設行為，走動畫關閉
       onClose();
@@ -61,7 +69,9 @@ export default function OperationInfoDialog({
 
   // 點擊遮罩關閉（點在 <dialog> 自身＝Backdrop）
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (e.target === dialogRef.current) onClose();
+    if (e.target === dialogRef.current) {
+      onClose();
+    }
   };
 
   return (
@@ -90,12 +100,20 @@ export default function OperationInfoDialog({
           <div className="flex items-center gap-2">
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-mingdao-blue/10 text-mingdao-blue">
               {/* 資訊圖示（純裝飾） */}
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+                aria-hidden="true"
+              >
                 <path d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6z" />
                 <path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zM4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8-8-3.59-8-8z" />
               </svg>
             </span>
-            <h2 id="mdtc-dialog-title" className="text-lg md:text-xl font-bold text-slate-800">
+            <h2
+              id="mdtc-dialog-title"
+              className="text-lg md:text-xl font-bold text-slate-800"
+            >
               MDTC 訊息通知
             </h2>
           </div>
@@ -106,8 +124,18 @@ export default function OperationInfoDialog({
             className="p-1.5 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mingdao-blue/50 transition"
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

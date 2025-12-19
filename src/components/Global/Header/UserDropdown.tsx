@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import SimpleButton from "@/components/Global/Button/SimpleButton";
 import { handleSignOut } from "@/library/auth/auth-actions";
 import { AccountStatus, User, UserRole } from "@/prisma/client";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 function UserDropdown({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +52,12 @@ function UserDropdown({ user }: { user: User }) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </SimpleButton>
 
@@ -86,13 +91,16 @@ function UserDropdown({ user }: { user: User }) {
               </p>
               <p>
                 驗證身分：
-                <span className={`font-medium ${status[user.status as keyof typeof status].color}`}>
+                <span
+                  className={`font-medium ${status[user.status as keyof typeof status].color}`}
+                >
                   {status[user.status as keyof typeof status].text}
                 </span>
               </p>
             </div>
 
-            {(user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN) && (
+            {(user.role === UserRole.ADMIN ||
+              user.role === UserRole.SUPERADMIN) && (
               <>
                 <hr className="border-slate-200 my-3" />
                 <div className="px-4 flex flex-col gap-1">
@@ -106,12 +114,14 @@ function UserDropdown({ user }: { user: User }) {
               </>
             )}
 
-            {(user.role === UserRole.SUPERADMIN || user.status !== AccountStatus.PENDING) && (
+            {(user.role === UserRole.SUPERADMIN ||
+              user.status !== AccountStatus.PENDING) && (
               <hr className="border-slate-200 my-3" />
             )}
 
             <div className="flex flex-col px-4 gap-1">
-              {(user.status === AccountStatus.UNVERIFIED || user.role === UserRole.SUPERADMIN) && (
+              {(user.status === AccountStatus.UNVERIFIED ||
+                user.role === UserRole.SUPERADMIN) && (
                 <Link
                   href="/register"
                   className="w-full text-left text-slate-700 hover:text-blue-500"
@@ -120,25 +130,27 @@ function UserDropdown({ user }: { user: User }) {
                 </Link>
               )}
 
-              {((user.status === AccountStatus.VERIFIED && user.role === UserRole.ALUMNI) ||
+              {((user.status === AccountStatus.VERIFIED &&
+                user.role === UserRole.ALUMNI) ||
                 user.role === UserRole.SUPERADMIN) && (
-                  <Link
-                    href="/profile"
-                    className="w-full text-left text-slate-700 hover:text-blue-500"
-                  >
-                    我的檔案
-                  </Link>
-                )}
+                <Link
+                  href="/profile"
+                  className="w-full text-left text-slate-700 hover:text-blue-500"
+                >
+                  我的檔案
+                </Link>
+              )}
 
-              {((user.status === AccountStatus.VERIFIED && user.role === UserRole.COMPANY) ||
+              {((user.status === AccountStatus.VERIFIED &&
+                user.role === UserRole.COMPANY) ||
                 user.role === UserRole.SUPERADMIN) && (
-                  <Link
-                    href="/enterprise"
-                    className="w-full text-left text-slate-700 hover:text-blue-500"
-                  >
-                    企業後台
-                  </Link>
-                )}
+                <Link
+                  href="/enterprise"
+                  className="w-full text-left text-slate-700 hover:text-blue-500"
+                >
+                  企業後台
+                </Link>
+              )}
             </div>
 
             <hr className="border-slate-200 my-3" />

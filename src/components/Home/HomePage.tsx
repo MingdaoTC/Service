@@ -37,8 +37,9 @@ export default function HomePage({ jobs, companies }: HomePageProps) {
 
           {/* 搜尋框 */}
           <div
-            className={`w-full max-w-3xl mx-auto transition-transform duration-300 ${isSearchExpanded ? "-translate-y-2" : ""
-              }`}
+            className={`w-full max-w-3xl mx-auto transition-transform duration-300 ${
+              isSearchExpanded ? "-translate-y-2" : ""
+            }`}
           >
             <div className="bg-white rounded-2xl shadow-xl ring-1 ring-slate-200 p-4 md:p-6">
               <EnhancedSearch

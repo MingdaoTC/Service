@@ -25,13 +25,15 @@ const Modal: React.FC<ModalProps> = ({
   const [mounted, setMounted] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
     lastFocusedRef.current = document.activeElement as HTMLElement | null;
 
@@ -41,7 +43,9 @@ const Modal: React.FC<ModalProps> = ({
     const t = requestAnimationFrame(() => setAnimateIn(true));
 
     const focusables = getFocusable(dialogRef.current);
-    if (focusables.length) focusables[0].focus();
+    if (focusables.length) {
+      focusables[0].focus();
+    }
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -63,15 +67,19 @@ const Modal: React.FC<ModalProps> = ({
   }, [isOpen, onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === backdropRef.current) onClose();
+    if (e.target === backdropRef.current) {
+      onClose();
+    }
   };
 
   const portalTarget = useMemo(
     () => (mounted ? document.body : null),
-    [mounted]
+    [mounted],
   );
 
-  if (!isOpen || !mounted || !portalTarget) return null;
+  if (!isOpen || !mounted || !portalTarget) {
+    return null;
+  }
 
   const panelBase =
     // 亮色系卡片 + 品牌描邊 + 柔陰影
@@ -88,16 +96,15 @@ const Modal: React.FC<ModalProps> = ({
       onMouseDown={handleBackdropClick}
       aria-hidden={false}
     >
-      <div
+      <dialog
         ref={dialogRef}
-        role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         className={`${panelBase} transition-all duration-200 ease-out ${panelAnim}`}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Brand top bar */}
-        <div className="h-1 w-full bg-mingdao-blue"></div>
+        <div className="h-1 w-full bg-mingdao-blue" />
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200/80">
@@ -143,9 +150,9 @@ const Modal: React.FC<ModalProps> = ({
             </button>
           ))}
         </div>
-      </div>
+      </dialog>
     </div>,
-    portalTarget
+    portalTarget,
   );
 };
 
@@ -170,17 +177,24 @@ function variantClass(variant?: "primary" | "secondary" | "danger") {
 
 /* ========== A11y helpers ========== */
 function getFocusable(root: HTMLElement | null): HTMLElement[] {
-  if (!root) return [];
+  if (!root) {
+    return [];
+  }
   const selectors =
     'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable=true]';
   return Array.from(root.querySelectorAll<HTMLElement>(selectors)).filter(
-    (el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement
+    (el) =>
+      el.offsetWidth > 0 ||
+      el.offsetHeight > 0 ||
+      el === document.activeElement,
   );
 }
 
 function trapFocus(e: KeyboardEvent, root: HTMLElement | null) {
   const focusables = getFocusable(root);
-  if (focusables.length === 0) return;
+  if (focusables.length === 0) {
+    return;
+  }
 
   const first = focusables[0];
   const last = focusables[focusables.length - 1];

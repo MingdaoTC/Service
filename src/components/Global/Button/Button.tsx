@@ -25,10 +25,8 @@ export default function Button({
   const variants: Record<NonNullable<TProps["type"]>, string> = {
     primary:
       "bg-gradient-to-r from-blue-600 to-blue-600 text-white focus-visible:outline-none focus-visible:ring-0",
-    secondary:
-      "bg-white text-slate-800 hover:bg-blue-50/60",
-    danger:
-      "bg-red-500 text-white hover:bg-red-600",
+    secondary: "bg-white text-slate-800 hover:bg-blue-50/60",
+    danger: "bg-red-500 text-white hover:bg-red-600",
   };
 
   const cls = `${base} ${variants[type]} ${className} select-none`;

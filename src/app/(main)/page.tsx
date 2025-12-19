@@ -2,11 +2,9 @@ import { getCompany, getJob } from "@/app/(main)/_home/action/fetch";
 import HomePage from "@/components/Home/HomePage";
 import { Suspense } from "react";
 
-
 export default async function Page() {
   // 服務器端獲取數據
   const [jobs, companies] = await Promise.all([getJob(), getCompany()]);
-
 
   return (
     <Suspense

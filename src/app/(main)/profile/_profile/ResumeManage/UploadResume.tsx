@@ -73,7 +73,9 @@ export default function UploadResume() {
         ref={formRef}
         className="flex flex-col gap-3 w-full rounded-xl bg-blue-50/70 ring-1 ring-slate-200 p-4"
       >
-        <h2 className="text-lg md:text-xl text-slate-800 font-semibold">上傳新履歷</h2>
+        <h2 className="text-lg md:text-xl text-slate-800 font-semibold">
+          上傳新履歷
+        </h2>
 
         <span
           className="text-red-600 transition-opacity duration-300 bg-red-50 border border-red-200 py-1 px-3 rounded-lg"
@@ -84,7 +86,10 @@ export default function UploadResume() {
 
         <div className="flex flex-col md:flex-row gap-4 w-full">
           <div className="flex-1 flex flex-col gap-1">
-            <label htmlFor="title" className="text-sm font-medium text-slate-600">
+            <label
+              htmlFor="title"
+              className="text-sm font-medium text-slate-600"
+            >
               履歷名稱
             </label>
             <input

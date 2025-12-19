@@ -6,13 +6,14 @@ import {
   JSXElementConstructor,
   ReactElement,
   ReactNode,
+  Suspense,
   useEffect,
   useState,
 } from "react";
 
 const CDN_URL = process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC_URL;
 
-export default function ShowImagePage() {
+function ShowImageContent() {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -237,5 +238,20 @@ export default function ShowImagePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShowImagePage() {
+  return (
+    <Suspense fallback={
+      <div className="h-[calc(100dvh-15rem)] bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-mingdao-blue mx-auto" />
+          <p className="mt-4 text-slate-600">載入中...</p>
+        </div>
+      </div>
+    }>
+      <ShowImageContent />
+    </Suspense>
   );
 }

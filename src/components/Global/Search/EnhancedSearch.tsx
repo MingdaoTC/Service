@@ -32,7 +32,9 @@ export default function EnhancedSearch(props: TProps) {
 
   // 當展開狀態改變時，通知父組件
   useEffect(() => {
-    if (props.onExpandChange) props.onExpandChange(isExpanded);
+    if (props.onExpandChange) {
+      props.onExpandChange(isExpanded);
+    }
   }, [isExpanded, props]);
 
   const searchParams = useSearchParams();
@@ -48,7 +50,9 @@ export default function EnhancedSearch(props: TProps) {
       setIsLoading(true);
       try {
         const categories = await getJobCategory();
-        if (categories) setJobCategories(categories);
+        if (categories) {
+          setJobCategories(categories);
+        }
 
         if (pathname === "/search") {
           const query = searchParams.get("q");
@@ -56,18 +60,26 @@ export default function EnhancedSearch(props: TProps) {
           const cityParam = searchParams.get("city");
           const districtParam = searchParams.get("district");
 
-          if (query) setKeyword(query);
-          if (categoryParam) setCategory(categoryParam);
+          if (query) {
+            setKeyword(query);
+          }
+          if (categoryParam) {
+            setCategory(categoryParam);
+          }
 
           if (cityParam) {
             setCityChoose(cityParam);
             const districts = getDistrictsByCity(cityParam);
             setTaiwanDistrictList(districts);
 
-            if (districtParam) setDistrictChoose(districtParam);
+            if (districtParam) {
+              setDistrictChoose(districtParam);
+            }
           }
 
-          if (categoryParam || cityParam || districtParam) setIsExpanded(true);
+          if (categoryParam || cityParam || districtParam) {
+            setIsExpanded(true);
+          }
         }
       } catch (error) {
         console.error("載入搜尋資料時發生錯誤:", error);
@@ -96,11 +108,17 @@ export default function EnhancedSearch(props: TProps) {
   // 執行搜尋
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (keyword) params.set("q", keyword);
-    if (category) params.set("category", category);
+    if (keyword) {
+      params.set("q", keyword);
+    }
+    if (category) {
+      params.set("category", category);
+    }
     if (cityChoose) {
       params.set("city", cityChoose);
-      if (districtChoose) params.set("district", districtChoose);
+      if (districtChoose) {
+        params.set("district", districtChoose);
+      }
     }
     router.push(`/search?${params.toString()}`);
   };
@@ -116,7 +134,9 @@ export default function EnhancedSearch(props: TProps) {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleSearch();
+            if (e.key === "Enter") {
+              handleSearch();
+            }
           }}
         />
 
@@ -146,23 +166,29 @@ export default function EnhancedSearch(props: TProps) {
       {/* 進階搜尋選項（絲滑展開） */}
       <div
         id="advanced-search"
-        className={`grid transition-[grid-template-rows] duration-300 ease-out ${isExpanded ? "grid-rows-[1fr] mt-3" : "grid-rows-[0fr] mt-0"
-          }`}
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          isExpanded ? "grid-rows-[1fr] mt-3" : "grid-rows-[0fr] mt-0"
+        }`}
         aria-hidden={!isExpanded}
       >
         <div
-          className={`overflow-hidden border-t ${isExpanded ? "border-slate-200 pt-3" : "border-transparent pt-0"
-            }`}
+          className={`overflow-hidden border-t ${
+            isExpanded ? "border-slate-200 pt-3" : "border-transparent pt-0"
+          }`}
         >
           <div
-            className={`flex flex-col sm:flex-row gap-2 ${isExpanded
+            className={`flex flex-col sm:flex-row gap-2 ${
+              isExpanded
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 -translate-y-1 pointer-events-none"
-              } transition-all duration-300`}
+            } transition-all duration-300`}
           >
             {/* 職業類別選擇 */}
             <div className="flex-1">
-              <label className="block text-xs text-slate-700 mb-1" htmlFor="category">
+              <label
+                className="block text-xs text-slate-700 mb-1"
+                htmlFor="category"
+              >
                 職業類別
               </label>
               <select
@@ -184,7 +210,10 @@ export default function EnhancedSearch(props: TProps) {
             {/* 地區選擇 */}
             <div className="flex-1 flex flex-col sm:flex-row gap-2">
               <div className="flex-1">
-                <label className="block text-xs text-slate-700 mb-1" htmlFor="city">
+                <label
+                  className="block text-xs text-slate-700 mb-1"
+                  htmlFor="city"
+                >
                   縣市
                 </label>
                 <select
@@ -203,7 +232,10 @@ export default function EnhancedSearch(props: TProps) {
               </div>
 
               <div className="flex-1">
-                <label className="block text-xs text-slate-700 mb-1" htmlFor="district">
+                <label
+                  className="block text-xs text-slate-700 mb-1"
+                  htmlFor="district"
+                >
                   地區
                 </label>
                 <select

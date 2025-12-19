@@ -13,7 +13,9 @@ export default async function ResumeList() {
     if (resumes.length === 0) {
       return (
         <div className="py-4">
-          <p className="text-center text-slate-600">您還沒有任何履歷，馬上建立履歷吧</p>
+          <p className="text-center text-slate-600">
+            您還沒有任何履歷，馬上建立履歷吧
+          </p>
         </div>
       );
     }
@@ -37,7 +39,9 @@ export default async function ResumeList() {
 
   return (
     <div className="py-4">
-      <p className="text-center text-slate-600">您還沒有任何履歷，馬上建立履歷吧</p>
+      <p className="text-center text-slate-600">
+        您還沒有任何履歷，馬上建立履歷吧
+      </p>
     </div>
   );
 }

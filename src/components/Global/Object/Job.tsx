@@ -54,7 +54,10 @@ export default function Job({
               <BiBookmark className="translate-y-[1px]" />
               儲存
             </Button> */}
-            <Button className="flex items-center gap-1 text-sm py-1 px-3" disabled>
+            <Button
+              className="flex items-center gap-1 text-sm py-1 px-3"
+              disabled
+            >
               <AiOutlineMail className="translate-y-[0.5px]" />
               應徵
             </Button>
@@ -68,7 +71,6 @@ export default function Job({
           <div
             className={`px-4 py-3 bg-white rounded-xl ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-50/40 hover:shadow-lg ${className}`}
           >
-
             <h2 className="text-base text-slate-800 font-extrabold line-clamp-1">
               {data.title}
             </h2>
